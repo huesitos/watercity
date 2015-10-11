@@ -11,7 +11,7 @@ ResourceManager::ResourceManager()
 	number_of_families = 10;
 
 	happiness = 50.0f;
-	awareness = 30.0f;
+	awareness = 0.0f;
 	awareness_min = 10.0f;
 }
 
