@@ -1,4 +1,5 @@
 #include "MainMenu.h"
+#include "GameLayer.h"
 
 USING_NS_CC;
 
@@ -38,12 +39,10 @@ bool MainMenu::init()
 
 void MainMenu::start_game(Ref *pSender)
 {
-	log("start_game");
-	Director::getInstance()->end();
+	Director::getInstance()->replaceScene(TransitionFade::create(1.0f, GameLayer::createScene()));
 }
 
 void MainMenu::exit_game(Ref *pSender)
 {
-	log("exit_game");
 	Director::getInstance()->end();
 }
