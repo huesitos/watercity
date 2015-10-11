@@ -11,6 +11,10 @@ public:
 	virtual bool init();
 
 	CREATE_FUNC(MainMenu);
+
+	void start_game(cocos2d::Ref *pSender);
+
+	void exit_game(cocos2d::Ref *pSender);
 };
 
 #endif // __MAIN_MENU_H__
