@@ -126,6 +126,7 @@ set(GAME_SRC
   Classes/AppDelegate.cpp
   Classes/MainMenu.cpp
   Classes/GameLayer.cpp
+  Classes/ResourceManager.cpp
   ${PLATFORM_SPECIFIC_SRC}
 )
 
@@ -133,6 +134,7 @@ set(GAME_HEADERS
   Classes/AppDelegate.h
   Classes/MainMenu.h
   Classes/GameLayer.h
+  Classes/ResourceManager.h
   ${PLATFORM_SPECIFIC_HEADERS}
 )
 
