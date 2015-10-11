@@ -129,6 +129,7 @@ set(GAME_SRC
   Classes/ResourceManager.cpp
   Classes/Project.cpp
   Classes/Ministry.cpp
+  Classes/Breakdown.cpp
   ${PLATFORM_SPECIFIC_SRC}
 )
 
@@ -139,6 +140,7 @@ set(GAME_HEADERS
   Classes/ResourceManager.h
   Classes/Project.h
   Classes/Ministry.h
+  Classes/Breakdown.h
   ${PLATFORM_SPECIFIC_HEADERS}
 )
 
