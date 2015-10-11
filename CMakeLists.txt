@@ -128,6 +128,7 @@ set(GAME_SRC
   Classes/GameLayer.cpp
   Classes/ResourceManager.cpp
   Classes/Project.cpp
+  Classes/Ministry.cpp
   ${PLATFORM_SPECIFIC_SRC}
 )
 
@@ -137,6 +138,7 @@ set(GAME_HEADERS
   Classes/GameLayer.h
   Classes/ResourceManager.h
   Classes/Project.h
+  Classes/Ministry.h
   ${PLATFORM_SPECIFIC_HEADERS}
 )
 
