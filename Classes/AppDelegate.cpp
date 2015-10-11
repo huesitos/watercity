@@ -1,4 +1,5 @@
 #include "AppDelegate.h"
+#include "MainMenu.h"
 
 USING_NS_CC;
 
@@ -74,7 +75,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     register_all_packages();
 
     // create a scene. it's an autorelease object
-    auto scene = Scene::create();
+    auto scene = MainMenu::createScene();
 
     // run
     director->runWithScene(scene);
