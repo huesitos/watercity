@@ -39,7 +39,7 @@ bool MainMenu::init()
 
 void MainMenu::start_game(Ref *pSender)
 {
-	Director::getInstance()->replaceScene(TransitionFade::create(1.0f, GameLayer::createScene()));
+	Director::getInstance()->replaceScene(TransitionFade::create(0.5f, GameLayer::createScene()));
 }
 
 void MainMenu::exit_game(Ref *pSender)
