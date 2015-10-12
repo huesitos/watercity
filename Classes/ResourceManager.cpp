@@ -10,6 +10,9 @@ ResourceManager::ResourceManager()
 	fee_per_family = 5;
 	number_of_families = 10;
 
+	population_total = 50;
+	population_occupied = 0;
+
 	happiness = 50.0f;
 	awareness = 0.0f;
 	awareness_min = 0.0f;
@@ -44,6 +47,11 @@ bool ResourceManager::has_enough_happiness(float happiness_cost)
 	return happiness >= happiness_cost;
 }
 
+bool ResourceManager::has_enough_unoccupied(int persons_needed)
+{
+	return get_population_unoccupied() >= persons_needed;
+}
+
 void ResourceManager::spend_water(int water_cost)
 {
 	water_reserves -= water_cost;
@@ -52,6 +60,16 @@ void ResourceManager::spend_water(int water_cost)
 void ResourceManager::spend_cash(int cash_cost)
 {
 	cash_total -= cash_cost;
+}
+
+void ResourceManager::occupy_persons(int num_persons)
+{
+	population_occupied += num_persons;
+}
+
+void ResourceManager::unoccupy_persons(int num_persons)
+{
+	population_occupied -= num_persons;
 }
 
 void ResourceManager::increase_inflow(int amount)

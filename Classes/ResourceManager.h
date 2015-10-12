@@ -27,11 +27,20 @@ public:
 	// Checks whether the user has enough happiness
 	bool has_enough_happiness(float happiness_cost);
 
+	// Checks whether the user has enough unoccupied persons
+	bool has_enough_unoccupied(int persons_needed);
+
 	// Spend some water from the reserve
 	void spend_water(int water_cost);
 
 	// Spend some cash from the reserve
 	void spend_cash(int cash_cost);
+
+	// Increases the number of occupied persons
+	void occupy_persons(int num_persons);
+
+	// Decreases the number of occupied persons
+	void unoccupy_persons(int num_persons);
 
 	// Adds 'amount' to the total inflow
 	void increase_inflow(int amount);
@@ -69,6 +78,9 @@ private:
 	int 	fee_per_family;
 	int 	number_of_families;
 
+	int 	population_total;
+	int 	population_occupied;
+
 	float 	happiness;
 	float 	awareness;
 	float 	awareness_min;
@@ -87,6 +99,10 @@ public:
 	int 	get_cash_total() { return cash_total; }
 	int 	get_fee_per_family() { return fee_per_family; }
 	int 	get_number_of_families() { return number_of_families; }
+
+	int 	get_population_total() { return population_total; }
+	int 	get_population_occupied() { return population_occupied; }
+	int 	get_population_unoccupied() { return population_total - population_occupied; }
 
 	float 	get_happiness() { return happiness; }
 	float 	get_awareness() { return awareness; }
