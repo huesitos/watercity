@@ -1,9 +1,9 @@
 #include "Project.h"
 #include "ResourceManager.h"
 
-Project::Project(std::string name, std::string description, int cash_cost, int water_cost, int completion_time)
+Project::Project(std::string name, std::string description, int cash_cost, int water_cost, int persons_needed, int completion_time)
 	: running(false), name(name), description(description), cash_cost(cash_cost), 
-	water_cost(water_cost), completion_time(completion_time), time_completed(0)
+	water_cost(water_cost), persons_needed(persons_needed), completion_time(completion_time), time_completed(0)
 {}
 
 void Project::start_project()
@@ -35,9 +35,9 @@ bool Project::is_completed()
 TechnologicalProject::TechnologicalProject()
 {}
 
-TechnologicalProject::TechnologicalProject(std::string name, std::string description, int cash_cost, int water_cost, 
+TechnologicalProject::TechnologicalProject(std::string name, std::string description, int cash_cost, int water_cost, int persons_needed, 
 							int completion_time, int change_in_consumption)
-	: Project(name, description, cash_cost, water_cost, completion_time), change_in_consumption(change_in_consumption)
+	: Project(name, description, cash_cost, water_cost, persons_needed, completion_time), change_in_consumption(change_in_consumption)
 {}
 
 void TechnologicalProject::complete()

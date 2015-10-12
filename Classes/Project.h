@@ -8,7 +8,7 @@ class Project
 {
 public:
 	Project() {}
-	Project(std::string name, std::string description, int cash_cost, int water_cost, int completion_time);
+	Project(std::string name, std::string description, int cash_cost, int water_cost, int persons_needed, int completion_time);
 	virtual ~Project() {}
 
 	virtual void complete();
@@ -24,6 +24,8 @@ public:
 	int 	get_cash_cost() { return cash_cost; }
 	int 	get_water_cost() { return water_cost; }
 
+	int 	get_persons_needed() { return persons_needed; }
+
 	int 	get_completion_time() { return completion_time; }
 	int 	get_time_completed() { return time_completed; }
 	int 	get_time_remaining() { return completion_time - time_completed; }
@@ -34,6 +36,8 @@ protected:
 
 	int 	cash_cost;
 	int 	water_cost;
+
+	int 	persons_needed;
 
 	// time given in "days"
 	int 	completion_time;
@@ -47,7 +51,7 @@ class TechnologicalProject : public Project
 {
 public:
 	TechnologicalProject();
-	TechnologicalProject(std::string name, std::string description, int cash_cost, int water_cost, 
+	TechnologicalProject(std::string name, std::string description, int cash_cost, int water_cost, int persons_needed, 
 							int completion_time, int change_in_consumption);
 	virtual ~TechnologicalProject() {}
 

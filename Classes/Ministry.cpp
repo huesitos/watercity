@@ -8,8 +8,8 @@ USING_NS_CC;
 Ministry::Ministry()
 	: current_project(0)
 {
-	TechnologicalProject p1("Pipes 1", "Build better pipes", 200, 400, 7, 200);
-	TechnologicalProject p2("Pipes 2", "Build even better pipes", 300, 500, 9, 300);
+	TechnologicalProject p1("Pipes 1", "Build better pipes", 200, 400, 25, 7, 200);
+	TechnologicalProject p2("Pipes 2", "Build even better pipes", 300, 500, 35, 9, 300);
 
 	projects.push_back(p1);
 	projects.push_back(p2);
