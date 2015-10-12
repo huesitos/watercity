@@ -69,7 +69,7 @@ Project Ministry::get_current_project()
 	if (has_project())
 		return projects[current_project];
 	else
-		return Project("None", "", 0, 0 ,0);
+		return Project("None", "", 0, 0, 0, 0);
 }
 
 void Ministry::start_project()
