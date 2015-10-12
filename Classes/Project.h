@@ -7,10 +7,16 @@
 class Project
 {
 public:
-	Project();
+	Project() {}
+	Project(std::string name, std::string description, int cash_cost, int water_cost, int completion_time);
 	virtual ~Project() {}
 
-	virtual void complete() = 0;
+	virtual void complete();
+
+	virtual void start_project();
+	virtual void develop();
+	virtual bool is_running();
+	virtual bool is_completed();
 
 	std::string 	get_name() { return name; }
 	std::string 	get_description() { return description; }
@@ -18,8 +24,9 @@ public:
 	int 	get_cash_cost() { return cash_cost; }
 	int 	get_water_cost() { return water_cost; }
 
-	float 	get_completion_time() { return completion_time; }
-	float 	get_time_completed() { return time_completed; }
+	int 	get_completion_time() { return completion_time; }
+	int 	get_time_completed() { return time_completed; }
+	int 	get_time_remaining() { return completion_time - time_completed; }
 
 protected:
 	std::string 	name;
@@ -28,9 +35,11 @@ protected:
 	int 	cash_cost;
 	int 	water_cost;
 
-	// time given in "weeks"
-	float 	completion_time;
-	float 	time_completed;
+	// time given in "days"
+	int 	completion_time;
+	int 	time_completed;
+
+	bool 	running;
 };
 
 
@@ -38,6 +47,8 @@ class TechnologicalProject : public Project
 {
 public:
 	TechnologicalProject();
+	TechnologicalProject(std::string name, std::string description, int cash_cost, int water_cost, 
+							int completion_time, int change_in_consumption);
 	virtual ~TechnologicalProject() {}
 
 	virtual void complete();

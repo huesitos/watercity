@@ -16,7 +16,7 @@ public:
 
 	// Update function to be called on at the beginning of each
 	// day by... (?)
-	void update_day(float dt);
+	void update_day();
 
 	// Checks whether the user has enough water
 	bool has_enough_water(int water_cost);

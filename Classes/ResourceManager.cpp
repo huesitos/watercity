@@ -2,17 +2,17 @@
 
 ResourceManager::ResourceManager()
 {
-	water_reserves = 10000;
+	water_reserves = 100000;
 	water_inflow = 2000;
 	water_consumption = 3000;
 
 	cash_total = 2000;
-	fee_per_family = 50;
+	fee_per_family = 5;
 	number_of_families = 10;
 
 	happiness = 50.0f;
 	awareness = 0.0f;
-	awareness_min = 10.0f;
+	awareness_min = 0.0f;
 }
 
 void ResourceManager::update(float dt)
@@ -20,7 +20,7 @@ void ResourceManager::update(float dt)
 	decrease_awareness(awareness_decay_rate * dt);
 }
 
-void ResourceManager::update_day(float dt)
+void ResourceManager::update_day()
 {
 	water_reserves += (water_inflow - water_consumption);
 	if (water_reserves < 0)

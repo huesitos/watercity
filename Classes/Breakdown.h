@@ -1,6 +1,7 @@
 #ifndef __BREAKDOWN_H__
 #define __BREAKDOWN_H__
 
+#include "cocos2d.h"
 #include <vector>
 
 

@@ -130,6 +130,7 @@ set(GAME_SRC
   Classes/Project.cpp
   Classes/Ministry.cpp
   Classes/Breakdown.cpp
+  Classes/ProhibitedAct.cpp
   ${PLATFORM_SPECIFIC_SRC}
 )
 
@@ -141,6 +142,7 @@ set(GAME_HEADERS
   Classes/Project.h
   Classes/Ministry.h
   Classes/Breakdown.h
+  Classes/ProhibitedAct.h
   ${PLATFORM_SPECIFIC_HEADERS}
 )
 
