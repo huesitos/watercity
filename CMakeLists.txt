@@ -131,6 +131,7 @@ set(GAME_SRC
   Classes/Ministry.cpp
   Classes/Breakdown.cpp
   Classes/ProhibitedAct.cpp
+  Classes/Rain.cpp
   ${PLATFORM_SPECIFIC_SRC}
 )
 
@@ -143,6 +144,7 @@ set(GAME_HEADERS
   Classes/Ministry.h
   Classes/Breakdown.h
   Classes/ProhibitedAct.h
+  Classes/Rain.h
   ${PLATFORM_SPECIFIC_HEADERS}
 )
 

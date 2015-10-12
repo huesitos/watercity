@@ -112,3 +112,8 @@ void ResourceManager::increase_awareness_min(float amount)
 	if (awareness_min > 100.0f)
 		awareness_min = 100.0f;
 }
+
+void ResourceManager::increase_water_reserves(float amount)
+{
+	water_reserves += amount;
+}

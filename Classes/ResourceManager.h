@@ -56,6 +56,9 @@ public:
 	// Adds 'amount' to the minimum awareness
 	void increase_awareness_min(float amount);
 
+	// Adds 'amount' to the water reserves
+	void increase_water_reserves(float amount);
+
 private:
 	ResourceManager();
 
