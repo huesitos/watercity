@@ -1,6 +1,7 @@
 #ifndef __RESOURCE_MANAGER_H__
 #define __RESOURCE_MANAGER_H__
 
+#include <iostream>
 
 class ResourceManager
 {
@@ -12,7 +13,7 @@ public:
 	}
 
 	// Update function to be called every frame
-	void update(float dt);
+	// void update(float dt);
 
 	// Update function to be called on at the beginning of each
 	// day by... (?)
@@ -39,9 +40,12 @@ public:
 	void decrease_inflow(int amount);
 
 	// Adds 'amount' to the total consumption
-	void increase_consumption(int amount);
+	// void increase_consumption(int amount);
+	void increase_selected_consumption(int amount);
 	// Substracts 'amount' to the total consumption
-	void decrease_consumption(int amount);
+	void decrease_actual_consumption(int amount);
+	void decrease_desired_consumption(int amount);
+	void decrease_selected_consumption(int amount);
 
 	// Adds 'amount' to the total happiness
 	void increase_happiness(float amount);
@@ -66,7 +70,11 @@ private:
 
 	int 	water_reserves;
 	int 	water_inflow;
-	int 	water_consumption;
+	int 	initial_actual_water_consumption;
+	int 	actual_water_consumption;
+	int 	initial_desired_water_consumption;
+	int 	desired_water_consumption;
+	int 	selected_water_consumption;
 
 	int 	cash_total;
 	int 	fee_per_family;
@@ -85,11 +93,15 @@ public:
 
 	int 	get_water_reserves() { return water_reserves; }
 	int 	get_water_inflow() { return water_inflow; }
-	int 	get_water_consumption() { return water_consumption; }
+	int 	get_actual_water_consumption() { return actual_water_consumption; }
+	int 	get_desired_water_consumption() { return desired_water_consumption; }
+	int 	get_selected_water_consumption() { return selected_water_consumption; }
 
 	int 	get_cash_total() { return cash_total; }
 	int 	get_fee_per_family() { return fee_per_family; }
 	int 	get_number_of_families() { return number_of_families; }
+
+	int 	get_happiness_penalty();
 
 	float 	get_happiness() { return happiness; }
 	float 	get_awareness() { return awareness; }

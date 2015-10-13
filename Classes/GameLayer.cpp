@@ -54,11 +54,47 @@ bool GameLayer::init()
 		}
 	});
 
-	this->addChild(run_week_button, 2);
+    this->addChild(run_week_button, 2);
 
-	add_labels();
+    add_button = ui::Button::create("add.png");
+    add_button->setPosition(Vec2(origin.x + visible_size.width - add_button->getContentSize().width,
+                                      origin.y + 100));
+    add_button->addTouchEventListener([this](Ref* sender, ui::Widget::TouchEventType type) {
+        switch (type)
+        {
+            case ui::Widget::TouchEventType::BEGAN:
+                rm.increase_selected_consumption(100);
+                this->update_labels();
+                break;
+            default:
+                break;
+        }
+    });
 
-	return true;
+    this->addChild(add_button, 2);
+
+
+    substract_button = ui::Button::create("substract.png");
+    substract_button->setPosition(Vec2(origin.x + visible_size.width - substract_button->getContentSize().width,
+                                      origin.y + (80 - substract_button->getContentSize().height)));
+    substract_button->addTouchEventListener([this](Ref* sender, ui::Widget::TouchEventType type) {
+        switch (type)
+        {
+            case ui::Widget::TouchEventType::BEGAN:
+                rm.decrease_selected_consumption(100);
+                this->update_labels();
+                break;
+            default:
+                break;
+        }
+    });
+
+    this->addChild(substract_button, 2);
+
+
+    add_labels();
+
+    return true;
 }
 
 void GameLayer::run_day()
@@ -66,34 +102,37 @@ void GameLayer::run_day()
 	technological_ministry->develop_project();
     Rain::rain();
 
-	rm.update_day();
+    rm.update_day();
 }
 
 void GameLayer::run_week()
 {
-	for (int i = 0; i < 7; ++i)
-		run_day();
+    for (int i = 0; i < 7; ++i)
+        run_day();
 
-	update_labels();
+    update_labels();
 }
 
 void GameLayer::update_labels()
 {
-	_happinessLabel->setString(StringUtils::format("%.0f%%", ResourceManager::getInstance().get_happiness()));
+    _happinessLabel->setString(StringUtils::format("%.0f%%", ResourceManager::getInstance().get_happiness()));
+    _happinessPenaltyLabel->setString(StringUtils::format("%d", ResourceManager::getInstance().get_happiness_penalty()));
     _awarenessLabel->setString(StringUtils::format("%.0f%%", ResourceManager::getInstance().get_awareness()));
     _waterReservesLabel->setString(StringUtils::format("%d", ResourceManager::getInstance().get_water_reserves()));
     _waterInflowLabel->setString(StringUtils::format("%d", ResourceManager::getInstance().get_water_inflow()));
-    _waterConsumptionLabel->setString(StringUtils::format("%d", ResourceManager::getInstance().get_water_consumption()));
+    _selectedWaterConsumptionLabel->setString(StringUtils::format("%d", ResourceManager::getInstance().get_selected_water_consumption()));
+    _actualWaterConsumptionLabel->setString(StringUtils::format("%d", ResourceManager::getInstance().get_actual_water_consumption()));
+    _desiredWaterConsumptionLabel->setString(StringUtils::format("%d", ResourceManager::getInstance().get_desired_water_consumption()));
     _cashLabel->setString(StringUtils::format("$ %d", ResourceManager::getInstance().get_cash_total()));
     _monthlyTaxesLabel->setString(StringUtils::format("$ %d",
             ResourceManager::getInstance().get_fee_per_family() * ResourceManager::getInstance().get_number_of_families()));
     _projectLabel->setString(StringUtils::format("%s: %d", technological_ministry->get_current_project().get_name().c_str(),
-    	static_cast<int>(technological_ministry->is_project_running())));
+        static_cast<int>(technological_ministry->is_project_running())));
 }
 
 void GameLayer::add_labels()
 {
-	int xLoc = origin.x + visible_size.width/64;
+    int xLoc = origin.x + visible_size.width/64;
     int fontSize = 18;
     int xGap = 15;
 
@@ -118,9 +157,17 @@ void GameLayer::add_labels()
 
     _waterConsumptionSprite = Sprite::create("consumption.png");
     _waterConsumptionSprite->setPosition(Vec2(xLoc, origin.y + visible_size.height*11/16));
-    _waterConsumptionLabel = Label::createWithTTF(StringUtils::format("%d",
-            ResourceManager::getInstance().get_water_consumption()), "fonts/Marker Felt.ttf", fontSize);
-    _waterConsumptionLabel->setPosition(Vec2(xLoc + xGap, origin.y + visible_size.height*11/16));
+    _selectedWaterConsumptionLabel = Label::createWithTTF(StringUtils::format("%d",
+            ResourceManager::getInstance().get_selected_water_consumption()), "fonts/Marker Felt.ttf", fontSize);
+    _selectedWaterConsumptionLabel->setPosition(Vec2(xLoc + xGap, origin.y + visible_size.height*11/16));
+
+    _actualWaterConsumptionLabel = Label::createWithTTF(StringUtils::format("%d",
+            ResourceManager::getInstance().get_actual_water_consumption()), "fonts/Marker Felt.ttf", fontSize);
+    _actualWaterConsumptionLabel->setPosition(Vec2(xLoc + 100, origin.y + visible_size.height*11/16));
+
+    _desiredWaterConsumptionLabel = Label::createWithTTF(StringUtils::format("%d",
+            ResourceManager::getInstance().get_desired_water_consumption()), "fonts/Marker Felt.ttf", fontSize);
+    _desiredWaterConsumptionLabel->setPosition(Vec2(xLoc + 200, origin.y + visible_size.height*11/16));
 
     _cashSprite = Sprite::create("cash.png");
     _cashSprite->setPosition(Vec2(xLoc, origin.y + visible_size.height*10/16));
@@ -132,15 +179,17 @@ void GameLayer::add_labels()
     _monthlyTaxesLabel->setPosition(Vec2(xLoc + xGap, origin.y + visible_size.height*9/16));
 
     _projectLabel = Label::createWithTTF(StringUtils::format("%s: %d", technological_ministry->get_current_project().get_name().c_str(),
-    	static_cast<int>(technological_ministry->is_project_running())), "fonts/Marker Felt.ttf", fontSize);
+        static_cast<int>(technological_ministry->is_project_running())), "fonts/Marker Felt.ttf", fontSize);
     _projectLabel->setPosition(Vec2(origin.x + visible_size.width * 3 / 4,
-    								origin.y + _projectLabel->getContentSize().height));
+                                    origin.y + _projectLabel->getContentSize().height));
 
     _happinessLabel->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
     _awarenessLabel->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
     _waterReservesLabel->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
     _waterInflowLabel->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
-    _waterConsumptionLabel->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
+    _selectedWaterConsumptionLabel->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
+    _actualWaterConsumptionLabel->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
+    _desiredWaterConsumptionLabel->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
     _cashLabel->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
     _monthlyTaxesLabel->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
     _projectLabel->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
@@ -149,7 +198,9 @@ void GameLayer::add_labels()
     _awarenessLabel->setTextColor(Color4B::BLACK);
     _waterReservesLabel->setTextColor(Color4B::BLACK);
     _waterInflowLabel->setTextColor(Color4B::BLACK);
-    _waterConsumptionLabel->setTextColor(Color4B::BLACK);
+    _selectedWaterConsumptionLabel->setTextColor(Color4B::BLACK);
+    _actualWaterConsumptionLabel->setTextColor(Color4B::BLACK);
+    _desiredWaterConsumptionLabel->setTextColor(Color4B::BLACK);
     _cashLabel->setTextColor(Color4B::BLACK);
     _monthlyTaxesLabel->setTextColor(Color4B::BLACK);
 
@@ -157,7 +208,9 @@ void GameLayer::add_labels()
     this->addChild(_awarenessLabel, 1);
     this->addChild(_waterReservesLabel, 1);
     this->addChild(_waterInflowLabel, 1);
-    this->addChild(_waterConsumptionLabel, 1);
+    this->addChild(_selectedWaterConsumptionLabel, 1);
+    this->addChild(_actualWaterConsumptionLabel, 1);
+    this->addChild(_desiredWaterConsumptionLabel, 1);
     this->addChild(_cashLabel, 1);
     this->addChild(_monthlyTaxesLabel, 1);
     this->addChild(_projectLabel, 1);
@@ -167,4 +220,12 @@ void GameLayer::add_labels()
     this->addChild(_waterReservesSprite, 1);
     this->addChild(_waterConsumptionSprite, 1);
     this->addChild(_cashSprite, 1);
+
+    auto happinessPenaltySprite = Sprite::create("happiness.png");
+    happinessPenaltySprite->setPosition(Vec2(origin.x + visible_size.width - 100, origin.y + 150));
+    _happinessPenaltyLabel = Label::createWithTTF(StringUtils::format("%d", ResourceManager::getInstance().get_happiness_penalty()), "fonts/Marker Felt.ttf", fontSize);
+    _happinessPenaltyLabel->setPosition(Vec2(origin.x + visible_size.width - 50, origin.y + 150));
+
+    this->addChild(happinessPenaltySprite, 1);
+    this->addChild(_happinessPenaltyLabel, 1);
 }

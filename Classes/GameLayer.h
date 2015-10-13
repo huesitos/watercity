@@ -38,11 +38,15 @@ private:
 	Vec2 top_right;
 
 	Label* _happinessLabel;
+	Label* _happinessPenaltyLabel;
 	Label* _awarenessLabel;
 
 	Label* _waterReservesLabel;
 	Label* _waterInflowLabel;
-	Label* _waterConsumptionLabel;
+
+	Label* _selectedWaterConsumptionLabel;
+	Label* _actualWaterConsumptionLabel;
+	Label* _desiredWaterConsumptionLabel;
 
 	Label* _cashLabel;
 	Label* _monthlyTaxesLabel;
@@ -62,6 +66,8 @@ private:
 	void add_labels();
 
 	ui::Button* run_week_button;
+	ui::Button* add_button;
+	ui::Button* substract_button;
 };
 
 #endif // __GAME_LAYER_H__
