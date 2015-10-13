@@ -49,6 +49,16 @@ private:
 
 	Label* _projectLabel;
 
+	Sprite* _happinessSprite;
+	Sprite* _awarenessSprite;
+
+	Sprite* _waterReservesSprite;
+	Sprite* _waterInflowSprite;
+	Sprite* _waterConsumptionSprite;
+
+	Sprite* _cashSprite;
+	Sprite* _monthlyTaxesSprite;
+
 	void add_labels();
 
 	ui::Button* run_week_button;
