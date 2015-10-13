@@ -47,18 +47,30 @@ void TechnologicalProject::complete()
 }
 
 
+
 EducationalProject::EducationalProject()
+{}
+
+EducationalProject::EducationalProject(std::string name, std::string description, int cash_cost, int water_cost,
+							int completion_time, int change_in_awareness)
+	: Project(name, description, cash_cost, water_cost, completion_time), change_in_awareness(change_in_awareness)
 {}
 
 void EducationalProject::complete()
 {
 	Project::complete();
 	ResourceManager::getInstance().increase_awareness(change_in_awareness);
-	ResourceManager::getInstance().increase_awareness_min(change_in_min_awareness);
+	// ResourceManager::getInstance().increase_awareness_min(change_in_min_awareness);
 }
 
 
+
 CulturalProject::CulturalProject()
+{}
+
+CulturalProject::CulturalProject(std::string name, std::string description, int cash_cost, int water_cost,
+							int completion_time, int change_in_happiness)
+	: Project(name, description, cash_cost, water_cost, completion_time), change_in_happiness(change_in_happiness)
 {}
 
 void CulturalProject::complete()

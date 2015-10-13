@@ -31,7 +31,9 @@ private:
 
 	ResourceManager &rm;
 
-	Ministry* 	technological_ministry;
+	Ministry* 	ministry_of_technology;
+	Ministry* 	ministry_of_education;
+	Ministry* 	ministry_of_culture;
 
 	Size visible_size;
 	Vec2 origin;

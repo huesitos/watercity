@@ -35,10 +35,20 @@ bool GameLayer::init()
 
 	this->addChild(bg, 1);
 
-	technological_ministry = Ministry::create("tech.png");
-	technological_ministry->setPosition(origin.x + visible_size.width/2, origin.y + visible_size.height/2);
+	ministry_of_technology = MinistryOfTechnology::create("tech.png");
+	ministry_of_technology->setPosition(origin.x + visible_size.width/2, origin.y + visible_size.height/2);
 
-	this->addChild(technological_ministry, 2);
+	this->addChild(ministry_of_technology, 2);
+
+    ministry_of_education = MinistryOfEducation::create("tech.png");
+    ministry_of_education->setPosition(origin.x + visible_size.width/2 - 100, origin.y + visible_size.height/2 - 100);
+
+    this->addChild(ministry_of_education, 2);
+
+    ministry_of_culture = MinistryOfCulture::create("tech.png");
+    ministry_of_culture->setPosition(origin.x + visible_size.width/2 + 100, origin.y + visible_size.height/2 + 100);
+
+    this->addChild(ministry_of_culture, 2);
 
 	run_week_button = ui::Button::create("run_week.png");
 	run_week_button->setPosition(Vec2(origin.x + visible_size.width - run_week_button->getContentSize().width,
@@ -99,7 +109,9 @@ bool GameLayer::init()
 
 void GameLayer::run_day()
 {
-	technological_ministry->develop_project();
+    ministry_of_technology->develop_project();
+    ministry_of_education->develop_project();
+	ministry_of_culture->develop_project();
     Rain::rain();
 
     rm.update_day();
@@ -126,8 +138,8 @@ void GameLayer::update_labels()
     _cashLabel->setString(StringUtils::format("$ %d", ResourceManager::getInstance().get_cash_total()));
     _monthlyTaxesLabel->setString(StringUtils::format("$ %d",
             ResourceManager::getInstance().get_fee_per_family() * ResourceManager::getInstance().get_number_of_families()));
-    _projectLabel->setString(StringUtils::format("%s: %d", technological_ministry->get_current_project().get_name().c_str(),
-        static_cast<int>(technological_ministry->is_project_running())));
+    _projectLabel->setString(StringUtils::format("%s: %d", ministry_of_technology->get_current_project()->get_name().c_str(),
+        static_cast<int>(ministry_of_technology->is_project_running())));
 }
 
 void GameLayer::add_labels()
@@ -178,8 +190,8 @@ void GameLayer::add_labels()
             ResourceManager::getInstance().get_fee_per_family() * ResourceManager::getInstance().get_number_of_families()), "fonts/Marker Felt.ttf", fontSize);
     _monthlyTaxesLabel->setPosition(Vec2(xLoc + xGap, origin.y + visible_size.height*9/16));
 
-    _projectLabel = Label::createWithTTF(StringUtils::format("%s: %d", technological_ministry->get_current_project().get_name().c_str(),
-        static_cast<int>(technological_ministry->is_project_running())), "fonts/Marker Felt.ttf", fontSize);
+    _projectLabel = Label::createWithTTF(StringUtils::format("%s: %d", ministry_of_technology->get_current_project()->get_name().c_str(),
+        static_cast<int>(ministry_of_technology->is_project_running())), "fonts/Marker Felt.ttf", fontSize);
     _projectLabel->setPosition(Vec2(origin.x + visible_size.width * 3 / 4,
                                     origin.y + _projectLabel->getContentSize().height));
 
