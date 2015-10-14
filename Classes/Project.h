@@ -66,6 +66,8 @@ class EducationalProject : public Project
 {
 public:
 	EducationalProject();
+	EducationalProject(std::string name, std::string description, int cash_cost, int water_cost,
+							int completion_time, int change_in_awareness);
 	virtual ~EducationalProject() {}
 
 	virtual void complete();
@@ -80,6 +82,8 @@ class CulturalProject : public Project
 {
 public:
 	CulturalProject();
+	CulturalProject(std::string name, std::string description, int cash_cost, int water_cost,
+							int completion_time, int change_in_happiness);
 	virtual ~CulturalProject() {}
 
 	virtual void complete();

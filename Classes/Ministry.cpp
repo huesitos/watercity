@@ -7,27 +7,24 @@ USING_NS_CC;
 
 Ministry::Ministry()
 	: current_project(0)
-{
-	projects.push_back(new TechnologicalProject("Pipes 1", "Build better pipes", 200, 400, 25, 7, 200));
-	projects.push_back(new TechnologicalProject("Pipes 2", "Build even better pipes", 300, 500, 35, 9, 300));
-}
+{}
 
 Ministry::~Ministry()
 {}
 
-Ministry* Ministry::create(const char* pszFileName)
-{
-	Ministry* ministry = new Ministry;
-	if (ministry && ministry->initWithFile(pszFileName))
-	{
-		ministry->autorelease();
-		ministry->setup_menu_items();
-		ministry->setup_listener();
-		return ministry;
-	}
-	CC_SAFE_DELETE(ministry);
-	return ministry = nullptr;
-}
+// Ministry* Ministry::create(const char* pszFileName)
+// {
+// 	Ministry* ministry = new Ministry;
+// 	if (ministry && ministry->initWithFile(pszFileName))
+// 	{
+// 		ministry->autorelease();
+//		ministry->setup_menu_items();
+// 		ministry->setup_listener();
+// 		return ministry;
+// 	}
+// 	CC_SAFE_DELETE(ministry);
+// 	return ministry = nullptr;
+// }
 
 void Ministry::setup_menu_items()
 {
@@ -101,7 +98,7 @@ bool Ministry::can_be_funded()
 {
 	ResourceManager &rm = ResourceManager::getInstance();
 
-	return rm.has_enough_water(projects[current_project]->get_water_cost()) && 
+	return rm.has_enough_water(projects[current_project]->get_water_cost()) &&
 		rm.has_enough_cash(projects[current_project]->get_cash_cost());
 }
 
@@ -160,4 +157,70 @@ bool Ministry::is_project_completed()
 		return projects[current_project]->is_completed();
 	else
 		return false;
+}
+
+
+
+MinistryOfTechnology::MinistryOfTechnology()
+{
+	projects.push_back(new TechnologicalProject("Pipes 1", "Build better pipes", 200, 400, 7, 200));
+	projects.push_back(new TechnologicalProject("Pipes 2", "Build even better pipes", 300, 500, 9, 300));
+}
+
+Ministry* MinistryOfTechnology::create(const char* pszFileName)
+{
+	Ministry* ministry = new MinistryOfTechnology;
+	if (ministry && ministry->initWithFile(pszFileName))
+	{
+		ministry->autorelease();
+		ministry->setup_menu_items();
+		ministry->setup_listener();
+		return ministry;
+	}
+	CC_SAFE_DELETE(ministry);
+	return ministry = nullptr;
+}
+
+
+
+MinistryOfEducation::MinistryOfEducation()
+{
+	projects.push_back(new EducationalProject("Tip 1", "Spend less time in the bathtub", 200, 400, 7, 2));
+	projects.push_back(new EducationalProject("Tip 2", "Use a glass for brushing your teeth", 300, 500, 9, 2));
+}
+
+Ministry* MinistryOfEducation::create(const char* pszFileName)
+{
+	Ministry* ministry = new MinistryOfEducation;
+	if (ministry && ministry->initWithFile(pszFileName))
+	{
+		ministry->autorelease();
+		ministry->setup_menu_items();
+		ministry->setup_listener();
+		return ministry;
+	}
+	CC_SAFE_DELETE(ministry);
+	return ministry = nullptr;
+}
+
+
+
+MinistryOfCulture::MinistryOfCulture()
+{
+	projects.push_back(new CulturalProject("Gardening fair", "What the name says", 200, 400, 7, 10));
+	projects.push_back(new CulturalProject("Aquatic park", "Yep", 300, 500, 9, 10));
+}
+
+Ministry* MinistryOfCulture::create(const char* pszFileName)
+{
+	Ministry* ministry = new MinistryOfCulture;
+	if (ministry && ministry->initWithFile(pszFileName))
+	{
+		ministry->autorelease();
+		ministry->setup_menu_items();
+		ministry->setup_listener();
+		return ministry;
+	}
+	CC_SAFE_DELETE(ministry);
+	return ministry = nullptr;
 }

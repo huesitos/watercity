@@ -4,7 +4,11 @@ ResourceManager::ResourceManager()
 {
 	water_reserves = 100000;
 	water_inflow = 2000;
-	water_consumption = 3000;
+	actual_water_consumption = 3000;
+	initial_actual_water_consumption = actual_water_consumption;
+	desired_water_consumption = 1500;
+	initial_desired_water_consumption = desired_water_consumption;
+	selected_water_consumption = actual_water_consumption;
 
 	cash_total = 2000;
 	fee_per_family = 5;
@@ -18,16 +22,23 @@ ResourceManager::ResourceManager()
 	awareness_min = 0.0f;
 }
 
-void ResourceManager::update(float dt)
-{
-	decrease_awareness(awareness_decay_rate * dt);
-}
+// void ResourceManager::update(float dt)
+// {
+// 	decrease_awareness(awareness_decay_rate * dt);
+// }
 
 void ResourceManager::update_day()
 {
-	water_reserves += (water_inflow - water_consumption);
+	water_reserves += (water_inflow - selected_water_consumption);
 	if (water_reserves < 0)
 		water_reserves = 0;
+
+	int happiness_penalty = get_happiness_penalty();
+
+	if (happiness_penalty < 0)
+		decrease_happiness(-1*get_happiness_penalty());
+	else
+		increase_happiness(get_happiness_penalty());
 
 	cash_total += (fee_per_family * number_of_families);
 }
@@ -84,16 +95,30 @@ void ResourceManager::decrease_inflow(int amount)
 		water_inflow = 0;
 }
 
-void ResourceManager::increase_consumption(int amount)
+void ResourceManager::increase_selected_consumption(int amount)
 {
-	water_consumption += amount;
+	selected_water_consumption += amount;
 }
 
-void ResourceManager::decrease_consumption(int amount)
+void ResourceManager::decrease_actual_consumption(int amount)
 {
-	water_consumption -= amount;
-	if (water_consumption < 0)
-		water_consumption = 0;
+	actual_water_consumption -= amount;
+	if (actual_water_consumption < 0)
+		actual_water_consumption = 0;
+}
+
+void ResourceManager::decrease_desired_consumption(int amount)
+{
+	desired_water_consumption -= amount;
+	if (desired_water_consumption < 0)
+		desired_water_consumption = 0;
+}
+
+void ResourceManager::decrease_selected_consumption(int amount)
+{
+	selected_water_consumption -= amount;
+	if (selected_water_consumption < 0)
+		selected_water_consumption = 0;
 }
 
 void ResourceManager::increase_happiness(float amount)
@@ -129,4 +154,19 @@ void ResourceManager::increase_awareness_min(float amount)
 	awareness_min += amount;
 	if (awareness_min > 100.0f)
 		awareness_min = 100.0f;
+}
+
+void ResourceManager::increase_water_reserves(float amount)
+{
+	water_reserves += amount;
+}
+
+int ResourceManager::get_happiness_penalty()
+{
+	// Penalty rate based on the difference between the actual and desired consumption
+	int consumption_difference = initial_actual_water_consumption - initial_desired_water_consumption;
+	double penalty_rate = 20.0/consumption_difference;
+	double water_difference = selected_water_consumption - actual_water_consumption;
+
+	return penalty_rate * water_difference;
 }

@@ -132,6 +132,7 @@ set(GAME_SRC
   Classes/Breakdown.cpp
   Classes/ProhibitedAct.cpp
   Classes/ProjectMenuItem.cpp
+  Classes/Rain.cpp
   ${PLATFORM_SPECIFIC_SRC}
 )
 
@@ -145,6 +146,7 @@ set(GAME_HEADERS
   Classes/Breakdown.h
   Classes/ProhibitedAct.h
   Classes/ProjectMenuItem.h
+  Classes/Rain.h
   ${PLATFORM_SPECIFIC_HEADERS}
 )
 
