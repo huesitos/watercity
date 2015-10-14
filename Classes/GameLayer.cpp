@@ -30,8 +30,6 @@ bool GameLayer::init()
 	auto bg = Sprite::create("Background.jpg");
 	bg->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
 	bg->setPosition(origin);
-	bg->setScaleX(visible_size.width / bg->getContentSize().width);
-	bg->setScaleY(visible_size.height / bg->getContentSize().height);
 
 	this->addChild(bg, 1);
 
@@ -86,14 +84,14 @@ void GameLayer::update_labels()
     _cashLabel->setString(StringUtils::format("Cash: $ %d", ResourceManager::getInstance().get_cash_total()));
     _monthlyTaxesLabel->setString(StringUtils::format("Monthly Taxes (p/min): $ %d", 
             ResourceManager::getInstance().get_fee_per_family() * ResourceManager::getInstance().get_number_of_families()));
-    _projectLabel->setString(StringUtils::format("%s: %d", technological_ministry->get_current_project().get_name().c_str(), 
+    _projectLabel->setString(StringUtils::format("%s: %d", technological_ministry->get_current_project()->get_name().c_str(), 
     	static_cast<int>(technological_ministry->is_project_running())));
 }
 
 void GameLayer::add_labels()
 {
 	int xLoc = origin.x + visible_size.width/64;
-    int fontSize = 8;
+    int fontSize = 20;
 
     _happinessLabel = Label::createWithTTF(StringUtils::format("Happiness: %.0f%%", ResourceManager::getInstance().get_happiness()), "fonts/Marker Felt.ttf", fontSize);
     _happinessLabel->setPosition(Vec2(xLoc, origin.y + visible_size.height*15/16));
@@ -119,7 +117,7 @@ void GameLayer::add_labels()
             ResourceManager::getInstance().get_fee_per_family() * ResourceManager::getInstance().get_number_of_families()), "fonts/Marker Felt.ttf", fontSize);
     _monthlyTaxesLabel->setPosition(Vec2(xLoc, origin.y + visible_size.height*9/16));
 
-    _projectLabel = Label::createWithTTF(StringUtils::format("%s: %d", technological_ministry->get_current_project().get_name().c_str(), 
+    _projectLabel = Label::createWithTTF(StringUtils::format("%s: %d", technological_ministry->get_current_project()->get_name().c_str(), 
     	static_cast<int>(technological_ministry->is_project_running())), "fonts/Marker Felt.ttf", fontSize);
     _projectLabel->setPosition(Vec2(origin.x + visible_size.width * 3 / 4, 
     								origin.y + _projectLabel->getContentSize().height));

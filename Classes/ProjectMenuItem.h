@@ -2,6 +2,7 @@
 #define __PROJECT_MENU_ITEM_H__
 
 #include "cocos2d.h"
+#include "ui/CocosGUI.h"
 #include "Project.h"
 
 USING_NS_CC;
@@ -39,8 +40,8 @@ private:
 	bool 		filled;
 
 	Sprite* 	project_image;
-	Sprite* 	fill_button;
-	Sprite* 	empty_button;
+	ui::Button* fill_button;
+	ui::Button* empty_button;
 
 	Label* 		name_label;
 	Label* 		description_label;

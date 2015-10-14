@@ -2,7 +2,7 @@
 #define __MINISTRY_H__
 
 #include "cocos2d.h"
-#include "Project.h"
+#include "ProjectMenuItem.h"
 #include <vector>
 
 
@@ -14,6 +14,7 @@ public:
 
 	static Ministry* create(const char* pszFileName);
 
+	void setup_menu_items();
 	void setup_listener();
 
 	void start_project();
@@ -24,7 +25,7 @@ public:
 	bool is_project_running();
 	bool is_project_completed();
 
-	Project get_current_project();
+	Project* get_current_project();
 
 private:
 	bool on_touch_began(cocos2d::Touch* touch, cocos2d::Event* event);
@@ -32,7 +33,9 @@ private:
 	bool has_project();
 	bool can_be_funded();
 
-	std::vector<TechnologicalProject> projects;
+	std::vector<TechnologicalProject*> projects;
+
+	cocos2d::Vector<ProjectMenuItem*> project_menu_items;
 
 	int current_project;
 };
