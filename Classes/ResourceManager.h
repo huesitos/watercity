@@ -89,7 +89,7 @@ private:
 	const float awareness_decay_rate = 5.0 / 60;
 
 public:
-	bool 	is_water_depleted() { return water_reserves == 0; }
+	bool 	is_water_depleted() { return water_reserves <= 0; }
 
 	int 	get_water_reserves() { return water_reserves; }
 	int 	get_water_inflow() { return water_inflow; }

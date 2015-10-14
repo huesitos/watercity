@@ -101,7 +101,6 @@ bool GameLayer::init()
 
     this->addChild(substract_button, 2);
 
-
     add_labels();
 
     return true;
@@ -123,6 +122,10 @@ void GameLayer::run_week()
         run_day();
 
     update_labels();
+    if (rm.is_water_depleted())
+    {
+        game_over();
+    }
 }
 
 void GameLayer::update_labels()
@@ -240,4 +243,28 @@ void GameLayer::add_labels()
 
     this->addChild(happinessPenaltySprite, 1);
     this->addChild(_happinessPenaltyLabel, 1);
+}
+
+void GameLayer::game_over()
+{
+    auto gameOver = Label::createWithTTF("Game Over", "fonts/Marker Felt.ttf", 50);
+    gameOver->setPosition(visible_size.width/2, visible_size.height/2);
+
+    this->addChild(gameOver, 10);
+
+    auto main_menu = ui::Button::create("play.png");
+    main_menu->setPosition(Vec2(origin.x + visible_size.width/2,
+                                      origin.y + visible_size.height/2 + - main_menu->getContentSize().height));
+    main_menu->addTouchEventListener([this](Ref* sender, ui::Widget::TouchEventType type) {
+        switch (type)
+        {
+            case ui::Widget::TouchEventType::BEGAN:
+                Director::getInstance()->replaceScene(TransitionFade::create(1.0f, GameLayer::createScene()));
+                break;
+            default:
+                break;
+        }
+    });
+
+    this->addChild(main_menu, 10);
 }

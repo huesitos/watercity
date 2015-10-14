@@ -5,6 +5,7 @@
 #include "ui/CocosGUI.h"
 #include "Ministry.h"
 #include "ResourceManager.h"
+#include "MainMenu.h"
 
 USING_NS_CC;
 
@@ -24,10 +25,13 @@ public:
 
 	void update_labels();
 
+	void game_over();
+
+
 private:
 	void 	run_week();
-
 	void 	run_day();
+	void 	add_labels();
 
 	ResourceManager &rm;
 
@@ -64,8 +68,6 @@ private:
 
 	Sprite* _cashSprite;
 	Sprite* _monthlyTaxesSprite;
-
-	void add_labels();
 
 	ui::Button* run_week_button;
 	ui::Button* add_button;
