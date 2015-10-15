@@ -163,8 +163,8 @@ bool Ministry::is_project_completed()
 
 MinistryOfTechnology::MinistryOfTechnology()
 {
-	projects.push_back(new TechnologicalProject("Pipes 1", "Build better pipes", 200, 400, 7, 200));
-	projects.push_back(new TechnologicalProject("Pipes 2", "Build even better pipes", 300, 500, 9, 300));
+	projects.push_back(new TechnologicalProject("Pipes 1", "Build better pipes", 200, 400, 25, 7, 200));
+	projects.push_back(new TechnologicalProject("Pipes 2", "Build even better pipes", 300, 500, 35, 9, 300));
 }
 
 Ministry* MinistryOfTechnology::create(const char* pszFileName)
@@ -185,8 +185,8 @@ Ministry* MinistryOfTechnology::create(const char* pszFileName)
 
 MinistryOfEducation::MinistryOfEducation()
 {
-	projects.push_back(new EducationalProject("Tip 1", "Spend less time in the bathtub", 200, 400, 7, 2));
-	projects.push_back(new EducationalProject("Tip 2", "Use a glass for brushing your teeth", 300, 500, 9, 2));
+	projects.push_back(new EducationalProject("Tip 1", "Spend less time in the bathtub", 200, 400, 15, 7, 2));
+	projects.push_back(new EducationalProject("Tip 2", "Use a glass for brushing your teeth", 300, 500, 20, 9, 2));
 }
 
 Ministry* MinistryOfEducation::create(const char* pszFileName)
@@ -207,8 +207,8 @@ Ministry* MinistryOfEducation::create(const char* pszFileName)
 
 MinistryOfCulture::MinistryOfCulture()
 {
-	projects.push_back(new CulturalProject("Gardening fair", "What the name says", 200, 400, 7, 10));
-	projects.push_back(new CulturalProject("Aquatic park", "Yep", 300, 500, 9, 10));
+	projects.push_back(new CulturalProject("Gardening fair", "What the name says", 200, 400, 15, 7, 10));
+	projects.push_back(new CulturalProject("Aquatic park", "Yep", 300, 500, 20, 9, 10));
 }
 
 Ministry* MinistryOfCulture::create(const char* pszFileName)
