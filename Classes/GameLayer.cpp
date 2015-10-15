@@ -42,17 +42,17 @@ bool GameLayer::init()
 	ministry_of_technology = MinistryOfTechnology::create("ministerioboton.png", "tech_projects.txt");
 	ministry_of_technology->setPosition(origin.x + visible_size.width * 0.53, origin.y + visible_size.height * 0.66);
 
-	this->addChild(ministry_of_technology, 2);
+	this->addChild(ministry_of_technology, 1);
 
     ministry_of_education = MinistryOfEducation::create("ministerioboton.png", "tech_projects.txt");
     ministry_of_education->setPosition(origin.x + visible_size.width * 0.64, origin.y + visible_size.height * 0.58);
 
-    this->addChild(ministry_of_education, 2);
+    this->addChild(ministry_of_education, 1);
 
     ministry_of_culture = MinistryOfCulture::create("ministerioboton.png", "tech_projects.txt");
     ministry_of_culture->setPosition(origin.x + visible_size.width * 0.75, origin.y + visible_size.height * 0.50);
 
-    this->addChild(ministry_of_culture, 2);
+    this->addChild(ministry_of_culture, 1);
 
 	run_week_button = ui::Button::create("start.png");
 	run_week_button->setPosition(Vec2(origin.x + visible_size.width * 0.95 - run_week_button->getContentSize().width / 2,
@@ -135,12 +135,12 @@ void GameLayer::update_labels()
     _happinessPenaltyLabel->setString(StringUtils::format("%d", ResourceManager::getInstance().get_happiness_penalty()));
     _awarenessLabel->setString(StringUtils::format("%.0f%%", ResourceManager::getInstance().get_awareness()));
     _waterReservesLabel->setString(StringUtils::format("%d", ResourceManager::getInstance().get_water_reserves()));
-    _selectedWaterConsumptionLabel->setString(StringUtils::format("%d", ResourceManager::getInstance().get_selected_water_consumption()));
-    _actualWaterConsumptionLabel->setString(StringUtils::format("%d", ResourceManager::getInstance().get_actual_water_consumption()));
-    _desiredWaterConsumptionLabel->setString(StringUtils::format("%d", ResourceManager::getInstance().get_desired_water_consumption()));
+    _selectedWaterConsumptionLabel->setString(StringUtils::format("%d gl", ResourceManager::getInstance().get_selected_water_consumption()));
+    // _actualWaterConsumptionLabel->setString(StringUtils::format("%d", ResourceManager::getInstance().get_actual_water_consumption()));
+    // _desiredWaterConsumptionLabel->setString(StringUtils::format("%d", ResourceManager::getInstance().get_desired_water_consumption()));
     _cashLabel->setString(StringUtils::format("$ %d", ResourceManager::getInstance().get_cash_total()));
-    _populationLabel->setString(StringUtils::format("%d / %d", 
-        ResourceManager::getInstance().get_population_occupied(), 
+    _populationLabel->setString(StringUtils::format("%d / %d",
+        ResourceManager::getInstance().get_population_occupied(),
         ResourceManager::getInstance().get_population_total()));
 
     int current_num_lines = (rm.get_selected_water_consumption() - rm.get_desired_water_consumption()) / 100;
@@ -157,9 +157,7 @@ void GameLayer::update_labels()
 
 void GameLayer::add_labels()
 {
-    int xLoc = origin.x + visible_size.width/32;
     int fontSize = 18;
-    int xGap = 15;
 
     _happinessLabel = Label::createWithTTF(StringUtils::format("%.0f%%", ResourceManager::getInstance().get_happiness()), "fonts/Marker Felt.ttf", fontSize);
     _happinessLabel->setPosition(Vec2(origin.x + visible_size.width * 0.70, origin.y + visible_size.height * 0.125));
@@ -171,23 +169,23 @@ void GameLayer::add_labels()
             ResourceManager::getInstance().get_water_reserves()), "fonts/Marker Felt.ttf", fontSize);
     _waterReservesLabel->setPosition(Vec2(origin.x + visible_size.width * 0.92, origin.y + visible_size.height * 0.315));
 
-    _selectedWaterConsumptionLabel = Label::createWithTTF(StringUtils::format("%d",
+    // _actualWaterConsumptionLabel = Label::createWithTTF(StringUtils::format("%d gl",
+    //         ResourceManager::getInstance().get_actual_water_consumption()), "fonts/Marker Felt.ttf", 12);
+    // _actualWaterConsumptionLabel->setPosition(Vec2(origin.x + visible_size.width*0.03, origin.y + visible_size.height*0.16));
+
+    _selectedWaterConsumptionLabel = Label::createWithTTF(StringUtils::format("%d gl",
             ResourceManager::getInstance().get_selected_water_consumption()), "fonts/Marker Felt.ttf", fontSize);
-    _selectedWaterConsumptionLabel->setPosition(Vec2(xLoc + xGap, origin.y + visible_size.height*11/16));
+    _selectedWaterConsumptionLabel->setPosition(Vec2(origin.x + visible_size.width*0.035, origin.y + visible_size.height*0.06));
 
-    _actualWaterConsumptionLabel = Label::createWithTTF(StringUtils::format("%d",
-            ResourceManager::getInstance().get_actual_water_consumption()), "fonts/Marker Felt.ttf", fontSize);
-    _actualWaterConsumptionLabel->setPosition(Vec2(xLoc + 100, origin.y + visible_size.height*11/16));
-
-    _desiredWaterConsumptionLabel = Label::createWithTTF(StringUtils::format("%d",
-            ResourceManager::getInstance().get_desired_water_consumption()), "fonts/Marker Felt.ttf", fontSize);
-    _desiredWaterConsumptionLabel->setPosition(Vec2(xLoc + 200, origin.y + visible_size.height*11/16));
+    // _desiredWaterConsumptionLabel = Label::createWithTTF(StringUtils::format("%d gl",
+    //         ResourceManager::getInstance().get_desired_water_consumption()), "fonts/Marker Felt.ttf", 12);
+    // _desiredWaterConsumptionLabel->setPosition(Vec2(origin.x + visible_size.width*0.03, origin.y + visible_size.height*0.08));
 
     _cashLabel = Label::createWithTTF(StringUtils::format("$ %d", ResourceManager::getInstance().get_cash_total()), "fonts/Marker Felt.ttf", fontSize);
     _cashLabel->setPosition(Vec2(origin.x + visible_size.width * 0.86, origin.y + visible_size.height * 0.255));
 
-    _populationLabel = Label::createWithTTF(StringUtils::format("%d / %d", 
-        ResourceManager::getInstance().get_population_occupied(), ResourceManager::getInstance().get_population_total()), 
+    _populationLabel = Label::createWithTTF(StringUtils::format("%d / %d",
+        ResourceManager::getInstance().get_population_occupied(), ResourceManager::getInstance().get_population_total()),
         "fonts/Marker Felt.ttf", fontSize);
     _populationLabel->setPosition(Vec2(origin.x + visible_size.width * 0.77, origin.y + visible_size.height * 0.19));
 
@@ -195,17 +193,17 @@ void GameLayer::add_labels()
     _awarenessLabel->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
     _waterReservesLabel->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
     _selectedWaterConsumptionLabel->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
-    _actualWaterConsumptionLabel->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
-    _desiredWaterConsumptionLabel->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
+    // _actualWaterConsumptionLabel->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
+    // _desiredWaterConsumptionLabel->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
     _cashLabel->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
     _populationLabel->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
 
     _happinessLabel->setTextColor(Color4B::WHITE);
     _awarenessLabel->setTextColor(Color4B::WHITE);
     _waterReservesLabel->setTextColor(Color4B::WHITE);
-    _selectedWaterConsumptionLabel->setTextColor(Color4B::WHITE);
-    _actualWaterConsumptionLabel->setTextColor(Color4B::WHITE);
-    _desiredWaterConsumptionLabel->setTextColor(Color4B::WHITE);
+    _selectedWaterConsumptionLabel->setTextColor(Color4B::BLACK);
+    // _actualWaterConsumptionLabel->setTextColor(Color4B::BLACK);
+    // _desiredWaterConsumptionLabel->setTextColor(Color4B::WHITE);
     _cashLabel->setTextColor(Color4B::WHITE);
     _populationLabel->setTextColor(Color4B::WHITE);
 
@@ -213,8 +211,8 @@ void GameLayer::add_labels()
     this->addChild(_awarenessLabel, 3);
     this->addChild(_waterReservesLabel, 3);
     this->addChild(_selectedWaterConsumptionLabel, 3);
-    this->addChild(_actualWaterConsumptionLabel, 3);
-    this->addChild(_desiredWaterConsumptionLabel, 3);
+    // this->addChild(_actualWaterConsumptionLabel, 3);
+    // this->addChild(_desiredWaterConsumptionLabel, 3);
     this->addChild(_cashLabel, 3);
     this->addChild(_populationLabel, 3);
 
