@@ -100,7 +100,26 @@ bool GameLayer::init()
         }
     });
 
+
     this->addChild(substract_button, 2);
+
+    auto increase_awareness_button = ui::Button::create("awareness.png");
+    increase_awareness_button->setPosition(Vec2(origin.x + visible_size.width/2, origin.y + visible_size.height/2));
+    increase_awareness_button->addTouchEventListener([this](Ref* sender, ui::Widget::TouchEventType type) {
+        switch (type)
+        {
+            case ui::Widget::TouchEventType::BEGAN:
+                // printf("Actual before decrease: %d\n", get_actual_water_consumption());
+                rm.increase_awareness(1);
+                update_labels();
+                break;
+            default:
+                break;
+        }
+    });
+
+    this->addChild(increase_awareness_button, 2);
+
 
     add_labels();
 
@@ -147,8 +166,10 @@ void GameLayer::update_labels()
     int i = 0;
 
     auto wl = Sprite::create("consumptionup.png");
+
+    int new_water_lines = (rm.get_actual_water_consumption()-rm.get_desired_water_consumption())/100;
     actual_consumption->setPosition(Vec2(origin.x + visible_size.width * 0.057, origin.y + visible_size.height * 0.080)
-            + Vec2(0, wl->getContentSize().height * 0.70) * num_of_water_lines);
+            + Vec2(0, wl->getContentSize().height * 0.70) * new_water_lines);
 
     for (; i < current_num_lines; ++i)
     {
@@ -238,14 +259,12 @@ void GameLayer::add_labels()
     auto wl = Sprite::create("consumptionup.png");
 
     desired_consumption->setPosition(Vec2(origin.x + visible_size.width * 0.057, origin.y + visible_size.height * 0.080)
-            + Vec2(0, desired_consumption->getContentSize().height * 0.70));
+            + Vec2(0, wl->getContentSize().height * 0.40));
     actual_consumption->setPosition(Vec2(origin.x + visible_size.width * 0.057, origin.y + visible_size.height * 0.080)
             + Vec2(0, wl->getContentSize().height * 0.70) * num_of_water_lines);
 
     this->addChild(desired_consumption, 3);
     this->addChild(actual_consumption, 2);
-
-    printf("%d\n", num_of_water_lines);
 
     for (int i = 0; i < num_of_water_lines; ++i)
     {

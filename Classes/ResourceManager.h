@@ -68,13 +68,16 @@ public:
 	// Adds 'amount' to the total awareness
 	void increase_awareness(float amount);
 	// Substracts 'amount' to the total awareness
-	void decrease_awareness(float amount);
+	// void decrease_awareness(float amount);
 
 	// Adds 'amount' to the minimum awareness
 	void increase_awareness_min(float amount);
 
 	// Adds 'amount' to the water reserves
 	void increase_water_reserves(float amount);
+
+	// Effect awareness has on actual water consumed
+	float awareness_actual_consumption_conversion(float awareness_amount);
 
 private:
 	ResourceManager();

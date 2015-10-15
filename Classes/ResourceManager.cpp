@@ -24,7 +24,7 @@ void ResourceManager::reset()
 
 	happiness = 50.0f;
 	awareness = 0.0f;
-	awareness_min = 0.0f;	
+	awareness_min = 0.0f;
 }
 
 // void ResourceManager::update(float dt)
@@ -103,9 +103,16 @@ void ResourceManager::decrease_inflow(int amount)
 void ResourceManager::increase_selected_consumption(int amount)
 {
 	selected_water_consumption += amount;
-	if (selected_water_consumption > actual_water_consumption)
-		selected_water_consumption = actual_water_consumption;
+	if (selected_water_consumption > initial_actual_water_consumption)
+		selected_water_consumption = initial_actual_water_consumption;
 }
+
+// void ResourceManager::increase_actual_consumption(int amount)
+// {
+// 	actual_water_consumption += amount;
+// 	if (actual_water_consumption > initial_actual_water_consumption)
+// 		actual_water_consumption = initial_actual_water_consumption;
+// }
 
 void ResourceManager::decrease_actual_consumption(int amount)
 {
@@ -144,17 +151,22 @@ void ResourceManager::decrease_happiness(float amount)
 
 void ResourceManager::increase_awareness(float amount)
 {
+	float awareness_temp = awareness;
 	awareness += amount;
 	if (awareness > 100.0f)
 		awareness = 100.0f;
+
+	decrease_actual_consumption(awareness_actual_consumption_conversion(awareness - awareness_temp));
 }
 
-void ResourceManager::decrease_awareness(float amount)
-{
-	awareness -= amount;
-	if (awareness < awareness_min)
-		awareness = awareness_min;
-}
+// void ResourceManager::decrease_awareness(float amount)
+// {
+// 	awareness -= amount;
+// 	if (awareness < awareness_min)
+// 		awareness = awareness_min;
+
+// 	increase_actual_consumption(awareness_actual_consumption_conversion(awareness));
+// }
 
 void ResourceManager::increase_awareness_min(float amount)
 {
@@ -176,4 +188,13 @@ int ResourceManager::get_happiness_penalty()
 	double water_difference = selected_water_consumption - actual_water_consumption;
 
 	return penalty_rate * water_difference;
+}
+
+float ResourceManager::awareness_actual_consumption_conversion(float awareness_amount)
+{
+	// the awareness affects half of the actual consumption
+	double conversion_rate = ((initial_actual_water_consumption - initial_desired_water_consumption)/2.0f)/100.0f;
+	printf("%f\n", conversion_rate);
+
+	return awareness_amount * conversion_rate;
 }
