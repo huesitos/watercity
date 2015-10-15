@@ -1,6 +1,9 @@
 #include "Ministry.h"
 #include "ResourceManager.h"
 #include "GameLayer.h"
+#include <iostream>
+#include <string>
+#include <fstream>
 
 USING_NS_CC;
 
@@ -12,19 +15,18 @@ Ministry::Ministry()
 Ministry::~Ministry()
 {}
 
-// Ministry* Ministry::create(const char* pszFileName)
-// {
-// 	Ministry* ministry = new Ministry;
-// 	if (ministry && ministry->initWithFile(pszFileName))
-// 	{
-// 		ministry->autorelease();
-//		ministry->setup_menu_items();
-// 		ministry->setup_listener();
-// 		return ministry;
-// 	}
-// 	CC_SAFE_DELETE(ministry);
-// 	return ministry = nullptr;
-// }
+bool Ministry::init(const char* pszFileName, const char* projectsFileName)
+{
+	if (initWithFile(pszFileName))
+	{
+		setup_projects(projectsFileName);
+		setup_menu_items();
+		setup_listener();
+		return true;
+	}
+
+	return false;
+}
 
 void Ministry::setup_menu_items()
 {
@@ -57,10 +59,11 @@ bool Ministry::on_touch_began(Touch* touch, Event* event)
 
 		for (auto pmi : project_menu_items)
 		{
-			if (i < 3)
+			if (i < 2)
 			{
-				pmi->setPosition(Vec2(0, 
-					(Director::getInstance()->getVisibleSize().height * 3 / 4) - i * (pmi->getBoundingBox().size.height)));
+				pmi->setPosition(Vec2(Director::getInstance()->getVisibleSize().width * 1 / 2, 
+					(Director::getInstance()->getVisibleSize().height * 3 / 4) - i * (pmi->getBoundingBox().size.height))
+					- this->getPosition());
 				pmi->setVisible(true);
 			}
 			++i;
@@ -75,7 +78,7 @@ bool Ministry::on_touch_began(Touch* touch, Event* event)
 			pmi->setVisible(false);
 		}
 
-		return true;
+		return false;
 	}
 
 /*	if (this->getBoundingBox().containsPoint(touch->getLocation()))
@@ -167,18 +170,52 @@ MinistryOfTechnology::MinistryOfTechnology()
 	projects.push_back(new TechnologicalProject("Pipes 2", "Build even better pipes", 300, 500, 35, 9, 300));
 }
 
-Ministry* MinistryOfTechnology::create(const char* pszFileName)
+Ministry* MinistryOfTechnology::create(const char* pszFileName, const char* projectsFileName)
 {
 	Ministry* ministry = new MinistryOfTechnology;
-	if (ministry && ministry->initWithFile(pszFileName))
+	if (ministry && ministry->init(pszFileName, projectsFileName))
 	{
 		ministry->autorelease();
-		ministry->setup_menu_items();
-		ministry->setup_listener();
 		return ministry;
 	}
 	CC_SAFE_DELETE(ministry);
 	return ministry = nullptr;
+}
+
+void MinistryOfTechnology::setup_projects(const char* projectsFileName)
+{
+/*	std::ifstream data_file(FileUtils::getInstance()->fullPathForFilename(projectsFileName).c_str());
+	if (data_file)
+	{
+		std::string name;
+		std::string desc;
+		int cash_cost;
+		int water_cost;
+		int persons_needed;
+		int completion_time;
+		int change_in_consumption;
+		int num_projects;
+
+		data_file >> num_projects;
+		data_file.ignore(10, '\n');
+
+		for (int i = 0; i < num_projects; ++i)
+		{
+			std::getline(data_file, name);
+			std::getline(data_file, desc);
+			data_file >> cash_cost;
+			data_file >> water_cost;
+			data_file >> persons_needed;
+			data_file >> completion_time;
+			data_file >> change_in_consumption;
+			data_file.ignore(10, '\n');
+
+			projects.push_back(new TechnologicalProject(name, desc, cash_cost, water_cost, persons_needed, 
+				completion_time, change_in_consumption));
+		}
+	}
+
+	data_file.close();*/
 }
 
 
@@ -189,18 +226,21 @@ MinistryOfEducation::MinistryOfEducation()
 	projects.push_back(new EducationalProject("Tip 2", "Use a glass for brushing your teeth", 300, 500, 20, 9, 2));
 }
 
-Ministry* MinistryOfEducation::create(const char* pszFileName)
+Ministry* MinistryOfEducation::create(const char* pszFileName, const char* projectsFileName)
 {
 	Ministry* ministry = new MinistryOfEducation;
-	if (ministry && ministry->initWithFile(pszFileName))
+	if (ministry && ministry->init(pszFileName, projectsFileName))
 	{
 		ministry->autorelease();
-		ministry->setup_menu_items();
-		ministry->setup_listener();
 		return ministry;
 	}
 	CC_SAFE_DELETE(ministry);
 	return ministry = nullptr;
+}
+
+void MinistryOfEducation::setup_projects(const char* projectsFileName)
+{
+	
 }
 
 
@@ -211,16 +251,20 @@ MinistryOfCulture::MinistryOfCulture()
 	projects.push_back(new CulturalProject("Aquatic park", "Yep", 300, 500, 20, 9, 10));
 }
 
-Ministry* MinistryOfCulture::create(const char* pszFileName)
+Ministry* MinistryOfCulture::create(const char* pszFileName, const char* projectsFileName)
 {
 	Ministry* ministry = new MinistryOfCulture;
-	if (ministry && ministry->initWithFile(pszFileName))
+	if (ministry && ministry->init(pszFileName, projectsFileName))
 	{
 		ministry->autorelease();
-		ministry->setup_menu_items();
-		ministry->setup_listener();
 		return ministry;
 	}
 	CC_SAFE_DELETE(ministry);
 	return ministry = nullptr;
 }
+
+void MinistryOfCulture::setup_projects(const char* projectsFileName)
+{
+	
+}
+

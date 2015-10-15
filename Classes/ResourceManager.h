@@ -12,6 +12,10 @@ public:
 		return *resource_manager;
 	}
 
+	// Resets resources to their initial values
+	// Called after a game over
+	void reset();
+
 	// Update function to be called every frame
 	// void update(float dt);
 

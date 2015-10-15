@@ -15,7 +15,9 @@ class GameLayer : public cocos2d::Layer
 public:
 	GameLayer()
 		: rm(ResourceManager::getInstance())
-	{}
+	{
+		rm.reset();
+	}
 
 	static cocos2d::Scene* createScene();
 
@@ -35,6 +37,9 @@ private:
 
 	ResourceManager &rm;
 
+	Sprite* 	background_town;
+	Sprite* 	background_menu;
+
 	Ministry* 	ministry_of_technology;
 	Ministry* 	ministry_of_education;
 	Ministry* 	ministry_of_culture;
@@ -46,32 +51,24 @@ private:
 	Label* _happinessLabel;
 	Label* _happinessPenaltyLabel;
 	Label* _awarenessLabel;
-
 	Label* _waterReservesLabel;
-	Label* _waterInflowLabel;
+	Label* _cashLabel;
+	Label* _populationLabel;
 
 	Label* _selectedWaterConsumptionLabel;
 	Label* _actualWaterConsumptionLabel;
 	Label* _desiredWaterConsumptionLabel;
 
-	Label* _cashLabel;
-	Label* _monthlyTaxesLabel;
-
-	Label* _projectLabel;
-
-	Sprite* _happinessSprite;
-	Sprite* _awarenessSprite;
-
-	Sprite* _waterReservesSprite;
-	Sprite* _waterInflowSprite;
-	Sprite* _waterConsumptionSprite;
-
-	Sprite* _cashSprite;
-	Sprite* _monthlyTaxesSprite;
-
 	ui::Button* run_week_button;
 	ui::Button* add_button;
 	ui::Button* substract_button;
+
+	// Water consumption gallon
+
+	Vector<Sprite*> 	water_lines;
+	int 				num_of_water_lines;
+
+	Sprite* 			topmost_line;
 };
 
 #endif // __GAME_LAYER_H__

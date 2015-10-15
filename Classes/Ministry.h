@@ -11,8 +11,9 @@ class Ministry : public cocos2d::Sprite
 public:
 	virtual ~Ministry();
 
-	// static Ministry* create(const char* pszFileName);
+	bool init(const char* pszFileName, const char* projectsFileName);
 
+	virtual void setup_projects(const char* projectsFileName) = 0;
 	void setup_menu_items();
 	void setup_listener();
 
@@ -46,7 +47,9 @@ public:
 	MinistryOfTechnology();
 	virtual ~MinistryOfTechnology() {}
 
-	static Ministry* create(const char* pszFileName);
+	static Ministry* create(const char* pszFileName, const char* projectsFileName);
+
+	virtual void setup_projects(const char* projectsFileName);
 
 };
 
@@ -56,7 +59,9 @@ public:
 	MinistryOfEducation();
 	virtual ~MinistryOfEducation() {}
 
-	static Ministry* create(const char* pszFileName);
+	static Ministry* create(const char* pszFileName, const char* projectsFileName);
+
+	virtual void setup_projects(const char* projectsFileName);
 
 };
 
@@ -66,7 +71,9 @@ public:
 	MinistryOfCulture();
 	virtual ~MinistryOfCulture() {}
 
-	static Ministry* create(const char* pszFileName);
+	static Ministry* create(const char* pszFileName, const char* projectsFileName);
+
+	virtual void setup_projects(const char* projectsFileName);
 
 };
 

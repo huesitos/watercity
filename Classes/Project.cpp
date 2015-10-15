@@ -27,6 +27,16 @@ bool Project::is_running()
 	return running;
 }
 
+void Project::set_to_start(bool starting)
+{
+	to_start = starting;
+}
+
+bool Project::is_set_to_start()
+{
+	return to_start;
+}
+
 bool Project::is_completed()
 {
 	return time_completed >= completion_time;
@@ -44,9 +54,8 @@ TechnologicalProject::TechnologicalProject(std::string name, std::string descrip
 void TechnologicalProject::complete()
 {
 	Project::complete();
-	ResourceManager::getInstance().decrease_desired_consumption(change_in_consumption);
+	ResourceManager::getInstance().decrease_actual_consumption(change_in_consumption);
 }
-
 
 
 EducationalProject::EducationalProject()

@@ -16,6 +16,8 @@ public:
 	virtual void start_project();
 	virtual void develop();
 	virtual bool is_running();
+	virtual void set_to_start(bool starting);
+	virtual bool is_set_to_start();
 	virtual bool is_completed();
 
 	std::string 	get_name() { return name; }
@@ -44,6 +46,7 @@ protected:
 	int 	time_completed;
 
 	bool 	running;
+	bool 	to_start;
 };
 
 

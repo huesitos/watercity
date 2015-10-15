@@ -2,11 +2,16 @@
 
 ResourceManager::ResourceManager()
 {
+	reset();
+}
+
+void ResourceManager::reset()
+{
 	water_reserves = 100000;
 	water_inflow = 2000;
-	actual_water_consumption = 3000;
+	actual_water_consumption = 2500;
 	initial_actual_water_consumption = actual_water_consumption;
-	desired_water_consumption = 1500;
+	desired_water_consumption = 1000;
 	initial_desired_water_consumption = desired_water_consumption;
 	selected_water_consumption = actual_water_consumption;
 
@@ -19,7 +24,7 @@ ResourceManager::ResourceManager()
 
 	happiness = 50.0f;
 	awareness = 0.0f;
-	awareness_min = 0.0f;
+	awareness_min = 0.0f;	
 }
 
 // void ResourceManager::update(float dt)
@@ -98,13 +103,15 @@ void ResourceManager::decrease_inflow(int amount)
 void ResourceManager::increase_selected_consumption(int amount)
 {
 	selected_water_consumption += amount;
+	if (selected_water_consumption > actual_water_consumption)
+		selected_water_consumption = actual_water_consumption;
 }
 
 void ResourceManager::decrease_actual_consumption(int amount)
 {
 	actual_water_consumption -= amount;
-	if (actual_water_consumption < 0)
-		actual_water_consumption = 0;
+	if (actual_water_consumption < desired_water_consumption)
+		actual_water_consumption = desired_water_consumption;
 }
 
 void ResourceManager::decrease_desired_consumption(int amount)
@@ -117,8 +124,8 @@ void ResourceManager::decrease_desired_consumption(int amount)
 void ResourceManager::decrease_selected_consumption(int amount)
 {
 	selected_water_consumption -= amount;
-	if (selected_water_consumption < 0)
-		selected_water_consumption = 0;
+	if (selected_water_consumption < desired_water_consumption)
+		selected_water_consumption = desired_water_consumption;
 }
 
 void ResourceManager::increase_happiness(float amount)
@@ -165,7 +172,7 @@ int ResourceManager::get_happiness_penalty()
 {
 	// Penalty rate based on the difference between the actual and desired consumption
 	int consumption_difference = initial_actual_water_consumption - initial_desired_water_consumption;
-	double penalty_rate = 20.0/consumption_difference;
+	double penalty_rate = 5.0/consumption_difference;
 	double water_difference = selected_water_consumption - actual_water_consumption;
 
 	return penalty_rate * water_difference;
