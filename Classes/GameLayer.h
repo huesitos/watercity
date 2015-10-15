@@ -69,6 +69,8 @@ private:
 	int 				num_of_water_lines;
 
 	Sprite* 			topmost_line;
+	Sprite* 			desired_consumption;
+	Sprite* 			actual_consumption;
 };
 
 #endif // __GAME_LAYER_H__

@@ -145,6 +145,11 @@ void GameLayer::update_labels()
 
     int current_num_lines = (rm.get_selected_water_consumption() - rm.get_desired_water_consumption()) / 100;
     int i = 0;
+
+    auto wl = Sprite::create("consumptionup.png");
+    actual_consumption->setPosition(Vec2(origin.x + visible_size.width * 0.057, origin.y + visible_size.height * 0.080)
+            + Vec2(0, wl->getContentSize().height * 0.70) * num_of_water_lines);
+
     for (; i < current_num_lines; ++i)
     {
         water_lines.at(i)->setVisible(true);
@@ -224,7 +229,23 @@ void GameLayer::add_labels()
     this->addChild(happinessPenaltySprite, 3);
     this->addChild(_happinessPenaltyLabel, 3);
 
-    num_of_water_lines = 15;
+    num_of_water_lines = (rm.get_actual_water_consumption()-rm.get_desired_water_consumption())/100;
+
+    desired_consumption = Sprite::create("need.png");
+    actual_consumption = Sprite::create("want.png");
+
+    // el actual deberia tener el mismo height?
+    auto wl = Sprite::create("consumptionup.png");
+
+    desired_consumption->setPosition(Vec2(origin.x + visible_size.width * 0.057, origin.y + visible_size.height * 0.080)
+            + Vec2(0, desired_consumption->getContentSize().height * 0.70));
+    actual_consumption->setPosition(Vec2(origin.x + visible_size.width * 0.057, origin.y + visible_size.height * 0.080)
+            + Vec2(0, wl->getContentSize().height * 0.70) * num_of_water_lines);
+
+    this->addChild(desired_consumption, 3);
+    this->addChild(actual_consumption, 2);
+
+    printf("%d\n", num_of_water_lines);
 
     for (int i = 0; i < num_of_water_lines; ++i)
     {
