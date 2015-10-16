@@ -21,6 +21,8 @@ public:
 
 	void develop_project();
 
+	virtual void stop_project() {};
+
 	bool has_project_running();
 	bool has_project_set_to_start();
 
@@ -87,6 +89,7 @@ public:
 	static Ministry* create(const char* pszFileName, const char* projectsFileName);
 
 	virtual void setup_projects(const char* projectsFileName);
+	virtual void stop_project();
 
 	virtual void setup_listener();
 

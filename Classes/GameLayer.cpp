@@ -57,16 +57,16 @@ bool GameLayer::init()
     ministry_of_education->setup_listener();
 
 
-/*  ministry_of_culture = MinistryOfCulture::create("ministerioboton.png", "tech_projects.txt");
-    ministry_of_culture->setPosition(origin.x + visible_size.width * 0.75, origin.y + visible_size.height * 0.50);
+    ministry_of_culture = MinistryOfCulture::create("ministerioboton.png", "tech_projects.txt");
+    ministry_of_culture->setPosition(origin.x + visible_size.width * 0.53, origin.y + visible_size.height * 0.44);
     this->addChild(ministry_of_culture, 1);
     ministry_of_culture->setTag(CULT);
 
-    menu_culture = ProjectMenuItem::create("culturamenu.png", ministry_of_culture);
-    menu_culture->setPosition(Vec2(origin.x + visible_size.width * 0.40, origin.y + visible_size.height * 0.50));
+    menu_culture = ProjectMenuItem::create("edumenu.png", ministry_of_culture);
+    menu_culture->setPosition(Vec2(origin.x + visible_size.width * 0.45, origin.y + visible_size.height * 0.60));
     this->addChild(menu_culture, 2);
     menu_culture->setVisible(false);
-    ministry_of_culture->setup_listener();*/
+    ministry_of_culture->setup_listener();
 
 	run_week_button = ui::Button::create("start.png");
 	run_week_button->setPosition(Vec2(origin.x + visible_size.width * 0.95 - run_week_button->getContentSize().width / 2,
@@ -151,6 +151,10 @@ void GameLayer::run_day()
         }
     }
 
+    if (ministry_of_culture->has_project_running())
+    {
+        ministry_of_culture->develop_project();
+    }
     Rain::rain();
 
     rm.update_day();
@@ -164,12 +168,16 @@ void GameLayer::run_week()
 
     menu_technology->setVisible(false);
     menu_education->setVisible(false);
+    menu_culture->setVisible(false);
 
     if (ministry_of_technology->can_be_funded())
         ministry_of_technology->start_project();
 
     if (ministry_of_education->can_be_funded())
         ministry_of_education->start_project();
+
+    if (ministry_of_culture->can_be_funded())
+        ministry_of_culture->start_project();
 
     for (int i = 0; i < 7; ++i)
         run_day();
@@ -178,9 +186,11 @@ void GameLayer::run_week()
 
     menu_technology->update_projects();
     menu_education->update_projects();
+    menu_culture->update_projects();
 
     menu_technology->update_labels();
     menu_education->update_labels();
+    menu_culture->update_labels();
 
     if (rm.is_water_depleted())
     {
@@ -194,7 +204,7 @@ void GameLayer::run_week()
 
     if (did_riot_happen && (ministry_of_technology->has_project_running() || ministry_of_education->has_project_running()))
     {
-        auto label = Label::createWithTTF("Oh no! The people rioted. Your projects were not completed.", 
+        auto label = Label::createWithTTF("Oh no! The people rioted. Your projects were not completed.",
             "fonts/Marker Felt.ttf", 30);
         label->setTextColor(Color4B::BLACK);
         label->setPosition(Vec2(origin.x + visible_size.width * 0.40, origin.y + visible_size.height * 0.60));
@@ -205,13 +215,16 @@ void GameLayer::run_week()
             this->removeChild(label);
         });
 
-        label->runAction(Sequence::create(FadeIn::create(1.0f), DelayTime::create(1.0f), 
+        label->runAction(Sequence::create(FadeIn::create(1.0f), DelayTime::create(1.0f),
             FadeOut::create(1.0f), get_removed, nullptr));
     }
     else if (will_reward)
     {
 
     }
+
+    if (ministry_of_culture->has_project_running())
+        ministry_of_culture->stop_project();
 }
 
 void GameLayer::update_labels()

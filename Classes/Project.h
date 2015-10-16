@@ -21,6 +21,7 @@ public:
 	virtual bool is_set_to_start() { return to_start; }
 	virtual bool is_completed() { return completed; }
 	virtual bool is_reported() { return reported; }
+	virtual void stop_project() {};
 
 	virtual void assign_persons_needed();
 	virtual void empty_persons_assigned();
@@ -104,7 +105,8 @@ public:
 							int completion_time, int change_in_happiness);
 	virtual ~CulturalProject() {}
 
-	virtual void complete();
+	virtual void develop();
+	void stop_project();
 	int get_change_in_happiness();
 
 protected:

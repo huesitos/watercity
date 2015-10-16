@@ -331,7 +331,7 @@ void MinistryOfEducation::setup_projects(const char* projectsFileName)
 
 MinistryOfCulture::MinistryOfCulture()
 {
-	projects.push_back(new CulturalProject("Gardening fair", "What the name says", 750, 3000, 15, 7, 20));
+	projects.push_back(new CulturalProject("Gardening fair", "What the name says", 0, 3500, 15, 7, 2));
 }
 
 Ministry* MinistryOfCulture::create(const char* pszFileName, const char* projectsFileName)
@@ -372,6 +372,16 @@ bool MinistryOfCulture::on_touch_began(Touch* touch, Event* event)
 	{
 		layer->get_menu_culture()->setVisible(false);
 		return false;
+	}
+}
+
+void MinistryOfCulture::stop_project()
+{
+	auto p = get_projects_running();
+
+	for (int i = 0; i < static_cast<int>(p.size()); ++i)
+	{
+		p[i]->stop_project();
 	}
 }
 

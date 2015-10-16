@@ -123,13 +123,18 @@ CulturalProject::CulturalProject(std::string name, std::string description, int 
 	: Project(name, description, cash_cost, water_cost, persons_needed, completion_time), change_in_happiness(change_in_happiness)
 {}
 
-void CulturalProject::complete()
+void CulturalProject::develop()
 {
-	Project::complete();
 	ResourceManager::getInstance().increase_happiness(change_in_happiness);
 }
 
 int CulturalProject::get_change_in_happiness()
 {
 	return change_in_happiness;
+}
+
+void CulturalProject::stop_project()
+{
+	running = false;
+	to_start = true;
 }
