@@ -43,21 +43,29 @@ private:
 	void 	run_day();
 	void 	add_labels();
 
+	void 	start_breakdown_minigame();
+	void 	run_breakdown_minigame();
+	void 	end_breakdown_minigame();
+	void 	on_correct_breakdown();
+	void 	on_incorrect_breakdown();
+
+	void 	report();
+
 	ResourceManager &rm;
 	Climate &climate;
 
 	Sprite* 	background_town;
 	Sprite* sunny;
-  Sprite* cloudy;
-  Sprite* rainy;
+  	Sprite* cloudy;
+  	Sprite* rainy;
 
-  Sprite* happy;
-  Sprite* mad;
+  	Sprite* happy;
+  	Sprite* mad;
 
-  Sprite* water_meter;
-  Sprite* water_reserves;
+  	Sprite* water_meter;
+  	Sprite* water_reserves;
 
-  Sprite* water_gallon;
+  	Sprite* water_gallon;
 
 	Ministry* 	ministry_of_technology;
 	Ministry* 	ministry_of_education;
@@ -89,6 +97,11 @@ private:
 
 	Sprite* background_consumption;
 	Sprite* background_resources;
+
+	// Breakdowns minigame
+
+	Vector<ui::Button*> breakdowns;
+	Vector<Sprite*> 	breakdown_sprites;
 
 	// Water consumption gallon
 

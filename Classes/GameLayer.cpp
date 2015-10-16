@@ -265,6 +265,156 @@ void GameLayer::run_week()
     menu_education->update_labels();
     menu_culture->update_labels();
 
+    start_breakdown_minigame();
+}
+
+void GameLayer::start_breakdown_minigame()
+{
+    turn_off_listeners();
+    ministry_of_technology->setVisible(false);
+    ministry_of_education->setVisible(false);
+
+    auto label = Label::createWithTTF("Oh no! There's been some breakdowns in the neighborhood!", "fonts/Marker Felt.ttf", 40);
+    label->setTextColor(Color4B::BLACK);
+    label->setPosition(Vec2(origin.x + visible_size.width * 0.40, origin.y + visible_size.height * 0.60));
+    this->addChild(label, 5);
+    label->setOpacity(0.0f);
+
+    auto get_removed = CallFunc::create([this, label](){
+       this->removeChild(label);
+    });
+
+    label->runAction(Sequence::create(FadeIn::create(1.0f), DelayTime::create(1.0f), 
+        FadeOut::create(1.0f), get_removed, nullptr));
+
+    this->runAction(Sequence::create(DelayTime::create(3.0f), 
+        CallFunc::create(CC_CALLBACK_0(GameLayer::run_breakdown_minigame, this)), nullptr));
+}
+
+void GameLayer::run_breakdown_minigame()
+{
+    Breakdown b(3);
+
+    breakdowns = b.get_breakdowns();
+    breakdown_sprites = b.get_breakdown_sprites();
+
+    for (auto breakdown : breakdowns)
+    {
+        breakdown->setOpacity(0.0f);
+        this->addChild(breakdown, 3);
+        breakdown->runAction(FadeIn::create(0.5f));
+    }
+
+    for (auto breakdown_sprite : breakdown_sprites)
+    {
+        breakdown_sprite->setOpacity(0.0f);
+        this->addChild(breakdown_sprite, 3);
+        breakdown_sprite->runAction(FadeIn::create(0.5f));
+    }
+
+    for (auto breakdown : breakdowns)
+    {
+        breakdown->addTouchEventListener([this, breakdown](Ref* sender, ui::Widget::TouchEventType type) {
+            switch (type)
+            {
+                case ui::Widget::TouchEventType::BEGAN:
+                    if (breakdown->getTag() == breakdown_sprites.at(0)->getTag())
+                    {
+                        this->on_correct_breakdown();
+                    }
+                    else
+                    {
+                        this->on_incorrect_breakdown();
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+            return true;
+        });
+    }
+}
+
+void GameLayer::end_breakdown_minigame()
+{
+    if (static_cast<int>(breakdowns.size()) == 0)
+    {
+        auto label = Label::createWithTTF("You fixed all of the breakdowns!", "fonts/Marker Felt.ttf", 30);
+        label->setTextColor(Color4B::BLACK);
+        label->setPosition(Vec2(origin.x + visible_size.width * 0.40, origin.y + visible_size.height * 0.60));
+        this->addChild(label, 5);
+        label->setOpacity(0.0f);
+
+        auto get_removed = CallFunc::create([this, label](){
+            this->removeChild(label);
+        });
+
+        label->runAction(Sequence::create(FadeIn::create(1.0f), DelayTime::create(1.0f), 
+            FadeOut::create(1.0f), get_removed, nullptr));
+    }
+    else
+    {
+        for (auto breakdown : breakdowns)
+        {
+            this->removeChild(breakdown);
+        }
+
+        for (auto breakdown_sprite : breakdown_sprites)
+        {
+            this->removeChild(breakdown_sprite);
+        }
+
+        breakdowns.clear();
+        breakdown_sprites.clear();
+
+        auto label = Label::createWithTTF("You couldn't fix all of the breakdowns :(", "fonts/Marker Felt.ttf", 30);
+        label->setTextColor(Color4B::BLACK);
+        label->setPosition(Vec2(origin.x + visible_size.width * 0.40, origin.y + visible_size.height * 0.60));
+        this->addChild(label, 5);
+        label->setOpacity(0.0f);
+
+        auto get_removed = CallFunc::create([this, label](){
+            this->removeChild(label);
+        });
+
+        label->runAction(Sequence::create(FadeIn::create(1.0f), DelayTime::create(1.0f), 
+            FadeOut::create(1.0f), get_removed, nullptr));
+    }
+
+    ministry_of_technology->setVisible(true);
+    ministry_of_education->setVisible(true);
+    turn_on_listeners();
+
+    report();
+}
+
+void GameLayer::on_correct_breakdown()
+{
+    this->removeChild(breakdowns.at(0));
+    this->removeChild(breakdown_sprites.at(0));
+
+    breakdowns.erase(breakdowns.begin());
+    breakdown_sprites.erase(breakdown_sprites.begin());
+
+    for (auto breakdown_sprite : breakdown_sprites)
+    {
+        breakdown_sprite->runAction(MoveBy::create(0.25f, Vec2(visible_size.width * -0.10, 0)));
+    }
+
+    if (static_cast<int>(breakdowns.size()) == 0)
+    {
+        end_breakdown_minigame();
+    }
+}
+
+void GameLayer::on_incorrect_breakdown()
+{
+    end_breakdown_minigame();
+}
+
+void GameLayer::report()
+{
     if (rm.is_water_depleted())
     {
         game_over();

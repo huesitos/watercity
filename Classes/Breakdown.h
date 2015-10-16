@@ -2,31 +2,39 @@
 #define __BREAKDOWN_H__
 
 #include "cocos2d.h"
+#include "ui/CocosGUI.h"
 #include <vector>
 
+USING_NS_CC;
+
+
+enum breakdown_type
+{
+	kWrench,
+	kFaucet,
+	kToilet,
+	kPipe,
+};
 
 class Breakdown
 {
 public:
+	Breakdown(int num_breakdowns = 3);
 	~Breakdown() {}
 
-	static void 	run_week(int num_breakdown_workers);
-
-	static int 		get_num_breakdowns();
-	static int 		get_water_lost();
-	static int 		get_cash_spent();
+	Vector<ui::Button*> 	get_breakdowns() { return breakdowns; }
+	Vector<Sprite*> 		get_breakdown_sprites() { return breakdown_sprites; }
 
 private:
-	static std::vector<Breakdown> breakdowns;
+	Vector<ui::Button*> 	breakdowns;
+	Vector<Sprite*> 		breakdown_sprites;
 
-	static int 		calc_expected_breakdowns(int num_breakdown_workers);
-	static int 		calc_expected_water_lost();
-	static int 		calc_expected_cash_spent();
+	int num_breakdowns;
 
-	Breakdown(int water_lost, int cash_spent);
+	std::vector<Vec2> positions;
+	std::vector<const char*> file_names;
 
-	int 	water_lost;
-	int 	cash_spent;
+	bool 	is_open_space(Vec2 pos);
 };
 
 #endif // __BREAKDOWN_H__

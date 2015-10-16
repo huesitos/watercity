@@ -1,75 +1,71 @@
 #include "Breakdown.h"
 
-USING_NS_CC;
 
-
-std::vector<Breakdown> Breakdown::breakdowns;
-
-Breakdown::Breakdown(int water_lost, int cash_spent)
-	: water_lost(water_lost), cash_spent(cash_spent)
-{}
-
-void Breakdown::run_week(int num_breakdown_workers)
+Breakdown::Breakdown(int num_breakdowns)
+	: num_breakdowns(num_breakdowns)
 {
-	const int EXPECTED_NUM_BREAKDOWNS 	= calc_expected_breakdowns(num_breakdown_workers);
-	const int EXPECTED_WATER_LOST 		= calc_expected_water_lost();
-	const int EXPECTED_CASH_SPENT 		= calc_expected_cash_spent();
+	if (num_breakdowns < 3)
+		num_breakdowns = 3;
 
-	const int SPREAD_BREAKDOWNS = 1;
-	const int SPREAD_WATER_LOST = 2;
-	const int SPREAD_CASH_SPENT = 2;
+	file_names.push_back("a1.png");
+	file_names.push_back("a2.png");
+	file_names.push_back("a3.png");
+	file_names.push_back("a4.png");
 
-	Breakdown::breakdowns.clear();
-
-	int num_breakdowns = RandomHelper::random_int(EXPECTED_NUM_BREAKDOWNS - SPREAD_BREAKDOWNS, EXPECTED_NUM_BREAKDOWNS + SPREAD_BREAKDOWNS);
+	Size visible_size = Director::getInstance()->getVisibleSize();
+	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
 	for (int i = 0; i < num_breakdowns; ++i)
 	{
-		Breakdown::breakdowns.push_back(Breakdown(RandomHelper::random_int(EXPECTED_WATER_LOST - SPREAD_WATER_LOST, EXPECTED_WATER_LOST + SPREAD_WATER_LOST), 
-									   RandomHelper::random_int(EXPECTED_CASH_SPENT - SPREAD_CASH_SPENT, EXPECTED_CASH_SPENT + SPREAD_CASH_SPENT)));
+		int type = RandomHelper::random_int(0, 3);
+
+		auto sprite = Sprite::create(file_names[type]);
+		auto button = ui::Button::create(file_names[type]);
+		sprite->setTag(type);
+		button->setTag(type);
+
+		Vec2 pos(RandomHelper::random_real(origin.x, origin.x + visible_size.width), 
+				 RandomHelper::random_real(origin.y, origin.y + visible_size.height));
+
+		while (!is_open_space(pos))
+		{
+			pos.x = RandomHelper::random_real(origin.x, origin.x + visible_size.width);
+			pos.y = RandomHelper::random_real(origin.y, origin.y + visible_size.height);
+		}
+
+		button->setPosition(pos);
+		sprite->setPosition(Vec2(origin.x + visible_size.width * (0.20 + 0.10 * i), origin.y + visible_size.height * 0.10));
+
+		breakdowns.pushBack(button);
+		breakdown_sprites.pushBack(sprite);
 	}
 }
 
-int Breakdown::calc_expected_breakdowns(int num_breakdown_workers)
+bool Breakdown::is_open_space(Vec2 pos)
 {
-	return 5;
-}
+	bool result = true;
+	Size visible_size = Director::getInstance()->getVisibleSize();
+	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-int Breakdown::calc_expected_water_lost()
-{
-	return 20;
-}
-
-int Breakdown::calc_expected_cash_spent()
-{
-	return 10;
-}
-
-int Breakdown::get_num_breakdowns()
-{
-	return static_cast<int>(Breakdown::breakdowns.size());
-}
-
-int Breakdown::get_water_lost()
-{
-	int water_lost = 0;
-
-	for (int i = 0; i < static_cast<int>(Breakdown::breakdowns.size()); ++i)
+	if (pos.x < origin.x + visible_size.width * 0.15 ||
+		pos.x > origin.x + visible_size.width * 0.85 ||
+		pos.y < origin.y + visible_size.height * 0.25 || 
+		pos.y > origin.y + visible_size.height * 0.85)
 	{
-		water_lost += Breakdown::breakdowns[i].water_lost;
+		result = false;
 	}
 
-	return water_lost;
-}
+	float x_gap = visible_size.width * 0.10;
+	float y_gap = visible_size.height * 0.10;
 
-int Breakdown::get_cash_spent()
-{
-	int cash_spent = 0;
-
-	for (int i = 0; i < static_cast<int>(Breakdown::breakdowns.size()); ++i)
+	for (int i = 0; i < static_cast<int>(positions.size()); ++i)
 	{
-		cash_spent += Breakdown::breakdowns[i].cash_spent;
+		if ((-x_gap < pos.x - positions[i].x || pos.x - positions[i].x < x_gap) && 
+			(-y_gap < pos.y - positions[i].y || pos.y - positions[i].y < y_gap))
+		{
+			result = false;
+		}
 	}
 
-	return cash_spent;
+	return result;
 }
