@@ -3,7 +3,7 @@
 
 #include "cocos2d.h"
 #include "ui/CocosGUI.h"
-#include "Ministry.h"
+#include "ProjectMenuItem.h"
 #include "ResourceManager.h"
 #include "MainMenu.h"
 
@@ -29,6 +29,9 @@ public:
 
 	void game_over();
 
+	ProjectMenuItem* get_menu_technology() { return menu_technology; }
+	ProjectMenuItem* get_menu_education() { return menu_education; }
+	ProjectMenuItem* get_menu_culture() { return menu_culture; }
 
 private:
 	void 	run_week();
@@ -38,11 +41,14 @@ private:
 	ResourceManager &rm;
 
 	Sprite* 	background_town;
-	Sprite* 	background_menu;
 
 	Ministry* 	ministry_of_technology;
 	Ministry* 	ministry_of_education;
 	Ministry* 	ministry_of_culture;
+
+	ProjectMenuItem* 	menu_technology;
+	ProjectMenuItem* 	menu_education;
+	ProjectMenuItem* 	menu_culture;
 
 	Size visible_size;
 	Vec2 origin;
@@ -68,7 +74,6 @@ private:
 	Vector<Sprite*> 	water_lines;
 	int 				num_of_water_lines;
 
-	Sprite* 			topmost_line;
 	Sprite* 			desired_consumption;
 	Sprite* 			actual_consumption;
 };
