@@ -1,9 +1,9 @@
-#include "Rain.h"
+#include "Climate.h"
 #include "ResourceManager.h"
 
 USING_NS_CC;
 
-void Rain::rain()
+void Climate::rain()
 {
   int will_it_rain = RandomHelper::random_int(0, 100);
 

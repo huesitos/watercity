@@ -1,7 +1,7 @@
 #include "GameLayer.h"
 #include "Breakdown.h"
 #include "ProhibitedAct.h"
-#include "Rain.h"
+#include "Climate.h"
 #include "Project.h"
 
 Scene* GameLayer::createScene()
@@ -151,7 +151,7 @@ void GameLayer::run_day()
     {
         ministry_of_culture->develop_project();
     }
-    Rain::rain();
+    Climate::rain();
 
     rm.update_day();
 }
