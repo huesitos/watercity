@@ -3,7 +3,7 @@
 
 #include "cocos2d.h"
 #include "ui/CocosGUI.h"
-#include "Project.h"
+#include "Ministry.h"
 
 USING_NS_CC;
 
@@ -14,41 +14,50 @@ public:
 	ProjectMenuItem() {}
 	virtual ~ProjectMenuItem() {}
 
-	static ProjectMenuItem* create(const char* pszFileName, Project* project)
+	static ProjectMenuItem* create(const char* pszFileName, Ministry* ministry)
 	{
 		ProjectMenuItem* pmi = new ProjectMenuItem;
 		if (pmi && pmi->initWithFile(pszFileName))
 		{
 			pmi->autorelease();
-			pmi->setup(project);
+			pmi->setup(ministry);
 			return pmi;
 		}
 		CC_SAFE_DELETE(pmi);
 		return pmi = nullptr;
 	}
 
+	void 		update_projects();
 	void 		update_labels();
 
 	bool 		is_filled() { return filled; }
 	void 		set_filled(bool filled) { this->filled = filled; }
 
 private:
-	void setup(Project* project);
+	void setup(Ministry* ministry);
 
-	Project* project;
+	Ministry* ministry;
 
 	bool 		filled;
 
-	Sprite* 	project_image;
-	ui::Button* fill_button;
-	ui::Button* empty_button;
+	Vector<Sprite*> 	project_images;
 
-	Label* 		name_label;
-	Label* 		description_label;
-	Label* 		cash_label;
-	Label* 		water_label;
-	Label* 		persons_label;
-	Label* 		time_label;
+	ui::Button* 	add_persons_project;
+	ui::Button* 	remove_persons_project;
+
+	Label* 			persons_project_label;
+
+	ui::Button* 	add_persons_work;
+	ui::Button* 	remove_persons_work;
+
+	Label* 			persons_work_label;
+
+	Vector<Label*> 	name_labels;
+	Vector<Label*> 	description_labels;
+	Vector<Label*> 	cash_labels;
+	Vector<Label*> 	water_labels;
+	Vector<Label*> 	persons_labels;
+	Vector<Label*> 	time_labels;
 };
 
 #endif // __PROJECT_MENU_ITEM_H__

@@ -4,17 +4,20 @@
 
 Project::Project(std::string name, std::string description, int cash_cost, int water_cost, int persons_needed, int completion_time)
 	: running(false), name(name), description(description), cash_cost(cash_cost), 
-	water_cost(water_cost), persons_needed(persons_needed), completion_time(completion_time), time_completed(0)
+	water_cost(water_cost), persons_needed(persons_needed), completion_time(completion_time), 
+	time_completed(0), persons_assigned(0), to_start(false)
 {}
 
 void Project::start_project()
 {
 	running = true;
+	to_start = false;
 }
 
 void Project::complete()
 {
 	running = false;
+	ResourceManager::getInstance().unoccupy_persons(persons_assigned);
 }
 
 void Project::develop()
@@ -40,6 +43,42 @@ bool Project::is_set_to_start()
 bool Project::is_completed()
 {
 	return time_completed >= completion_time;
+}
+
+void Project::assign_persons_needed()
+{
+	if (persons_assigned == 0 && ResourceManager::getInstance().has_enough_unoccupied(persons_needed))
+	{
+		persons_assigned = persons_needed;
+		ResourceManager::getInstance().occupy_persons(persons_needed);
+	}
+}
+
+void Project::empty_persons_assigned()
+{
+	if (persons_assigned > 0)
+	{
+		ResourceManager::getInstance().unoccupy_persons(persons_assigned);
+		persons_assigned = 0;
+	}
+}
+
+void Project::increase_persons_assigned()
+{
+	if (ResourceManager::getInstance().has_enough_unoccupied(1))
+	{
+		persons_assigned++;
+		ResourceManager::getInstance().occupy_persons(1);
+	}
+}
+
+void Project::decrease_persons_assigned()
+{
+	if (persons_assigned > persons_needed)
+	{
+		persons_assigned--;
+		ResourceManager::getInstance().unoccupy_persons(1);
+	}
 }
 
 

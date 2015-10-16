@@ -20,12 +20,18 @@ public:
 	virtual bool is_set_to_start();
 	virtual bool is_completed();
 
+	virtual void assign_persons_needed();
+	virtual void empty_persons_assigned();
+	virtual void increase_persons_assigned();
+	virtual void decrease_persons_assigned();
+
 	std::string 	get_name() { return name; }
 	std::string 	get_description() { return description; }
 
 	int 	get_cash_cost() { return cash_cost; }
 	int 	get_water_cost() { return water_cost; }
 
+	int 	get_persons_assigned() { return persons_assigned; }
 	int 	get_persons_needed() { return persons_needed; }
 
 	int 	get_completion_time() { return completion_time; }
@@ -39,6 +45,7 @@ protected:
 	int 	cash_cost;
 	int 	water_cost;
 
+	int 	persons_assigned;
 	int 	persons_needed;
 
 	// time given in "days"

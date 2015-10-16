@@ -3,6 +3,10 @@
 
 #include <iostream>
 
+#define TECH 100
+#define EDU 200
+#define CULT 300
+
 class ResourceManager
 {
 public:

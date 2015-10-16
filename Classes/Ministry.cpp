@@ -1,4 +1,4 @@
-#include "Ministry.h"
+#include "ProjectMenuItem.h"
 #include "ResourceManager.h"
 #include "GameLayer.h"
 #include <iostream>
@@ -9,7 +9,6 @@ USING_NS_CC;
 
 
 Ministry::Ministry()
-	: current_project(0)
 {}
 
 Ministry::~Ministry()
@@ -20,40 +19,15 @@ bool Ministry::init(const char* pszFileName, const char* projectsFileName)
 	if (initWithFile(pszFileName))
 	{
 		setup_projects(projectsFileName);
-		setup_menu_items();
-		setup_listener();
 		return true;
 	}
 
 	return false;
 }
 
-void Ministry::setup_menu_items()
-{
-	for (int i = 0; i < static_cast<int>(projects.size()); ++i)
-	{
-		auto pmi = ProjectMenuItem::create("blue_rectangle.png", projects[i]);
-		pmi->setVisible(false);
-		this->addChild(pmi, 1);
-		project_menu_items.pushBack(pmi);
-	}
-}
-
-void Ministry::setup_listener()
-{
-	auto listener = EventListenerTouchOneByOne::create();
-	listener->setSwallowTouches(true);
-
-	listener->onTouchBegan = CC_CALLBACK_2(Ministry::on_touch_began, this);
-	listener->onTouchMoved = [] (Touch* touch, Event* event) {};
-	listener->onTouchEnded = [] (Touch* touch, Event* event) {};
-
-	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
-}
-
 bool Ministry::on_touch_began(Touch* touch, Event* event)
 {
-	if (this->getBoundingBox().containsPoint(touch->getLocation()))
+/*	if (this->getBoundingBox().containsPoint(touch->getLocation()))
 	{
 		int i = 0;
 
@@ -79,7 +53,7 @@ bool Ministry::on_touch_began(Touch* touch, Event* event)
 		}
 
 		return false;
-	}
+	}*/
 
 /*	if (this->getBoundingBox().containsPoint(touch->getLocation()))
 	{
@@ -94,77 +68,139 @@ bool Ministry::on_touch_began(Touch* touch, Event* event)
 
 bool Ministry::has_project()
 {
-	return current_project < static_cast<int>(projects.size());
+	return static_cast<int>(get_projects_to_display().size()) > 0;
 }
 
 bool Ministry::can_be_funded()
 {
 	ResourceManager &rm = ResourceManager::getInstance();
 
-	return rm.has_enough_water(projects[current_project]->get_water_cost()) &&
-		rm.has_enough_cash(projects[current_project]->get_cash_cost());
+	auto p = get_projects_set_to_start();
+
+	int total_water_cost = 0;
+	int total_cash_cost = 0;
+
+	for (int i = 0; i < static_cast<int>(p.size()); ++i)
+	{
+		total_water_cost += p[i]->get_water_cost();
+		total_cash_cost += p[i]->get_cash_cost();
+	}
+
+	return rm.has_enough_water(total_water_cost) && rm.has_enough_cash(total_cash_cost);
 }
 
-Project* Ministry::get_current_project()
+std::vector<Project*> Ministry::get_projects_to_display()
 {
-	if (has_project())
-		return projects[current_project];
-	else
-		return new Project("None", "", 0, 0, 0, 0);
+	std::vector<Project*> p;
+
+	const int MAX_PROJECTS = 1;
+	int size = 0;
+
+	for (int i = 0; i < static_cast<int>(projects.size()); ++i)
+	{
+		if (!projects[i]->is_completed())
+		{
+			p.push_back(projects[i]);
+			size++;
+
+			if (size == MAX_PROJECTS)
+				break;
+		}
+	}
+
+	return p;
+}
+
+std::vector<Project*> Ministry::get_projects_running()
+{
+	std::vector<Project*> p;
+
+	const int MAX_PROJECTS = 1;
+	int size = 0;
+
+	for (int i = 0; i < static_cast<int>(projects.size()); ++i)
+	{
+		if (projects[i]->is_running())
+		{
+			p.push_back(projects[i]);
+			size++;
+
+			if (size == MAX_PROJECTS)
+				break;
+		}
+	}
+
+	return p;
+}
+
+std::vector<Project*> Ministry::get_projects_set_to_start()
+{
+	std::vector<Project*> p;
+
+	const int MAX_PROJECTS = 1;
+	int size = 0;
+
+	for (int i = 0; i < static_cast<int>(projects.size()); ++i)
+	{
+		if (projects[i]->is_set_to_start())
+		{
+			p.push_back(projects[i]);
+			size++;
+
+			if (size == MAX_PROJECTS)
+				break;
+		}
+	}
+
+	return p;
 }
 
 void Ministry::start_project()
 {
-	if (!is_project_running() && has_project())
-	{
-		projects[current_project]->start_project();
+	ResourceManager &rm = ResourceManager::getInstance();
 
-		ResourceManager::getInstance().spend_water(projects[current_project]->get_water_cost());
-		ResourceManager::getInstance().spend_cash(projects[current_project]->get_cash_cost());
+	auto p = get_projects_set_to_start();
+
+	for (int i = 0; i < static_cast<int>(p.size()); ++i)
+	{
+		p[i]->start_project();
+
+		rm.spend_water(p[i]->get_water_cost());
+		rm.spend_cash(p[i]->get_cash_cost());
 	}
 
 	((GameLayer*) this->getParent())->update_labels();
 }
 
-void Ministry::complete_project()
-{
-	projects[current_project]->complete();
-
-	current_project++;
-}
-
 void Ministry::develop_project()
 {
-	if (has_project() && is_project_running())
-	{
-		projects[current_project]->develop();
+	auto p = get_projects_running();
 
-		if (is_project_completed())
+	for (int i = 0; i < static_cast<int>(p.size()); ++i)
+	{
+		p[i]->develop();
+
+		if (p[i]->is_completed())
 		{
-			complete_project();
+			p[i]->complete();
 		}
 	}
 }
 
-bool Ministry::is_project_running()
+bool Ministry::has_project_running()
 {
-	if (has_project())
-		return projects[current_project]->is_running();
-	else
-		return false;
+	return static_cast<int>(get_projects_running().size()) > 0;
 }
 
-bool Ministry::is_project_completed()
+bool Ministry::has_project_set_to_start()
 {
-	if (has_project())
-		return projects[current_project]->is_completed();
-	else
-		return false;
+	return static_cast<int>(get_projects_set_to_start().size()) > 0;
 }
 
 
 
 MinistryOfTechnology::MinistryOfTechnology()
+	: persons_on_breakdowns(0)
 {
 	projects.push_back(new TechnologicalProject("Pipes 1", "Build better pipes", 200, 400, 25, 7, 200));
 	projects.push_back(new TechnologicalProject("Pipes 2", "Build even better pipes", 300, 500, 35, 9, 300));
@@ -180,6 +216,50 @@ Ministry* MinistryOfTechnology::create(const char* pszFileName, const char* proj
 	}
 	CC_SAFE_DELETE(ministry);
 	return ministry = nullptr;
+}
+
+void MinistryOfTechnology::setup_listener()
+{
+	auto listener = EventListenerTouchOneByOne::create();
+	listener->setSwallowTouches(true);
+
+	listener->onTouchBegan = CC_CALLBACK_2(MinistryOfTechnology::on_touch_began, this);
+	listener->onTouchMoved = [] (Touch* touch, Event* event) {};
+	listener->onTouchEnded = [] (Touch* touch, Event* event) {};
+
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
+}
+
+bool MinistryOfTechnology::on_touch_began(Touch* touch, Event* event)
+{
+	auto layer = (GameLayer*) (this->getParent());
+
+	if (this->getBoundingBox().containsPoint(touch->getLocation()))
+	{
+		layer->get_menu_technology()->update_projects();
+		layer->get_menu_technology()->setVisible(true);
+		return true;
+	}
+	else
+	{
+		layer->get_menu_technology()->setVisible(false);
+		return false;
+	}
+}
+
+void MinistryOfTechnology::increase_persons_on_breakdowns()
+{
+	persons_on_breakdowns++;
+	ResourceManager::getInstance().occupy_persons(1);
+}
+
+void MinistryOfTechnology::decrease_persons_on_breakdowns()
+{
+	if (persons_on_breakdowns > 0)
+	{
+		persons_on_breakdowns--;
+		ResourceManager::getInstance().unoccupy_persons(1);
+	}
 }
 
 void MinistryOfTechnology::setup_projects(const char* projectsFileName)
@@ -238,6 +318,35 @@ Ministry* MinistryOfEducation::create(const char* pszFileName, const char* proje
 	return ministry = nullptr;
 }
 
+void MinistryOfEducation::setup_listener()
+{
+	auto listener = EventListenerTouchOneByOne::create();
+	listener->setSwallowTouches(true);
+
+	listener->onTouchBegan = CC_CALLBACK_2(MinistryOfEducation::on_touch_began, this);
+	listener->onTouchMoved = [] (Touch* touch, Event* event) {};
+	listener->onTouchEnded = [] (Touch* touch, Event* event) {};
+
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
+}
+
+bool MinistryOfEducation::on_touch_began(Touch* touch, Event* event)
+{
+	auto layer = (GameLayer*) (this->getParent());
+
+	if (this->getBoundingBox().containsPoint(touch->getLocation()))
+	{
+		layer->get_menu_education()->update_projects();
+		layer->get_menu_education()->setVisible(true);
+		return true;
+	}
+	else
+	{
+		layer->get_menu_education()->setVisible(false);
+		return false;
+	}
+}
+
 void MinistryOfEducation::setup_projects(const char* projectsFileName)
 {
 	
@@ -261,6 +370,35 @@ Ministry* MinistryOfCulture::create(const char* pszFileName, const char* project
 	}
 	CC_SAFE_DELETE(ministry);
 	return ministry = nullptr;
+}
+
+void MinistryOfCulture::setup_listener()
+{
+	auto listener = EventListenerTouchOneByOne::create();
+	listener->setSwallowTouches(true);
+
+	listener->onTouchBegan = CC_CALLBACK_2(MinistryOfCulture::on_touch_began, this);
+	listener->onTouchMoved = [] (Touch* touch, Event* event) {};
+	listener->onTouchEnded = [] (Touch* touch, Event* event) {};
+
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
+}
+
+bool MinistryOfCulture::on_touch_began(Touch* touch, Event* event)
+{
+	auto layer = (GameLayer*) (this->getParent());
+
+	if (this->getBoundingBox().containsPoint(touch->getLocation()))
+	{
+		layer->get_menu_culture()->update_projects();
+		layer->get_menu_culture()->setVisible(true);
+		return true;
+	}
+	else
+	{
+		layer->get_menu_culture()->setVisible(false);
+		return false;
+	}
 }
 
 void MinistryOfCulture::setup_projects(const char* projectsFileName)

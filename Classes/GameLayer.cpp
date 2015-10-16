@@ -33,26 +33,38 @@ bool GameLayer::init()
 
     this->addChild(background_town, 1);
 
-    background_menu = Sprite::create("menuback.png");
-	background_menu->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
-	background_menu->setPosition(origin);
+	ministry_of_technology = MinistryOfTechnology::create("tech.png", "tech_projects.txt");
+    ministry_of_technology->setPosition(origin.x + visible_size.width * 0.53, origin.y + visible_size.height * 0.66);
+    this->addChild(ministry_of_technology, 1);
+    ministry_of_technology->setTag(TECH);
 
-	this->addChild(background_menu, 1);
+    menu_technology = ProjectMenuItem::create("techmenu.png", ministry_of_technology);
+    menu_technology->setPosition(Vec2(origin.x + visible_size.width * 0.40, origin.y + visible_size.height * 0.70));
+    this->addChild(menu_technology, 2);
+    menu_technology->setVisible(false);
+    ministry_of_technology->setup_listener();
 
-	ministry_of_technology = MinistryOfTechnology::create("ministerioboton.png", "tech_projects.txt");
-	ministry_of_technology->setPosition(origin.x + visible_size.width * 0.53, origin.y + visible_size.height * 0.66);
-
-	this->addChild(ministry_of_technology, 2);
-
-    ministry_of_education = MinistryOfEducation::create("ministerioboton.png", "tech_projects.txt");
+    ministry_of_education = MinistryOfEducation::create("edu.png", "tech_projects.txt");
     ministry_of_education->setPosition(origin.x + visible_size.width * 0.64, origin.y + visible_size.height * 0.58);
+    this->addChild(ministry_of_education, 1);
+    ministry_of_education->setTag(EDU);
 
-    this->addChild(ministry_of_education, 2);
+    menu_education = ProjectMenuItem::create("edumenu.png", ministry_of_education);
+    menu_education->setPosition(Vec2(origin.x + visible_size.width * 0.40, origin.y + visible_size.height * 0.70));
+    this->addChild(menu_education, 2);
+    menu_education->setVisible(false);
+    ministry_of_education->setup_listener();
 
-    ministry_of_culture = MinistryOfCulture::create("ministerioboton.png", "tech_projects.txt");
+/*  ministry_of_culture = MinistryOfCulture::create("ministerioboton.png", "tech_projects.txt");
     ministry_of_culture->setPosition(origin.x + visible_size.width * 0.75, origin.y + visible_size.height * 0.50);
+    this->addChild(ministry_of_culture, 1);
+    ministry_of_culture->setTag(CULT);
 
-    this->addChild(ministry_of_culture, 2);
+    menu_culture = ProjectMenuItem::create("culturamenu.png", ministry_of_culture);
+    menu_culture->setPosition(Vec2(origin.x + visible_size.width * 0.40, origin.y + visible_size.height * 0.50));
+    this->addChild(menu_culture, 2);
+    menu_culture->setVisible(false);
+    ministry_of_culture->setup_listener();*/
 
 	run_week_button = ui::Button::create("start.png");
 	run_week_button->setPosition(Vec2(origin.x + visible_size.width * 0.95 - run_week_button->getContentSize().width / 2,
@@ -111,7 +123,6 @@ void GameLayer::run_day()
 {
     ministry_of_technology->develop_project();
     ministry_of_education->develop_project();
-	ministry_of_culture->develop_project();
     Rain::rain();
 
     rm.update_day();
@@ -119,6 +130,12 @@ void GameLayer::run_day()
 
 void GameLayer::run_week()
 {
+    if (ministry_of_technology->can_be_funded())
+        ministry_of_technology->start_project();
+
+    if (ministry_of_education->can_be_funded())
+        ministry_of_education->start_project();
+
     for (int i = 0; i < 7; ++i)
         run_day();
 
@@ -127,6 +144,12 @@ void GameLayer::run_week()
     {
         game_over();
     }
+
+    menu_technology->update_projects();
+    menu_education->update_projects();
+
+    menu_technology->update_labels();
+    menu_education->update_labels();
 }
 
 void GameLayer::update_labels()
@@ -231,7 +254,7 @@ void GameLayer::add_labels()
     for (int i = 0; i < num_of_water_lines; ++i)
     {
         auto wl = Sprite::create("consumptionup.png");
-        wl->setPosition(Vec2(origin.x + visible_size.width * 0.057, origin.y + visible_size.height * 0.083)
+        wl->setPosition(Vec2(origin.x + visible_size.width * 0.052, origin.y + visible_size.height * 0.088)
             + Vec2(0, wl->getContentSize().height * 0.70) * i);
         wl->setVisible(false);
 
