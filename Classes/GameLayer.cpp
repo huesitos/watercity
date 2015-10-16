@@ -37,7 +37,6 @@ bool GameLayer::init()
 	ministry_of_technology = MinistryOfTechnology::create("tech.png", "tech_projects.txt");
     ministry_of_technology->setPosition(origin.x + visible_size.width * 0.55, origin.y + visible_size.height * 0.63);
     this->addChild(ministry_of_technology, 1);
-    ministry_of_technology->setTag(TECH);
 
     menu_technology = ProjectMenuItem::create("techmenu.png", ministry_of_technology);
     menu_technology->setPosition(Vec2(origin.x + visible_size.width * 0.45, origin.y + visible_size.height * 0.60));
@@ -48,7 +47,6 @@ bool GameLayer::init()
     ministry_of_education = MinistryOfEducation::create("edu.png", "tech_projects.txt");
     ministry_of_education->setPosition(origin.x + visible_size.width * 0.72, origin.y + visible_size.height * 0.50);
     this->addChild(ministry_of_education, 1);
-    ministry_of_education->setTag(EDU);
 
     menu_education = ProjectMenuItem::create("edumenu.png", ministry_of_education);
     menu_education->setPosition(Vec2(origin.x + visible_size.width * 0.45, origin.y + visible_size.height * 0.60));
@@ -56,11 +54,9 @@ bool GameLayer::init()
     menu_education->setVisible(false);
     ministry_of_education->setup_listener();
 
-
     ministry_of_culture = MinistryOfCulture::create("ministerioboton.png", "tech_projects.txt");
     ministry_of_culture->setPosition(origin.x + visible_size.width * 0.53, origin.y + visible_size.height * 0.44);
     this->addChild(ministry_of_culture, 1);
-    ministry_of_culture->setTag(CULT);
 
     menu_culture = ProjectMenuItem::create("edumenu.png", ministry_of_culture);
     menu_culture->setPosition(Vec2(origin.x + visible_size.width * 0.45, origin.y + visible_size.height * 0.60));
@@ -224,7 +220,11 @@ void GameLayer::run_week()
     }
 
     if (ministry_of_culture->has_project_running())
+    {
         ministry_of_culture->stop_project();
+        this->update_labels();
+        menu_culture->update_labels();
+    }
 }
 
 void GameLayer::update_labels()
@@ -233,7 +233,7 @@ void GameLayer::update_labels()
     _happinessPenaltyLabel->setString(StringUtils::format("%.0f", ResourceManager::getInstance().get_happiness_penalty() * 7));
     _awarenessLabel->setString(StringUtils::format("%.0f%%", ResourceManager::getInstance().get_awareness()));
     _waterReservesLabel->setString(StringUtils::format("%d", ResourceManager::getInstance().get_water_reserves()));
-    _selectedWaterConsumptionLabel->setString(StringUtils::format("%d gl", ResourceManager::getInstance().get_selected_water_consumption()));
+    _selectedWaterConsumptionLabel->setString(StringUtils::format("%d gl", ResourceManager::getInstance().get_selected_water_consumption() * 7));
 
     // _actualWaterConsumptionLabel->setString(StringUtils::format("%d", ResourceManager::getInstance().get_actual_water_consumption()));
     // _desiredWaterConsumptionLabel->setString(StringUtils::format("%d", ResourceManager::getInstance().get_desired_water_consumption()));
@@ -280,7 +280,7 @@ void GameLayer::add_labels()
     // _actualWaterConsumptionLabel->setPosition(Vec2(origin.x + visible_size.width*0.03, origin.y + visible_size.height*0.16));
 
     _selectedWaterConsumptionLabel = Label::createWithTTF(StringUtils::format("%d gl",
-            ResourceManager::getInstance().get_selected_water_consumption()), "fonts/Marker Felt.ttf", fontSize);
+            ResourceManager::getInstance().get_selected_water_consumption() * 7), "fonts/Marker Felt.ttf", fontSize);
     _selectedWaterConsumptionLabel->setPosition(Vec2(origin.x + visible_size.width*0.035, origin.y + visible_size.height*0.06));
 
     // _desiredWaterConsumptionLabel = Label::createWithTTF(StringUtils::format("%d gl",

@@ -74,6 +74,13 @@ void Project::decrease_persons_assigned()
 	}
 }
 
+bool Project::can_be_funded()
+{
+	ResourceManager &rm = ResourceManager::getInstance();
+
+	return rm.has_enough_water(this->get_water_cost()) && rm.has_enough_cash(this->get_cash_cost());
+}
+
 
 TechnologicalProject::TechnologicalProject()
 {}

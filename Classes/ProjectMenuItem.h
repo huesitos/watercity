@@ -42,14 +42,9 @@ private:
 
 	Vector<Sprite*> 	project_images;
 
-	ui::Button* 	add_persons_project;
-	ui::Button* 	remove_persons_project;
+	ui::Button* 	fund_project;
 
 	Label* 			persons_project_label;
-
-	ui::Button* 	add_persons_work;
-	ui::Button* 	remove_persons_work;
-
 	Label* 			persons_work_label;
 
 	Vector<Label*> 	name_labels;

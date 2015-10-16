@@ -32,138 +32,41 @@ void ProjectMenuItem::setup(Ministry* ministry)
 	persons_project_label->setTextColor(Color4B::WHITE);
 	this->addChild(persons_project_label, 1);
 
-	add_persons_project = ui::Button::create("up.png");
-	add_persons_project->setPosition(Vec2(rect_size.width * 0.25, rect_size.height * 0.45));
+	// Fund/defund project
+	// Assign persons and check if can be funded
+	fund_project = ui::Button::create("up.png");
+	fund_project->setPosition(Vec2(rect_size.width * 0.80, rect_size.height * 0.45));
 
-	add_persons_project->addTouchEventListener([this](Ref* sender, ui::Widget::TouchEventType type) {
-		auto projs = this->ministry->get_projects_to_display();
-		Project* proj = nullptr;
-		if (static_cast<int>(projs.size()) > 0)
-			proj = projs[0];
+ 	fund_project->addTouchEventListener([this](Ref* sender, ui::Widget::TouchEventType type){
+ 			auto projs = this->ministry->get_projects_to_display();
+			Project* proj = nullptr;
+			if (static_cast<int>(projs.size()) > 0)
+				proj = projs[0];
 
-		switch (type)
-		{
-			case ui::Widget::TouchEventType::BEGAN:
-				if (proj && !proj->is_running())
-				{
-					if (!proj->is_set_to_start())
-					{
-						proj->assign_persons_needed();
-					}
-					else
-					{
-						proj->increase_persons_assigned();
-					}
-				}
-				break;
-			default:
-				break;
-		}
+      switch (type)
+      {
+        case ui::Widget::TouchEventType::BEGAN:
+                break;
+        case ui::Widget::TouchEventType::ENDED:
+                if (proj && !proj->is_set_to_start() && proj->can_be_funded())
+								{
+									proj->assign_persons_needed();
+								}
+                break;
+        default:
+                break;
+      }
 
-		this->update_labels();
-		((GameLayer*) this->getParent())->update_labels();
-		return true;
+	    this->update_labels();
+			((GameLayer*) this->getParent())->update_labels();
+			return true;
 	});
 
-	this->addChild(add_persons_project, 1);
-
-	remove_persons_project = ui::Button::create("down.png");
-	remove_persons_project->setPosition(Vec2(rect_size.width * 0.25, rect_size.height * 0.35));
-
-	remove_persons_project->addTouchEventListener([this](Ref* sender, ui::Widget::TouchEventType type) {
-		auto projs = this->ministry->get_projects_to_display();
-		Project* proj = nullptr;
-		if (static_cast<int>(projs.size()) > 0)
-			proj = projs[0];
-
-		switch (type)
-		{
-			case ui::Widget::TouchEventType::BEGAN:
-				if (proj && !proj->is_running() && proj->is_set_to_start())
-				{
-					if (proj->get_persons_assigned() > proj->get_persons_needed())
-					{
-						proj->decrease_persons_assigned();
-					}
-					else
-					{
-						proj->empty_persons_assigned();
-						proj->set_to_start(false);
-					}
-				}
-				break;
-			default:
-				break;
-		}
-
-		this->update_labels();
-		((GameLayer*) this->getParent())->update_labels();
-		return true;
-	});
-
-	this->addChild(remove_persons_project, 1);
-
-	if (ministry->getTag() == TECH)
-	{
-		persons_work_label = Label::createWithTTF(StringUtils::format("%d", ((MinistryOfTechnology*) ministry)->get_persons_on_breakdowns()),
-			"fonts/Marker Felt.ttf", 30);
-		persons_work_label->setDimensions(rect_size.width * 0.10, rect_size.height * 0.15);
-		persons_work_label->setPosition(Vec2(rect_size.width * 0.20, rect_size.height * 0.08));
-		persons_work_label->setTextColor(Color4B::WHITE);
-		this->addChild(persons_work_label, 1);
-
-		add_persons_work = ui::Button::create("up.png");
-		add_persons_work->setPosition(Vec2(rect_size.width * 0.25, rect_size.height * 0.15));
-
-		add_persons_work->addTouchEventListener([this](Ref* sender, ui::Widget::TouchEventType type) {
-			switch (type)
-			{
-				case ui::Widget::TouchEventType::BEGAN:
-					if (ResourceManager::getInstance().has_enough_unoccupied(1))
-					{
-						((MinistryOfTechnology*) this->ministry)->increase_persons_on_breakdowns();
-						this->update_labels();
-						((GameLayer*) this->getParent())->update_labels();
-					}
-					break;
-				default:
-					break;
-			}
-
-			return true;
-		});
-
-		this->addChild(add_persons_work, 1);
-
-		remove_persons_work = ui::Button::create("down.png");
-		remove_persons_work->setPosition(Vec2(rect_size.width * 0.25, rect_size.height * 0.05));
-
-		remove_persons_work->addTouchEventListener([this](Ref* sender, ui::Widget::TouchEventType type) {
-			switch (type)
-			{
-				case ui::Widget::TouchEventType::BEGAN:
-					((MinistryOfTechnology*) this->ministry)->decrease_persons_on_breakdowns();
-					this->update_labels();
-					((GameLayer*) this->getParent())->update_labels();
-					break;
-				default:
-					break;
-			}
-
-			return true;
-		});
-
-		this->addChild(remove_persons_work, 1);
-	}
+	this->addChild(fund_project, 1);
 }
 
 void ProjectMenuItem::update_labels()
 {
-	if (ministry->getTag() == TECH)
-	{
-		persons_work_label->setString(StringUtils::format("%d", ((MinistryOfTechnology*) ministry)->get_persons_on_breakdowns()));
-	}
-
 	auto projs = ministry->get_projects_set_to_start();
 	int num_projs = static_cast<int>(projs.size());
 
@@ -221,43 +124,6 @@ void ProjectMenuItem::update_projects()
 		project_images.pushBack(project_image);
 		this->addChild(project_image, 1, -999);
 		project_image->setPosition(Vec2(rect_size.width * 0.65, rect_size.height * (0.70 - 0.25 * i)));
-
-/*		auto listener = EventListenerTouchOneByOne::create();
-		listener->setSwallowTouches(false);
-
-		listener->onTouchBegan = [this, projs, i, project_image] (Touch* touch, Event* event) {
-			//auto projs = this->ministry->get_projects_to_display();
-			if (project_image->isVisible() && project_image->getBoundingBox().containsPoint(touch->getLocation()))
-			{
-				if (!this->ministry->has_project_running())
-				{
-					bool diff_project = false;
-
-					for (int k = 0; k < static_cast<int>(projs.size()); ++k)
-					{
-						if (projs[k]->is_set_to_start() && projs[k] != projs[i])
-						{
-							projs[k]->empty_persons_assigned();
-							projs[k]->set_to_start(false);
-							diff_project = true;
-						}
-					}
-
-					if (diff_project)
-					{
-						projs[i]->set_to_start(true);
-						projs[i]->assign_persons_needed();
-					}
-				}
-
-				this->update_labels();
-				return true;
-			}
-
-			return false;
-		};
-
-		project_image->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, project_image);*/
 
 		auto size = project_image->getContentSize();
 

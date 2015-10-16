@@ -27,6 +27,7 @@ public:
 	virtual void empty_persons_assigned();
 	virtual void increase_persons_assigned();
 	virtual void decrease_persons_assigned();
+	bool can_be_funded();
 
 	std::string 	get_name() { return name; }
 	std::string 	get_description() { return description; }
