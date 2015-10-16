@@ -27,6 +27,9 @@ public:
 
 	void update_labels();
 
+	void turn_off_listeners();
+	void turn_on_listeners();
+
 	void game_over();
 	void finished();
 

@@ -19,7 +19,7 @@ void ResourceManager::reset()
 	fee_per_family = 10;
 	number_of_families = 20;
 
-	population_total = 50;
+	population_total = 60;
 	population_occupied = 0;
 
 	happiness = 50.0f;

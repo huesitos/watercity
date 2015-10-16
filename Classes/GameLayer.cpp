@@ -133,6 +133,9 @@ void GameLayer::run_day()
 
 void GameLayer::run_week()
 {
+    menu_technology->setVisible(false);
+    menu_education->setVisible(false);
+
     if (ministry_of_technology->can_be_funded())
         ministry_of_technology->start_project();
 
@@ -181,7 +184,7 @@ void GameLayer::update_labels()
 
     auto wl = Sprite::create("consumptionup.png");
 
-    int new_water_lines = (rm.get_actual_water_consumption()-rm.get_desired_water_consumption())/100;
+    float new_water_lines = (rm.get_actual_water_consumption() - rm.get_desired_water_consumption()) / 100.0f;
     actual_consumption->setPosition(Vec2(origin.x + visible_size.width * 0.057, origin.y + visible_size.height * 0.080)
             + Vec2(0, wl->getContentSize().height * 0.70) * new_water_lines);
 
@@ -256,12 +259,9 @@ void GameLayer::add_labels()
     this->addChild(_cashLabel, 3);
     this->addChild(_populationLabel, 3);
 
-    auto happinessPenaltySprite = Sprite::create("happy.png");
-    happinessPenaltySprite->setPosition(Vec2(origin.x + visible_size.width * 0.12, origin.y + visible_size.height * 0.02));
     _happinessPenaltyLabel = Label::createWithTTF(StringUtils::format("%d", ResourceManager::getInstance().get_happiness_penalty()), "fonts/Marker Felt.ttf", fontSize);
-    _happinessPenaltyLabel->setPosition(Vec2(origin.x + visible_size.width * 0.14, origin.y + visible_size.height * 0.02));
+    _happinessPenaltyLabel->setPosition(Vec2(origin.x + visible_size.width * 0.13, origin.y + visible_size.height * 0.02));
 
-    this->addChild(happinessPenaltySprite, 3);
     this->addChild(_happinessPenaltyLabel, 3);
 
     num_of_water_lines = (rm.get_actual_water_consumption()-rm.get_desired_water_consumption())/100;
@@ -298,8 +298,34 @@ void GameLayer::add_labels()
     }
 }
 
+void GameLayer::turn_off_listeners()
+{
+    ministry_of_technology->pause();
+    ministry_of_education->pause();
+    menu_technology->pause();
+    menu_education->pause();
+    run_week_button->pause();
+    add_button->pause();
+    substract_button->pause();
+}
+
+void GameLayer::turn_on_listeners()
+{
+    ministry_of_technology->resume();
+    ministry_of_education->resume();
+    menu_technology->resume();
+    menu_education->resume();
+    run_week_button->resume();
+    add_button->resume();
+    substract_button->resume();
+}
+
 void GameLayer::game_over()
 {
+    menu_technology->setVisible(false);
+    menu_education->setVisible(false);
+    turn_off_listeners();
+
     auto gameOver = Label::createWithTTF("Game Over", "fonts/Marker Felt.ttf", 50);
     gameOver->setPosition(visible_size.width/2, visible_size.height/2);
 
@@ -326,6 +352,10 @@ void GameLayer::game_over()
 
 void GameLayer::finished()
 {
+    menu_technology->setVisible(false);
+    menu_education->setVisible(false);
+    turn_off_listeners();
+
     auto gameOver = Label::createWithTTF("Congrats!", "fonts/Marker Felt.ttf", 50);
     gameOver->setPosition(visible_size.width/2, visible_size.height/2);
 

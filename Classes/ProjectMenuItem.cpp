@@ -123,6 +123,7 @@ void ProjectMenuItem::setup(Ministry* ministry)
 					{
 						((MinistryOfTechnology*) this->ministry)->increase_persons_on_breakdowns();
 						this->update_labels();
+						((GameLayer*) this->getParent())->update_labels();
 					}
 					break;
 				default:
@@ -143,6 +144,7 @@ void ProjectMenuItem::setup(Ministry* ministry)
 				case ui::Widget::TouchEventType::BEGAN:
 					((MinistryOfTechnology*) this->ministry)->decrease_persons_on_breakdowns();
 					this->update_labels();
+					((GameLayer*) this->getParent())->update_labels();
 					break;
 				default:
 					break;
@@ -185,7 +187,7 @@ void ProjectMenuItem::update_labels()
 
 void ProjectMenuItem::update_projects()
 {
-	int num_removals = static_cast<int>(project_images.size()) * 7;
+	int num_removals = static_cast<int>(project_images.size());
 
 	project_images.clear();
 	name_labels.clear();
@@ -256,41 +258,41 @@ void ProjectMenuItem::update_projects()
 		name_label->setPosition(Vec2(size.width * 0.50, size.height - name_label->getContentSize().height * 0.75));
 		name_label->setTextColor(Color4B::BLACK);
 		name_labels.pushBack(name_label);
-		project_image->addChild(name_label, 1, -999);
+		project_image->addChild(name_label, 1);
 
 		auto description_label = Label::createWithTTF(projs[i]->get_description(), "fonts/Marker Felt.ttf", font_size);
 		description_label->setDimensions(size.width * 0.90, size.height * 0.30);
 		description_label->setPosition(Vec2(size.width * 0.50, size.height * 0.70 - description_label->getContentSize().height * 0.75));
 		description_label->setTextColor(Color4B::BLACK);
 		description_labels.pushBack(description_label);
-		project_image->addChild(description_label, 1, -999);
+		project_image->addChild(description_label, 1);
 
 		auto cash_label = Label::createWithTTF(StringUtils::format("$ %d", projs[i]->get_cash_cost()), "fonts/Marker Felt.ttf", font_size);
 		cash_label->setDimensions(size.width * 0.20, size.height * 0.20);
 		cash_label->setPosition(Vec2(size.width * 0.15, size.height * 0.30 - cash_label->getContentSize().height / 2));
 		cash_label->setTextColor(Color4B::BLACK);
 		cash_labels.pushBack(cash_label);
-		project_image->addChild(cash_label, 1, -999);
+		project_image->addChild(cash_label, 1);
 
 		auto water_label = Label::createWithTTF(StringUtils::format("Water: %d", projs[i]->get_water_cost()), "fonts/Marker Felt.ttf", font_size);
-		water_label->setDimensions(size.width * 0.20, size.height * 0.20);
+		water_label->setDimensions(size.width * 0.30, size.height * 0.20);
 		water_label->setPosition(Vec2(size.width * 0.25, size.height * 0.30 - water_label->getContentSize().height / 2));
 		water_label->setTextColor(Color4B::BLACK);
 		water_labels.pushBack(water_label);
-		project_image->addChild(water_label, 1, -999);
+		project_image->addChild(water_label, 1);
 
 		auto persons_label = Label::createWithTTF(StringUtils::format("%d / %d", projs[i]->get_persons_assigned(), projs[i]->get_persons_needed()), "fonts/Marker Felt.ttf", font_size);
-		persons_label->setDimensions(size.width * 0.25, size.height * 0.20);
+		persons_label->setDimensions(size.width * 0.30, size.height * 0.20);
 		persons_label->setPosition(Vec2(size.width * 0.55, size.height * 0.30 - persons_label->getContentSize().height / 2));
 		persons_label->setTextColor(Color4B::BLACK);
 		persons_labels.pushBack(persons_label);
-		project_image->addChild(persons_label, 1, -999);
+		project_image->addChild(persons_label, 1);
 
 		auto time_label = Label::createWithTTF(StringUtils::format("%d / %d", projs[i]->get_time_completed(), projs[i]->get_completion_time()), "fonts/Marker Felt.ttf", font_size);
-		time_label->setDimensions(size.width * 0.25, size.height * 0.20);
+		time_label->setDimensions(size.width * 0.30, size.height * 0.20);
 		time_label->setPosition(Vec2(size.width * 0.80, size.height * 0.30 - time_label->getContentSize().height / 2));
 		time_label->setTextColor(Color4B::BLACK);
 		time_labels.pushBack(time_label);
-		project_image->addChild(time_label, 1, -999);
+		project_image->addChild(time_label, 1);
 	}
 }
