@@ -49,7 +49,6 @@ void ProjectMenuItem::setup(Ministry* ministry)
 					if (!proj->is_set_to_start())
 					{
 						proj->assign_persons_needed();
-						proj->set_to_start(true);
 					}
 					else
 					{

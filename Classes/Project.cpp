@@ -51,6 +51,7 @@ void Project::assign_persons_needed()
 	{
 		persons_assigned = persons_needed;
 		ResourceManager::getInstance().occupy_persons(persons_needed);
+		set_to_start(true);
 	}
 }
 
