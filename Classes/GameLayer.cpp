@@ -167,7 +167,7 @@ void GameLayer::run_week()
 void GameLayer::update_labels()
 {
     _happinessLabel->setString(StringUtils::format("%.0f%%", ResourceManager::getInstance().get_happiness()));
-    _happinessPenaltyLabel->setString(StringUtils::format("%d", ResourceManager::getInstance().get_happiness_penalty() * 7));
+    _happinessPenaltyLabel->setString(StringUtils::format("%.0f", ResourceManager::getInstance().get_happiness_penalty() * 7));
     _awarenessLabel->setString(StringUtils::format("%.0f%%", ResourceManager::getInstance().get_awareness()));
     _waterReservesLabel->setString(StringUtils::format("%d", ResourceManager::getInstance().get_water_reserves()));
     _selectedWaterConsumptionLabel->setString(StringUtils::format("%d gl", ResourceManager::getInstance().get_selected_water_consumption()));
@@ -259,7 +259,7 @@ void GameLayer::add_labels()
     this->addChild(_cashLabel, 3);
     this->addChild(_populationLabel, 3);
 
-    _happinessPenaltyLabel = Label::createWithTTF(StringUtils::format("%d", ResourceManager::getInstance().get_happiness_penalty()), "fonts/Marker Felt.ttf", fontSize);
+    _happinessPenaltyLabel = Label::createWithTTF(StringUtils::format("%.0f", ResourceManager::getInstance().get_happiness_penalty() * 7), "fonts/Marker Felt.ttf", fontSize);
     _happinessPenaltyLabel->setPosition(Vec2(origin.x + visible_size.width * 0.13, origin.y + visible_size.height * 0.02));
 
     this->addChild(_happinessPenaltyLabel, 3);

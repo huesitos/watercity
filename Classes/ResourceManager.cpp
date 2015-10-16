@@ -38,7 +38,7 @@ void ResourceManager::update_day()
 	if (water_reserves < 0)
 		water_reserves = 0;
 
-	int happiness_penalty = get_happiness_penalty();
+	float happiness_penalty = get_happiness_penalty();
 
 	if (happiness_penalty < 0)
 		decrease_happiness(-1*get_happiness_penalty());
@@ -180,7 +180,7 @@ void ResourceManager::increase_water_reserves(float amount)
 	water_reserves += amount;
 }
 
-int ResourceManager::get_happiness_penalty()
+float ResourceManager::get_happiness_penalty()
 {
 	// Penalty rate based on the difference between the actual and desired consumption
 	int consumption_difference = initial_actual_water_consumption - initial_desired_water_consumption;

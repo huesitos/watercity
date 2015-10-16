@@ -128,7 +128,7 @@ public:
 	int 	get_population_occupied() { return population_occupied; }
 	int 	get_population_unoccupied() { return population_total - population_occupied; }
 
-	int 	get_happiness_penalty();
+	float 	get_happiness_penalty();
 
 	float 	get_happiness() { return happiness; }
 	float 	get_awareness() { return awareness; }
