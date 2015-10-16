@@ -119,10 +119,11 @@ bool GameLayer::init()
     background_resources->setAnchorPoint(Vec2::ANCHOR_BOTTOM_RIGHT);
     background_resources->setPosition(origin + Vec2(visible_size.width, 0));
 
-   this->addChild(background_resources, 1);
+    this->addChild(background_resources, 1);
 
 	ministry_of_technology = MinistryOfTechnology::create("images/technology.png", "tech_projects.txt");
     ministry_of_technology->setPosition(origin.x + visible_size.width * 0.58, origin.y + visible_size.height * 0.66);
+
     this->addChild(ministry_of_technology, 1);
 
     menu_technology = ProjectMenuItem::create("images/techmenu.png", ministry_of_technology);
