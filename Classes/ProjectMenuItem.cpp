@@ -105,7 +105,7 @@ void ProjectMenuItem::setup(Ministry* ministry)
 
 	if (ministry->getTag() == TECH)
 	{
-		persons_work_label = Label::createWithTTF(StringUtils::format("%d", ((MinistryOfTechnology*) ministry)->get_persons_on_breakdowns()), 
+		persons_work_label = Label::createWithTTF(StringUtils::format("%d", ((MinistryOfTechnology*) ministry)->get_persons_on_breakdowns()),
 			"fonts/Marker Felt.ttf", 30);
 		persons_work_label->setDimensions(rect_size.width * 0.10, rect_size.height * 0.15);
 		persons_work_label->setPosition(Vec2(rect_size.width * 0.20, rect_size.height * 0.08));
@@ -276,21 +276,21 @@ void ProjectMenuItem::update_projects()
 
 		auto water_label = Label::createWithTTF(StringUtils::format("Water: %d", projs[i]->get_water_cost()), "fonts/Marker Felt.ttf", font_size);
 		water_label->setDimensions(size.width * 0.30, size.height * 0.20);
-		water_label->setPosition(Vec2(size.width * 0.25, size.height * 0.30 - water_label->getContentSize().height / 2));
+		water_label->setPosition(Vec2(size.width * 0.35, size.height * 0.30 - water_label->getContentSize().height / 2));
 		water_label->setTextColor(Color4B::BLACK);
 		water_labels.pushBack(water_label);
 		project_image->addChild(water_label, 1);
 
 		auto persons_label = Label::createWithTTF(StringUtils::format("%d / %d", projs[i]->get_persons_assigned(), projs[i]->get_persons_needed()), "fonts/Marker Felt.ttf", font_size);
 		persons_label->setDimensions(size.width * 0.30, size.height * 0.20);
-		persons_label->setPosition(Vec2(size.width * 0.55, size.height * 0.30 - persons_label->getContentSize().height / 2));
+		persons_label->setPosition(Vec2(size.width * 0.65, size.height * 0.30 - persons_label->getContentSize().height / 2));
 		persons_label->setTextColor(Color4B::BLACK);
 		persons_labels.pushBack(persons_label);
 		project_image->addChild(persons_label, 1);
 
 		auto time_label = Label::createWithTTF(StringUtils::format("%d / %d", projs[i]->get_time_completed(), projs[i]->get_completion_time()), "fonts/Marker Felt.ttf", font_size);
 		time_label->setDimensions(size.width * 0.30, size.height * 0.20);
-		time_label->setPosition(Vec2(size.width * 0.80, size.height * 0.30 - time_label->getContentSize().height / 2));
+		time_label->setPosition(Vec2(size.width * 0.90, size.height * 0.30 - time_label->getContentSize().height / 2));
 		time_label->setTextColor(Color4B::BLACK);
 		time_labels.pushBack(time_label);
 		project_image->addChild(time_label, 1);

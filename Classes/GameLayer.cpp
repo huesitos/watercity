@@ -35,23 +35,23 @@ bool GameLayer::init()
     this->addChild(background_town, 1);
 
 	ministry_of_technology = MinistryOfTechnology::create("tech.png", "tech_projects.txt");
-    ministry_of_technology->setPosition(origin.x + visible_size.width * 0.53, origin.y + visible_size.height * 0.66);
+    ministry_of_technology->setPosition(origin.x + visible_size.width * 0.55, origin.y + visible_size.height * 0.63);
     this->addChild(ministry_of_technology, 1);
     ministry_of_technology->setTag(TECH);
 
     menu_technology = ProjectMenuItem::create("techmenu.png", ministry_of_technology);
-    menu_technology->setPosition(Vec2(origin.x + visible_size.width * 0.40, origin.y + visible_size.height * 0.70));
+    menu_technology->setPosition(Vec2(origin.x + visible_size.width * 0.45, origin.y + visible_size.height * 0.60));
     this->addChild(menu_technology, 2);
     menu_technology->setVisible(false);
     ministry_of_technology->setup_listener();
 
     ministry_of_education = MinistryOfEducation::create("edu.png", "tech_projects.txt");
-    ministry_of_education->setPosition(origin.x + visible_size.width * 0.64, origin.y + visible_size.height * 0.58);
+    ministry_of_education->setPosition(origin.x + visible_size.width * 0.72, origin.y + visible_size.height * 0.50);
     this->addChild(ministry_of_education, 1);
     ministry_of_education->setTag(EDU);
 
     menu_education = ProjectMenuItem::create("edumenu.png", ministry_of_education);
-    menu_education->setPosition(Vec2(origin.x + visible_size.width * 0.40, origin.y + visible_size.height * 0.70));
+    menu_education->setPosition(Vec2(origin.x + visible_size.width * 0.45, origin.y + visible_size.height * 0.60));
     this->addChild(menu_education, 2);
     menu_education->setVisible(false);
     ministry_of_education->setup_listener();
