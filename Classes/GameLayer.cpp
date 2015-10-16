@@ -166,15 +166,6 @@ void GameLayer::run_week()
     menu_education->setVisible(false);
     menu_culture->setVisible(false);
 
-    if (ministry_of_technology->can_be_funded())
-        ministry_of_technology->start_project();
-
-    if (ministry_of_education->can_be_funded())
-        ministry_of_education->start_project();
-
-    if (ministry_of_culture->can_be_funded())
-        ministry_of_culture->start_project();
-
     for (int i = 0; i < 7; ++i)
         run_day();
 

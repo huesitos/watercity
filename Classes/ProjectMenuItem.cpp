@@ -51,6 +51,7 @@ void ProjectMenuItem::setup(Ministry* ministry)
                 if (proj && !proj->is_set_to_start() && proj->can_be_funded())
 								{
 									proj->assign_persons_needed();
+									this->ministry->start_project();
 								}
                 break;
         default:

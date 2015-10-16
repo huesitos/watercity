@@ -122,6 +122,7 @@ void Ministry::start_project()
 
 	for (int i = 0; i < static_cast<int>(p.size()); ++i)
 	{
+		printf("cobro\n");
 		p[i]->start_project();
 
 		rm.spend_water(p[i]->get_water_cost());
