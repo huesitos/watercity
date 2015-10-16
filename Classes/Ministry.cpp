@@ -25,47 +25,6 @@ bool Ministry::init(const char* pszFileName, const char* projectsFileName)
 	return false;
 }
 
-bool Ministry::on_touch_began(Touch* touch, Event* event)
-{
-/*	if (this->getBoundingBox().containsPoint(touch->getLocation()))
-	{
-		int i = 0;
-
-		for (auto pmi : project_menu_items)
-		{
-			if (i < 2)
-			{
-				pmi->setPosition(Vec2(Director::getInstance()->getVisibleSize().width * 1 / 2, 
-					(Director::getInstance()->getVisibleSize().height * 3 / 4) - i * (pmi->getBoundingBox().size.height))
-					- this->getPosition());
-				pmi->setVisible(true);
-			}
-			++i;
-		}
-
-		return true;
-	}
-	else
-	{
-		for (auto pmi : project_menu_items)
-		{
-			pmi->setVisible(false);
-		}
-
-		return false;
-	}*/
-
-/*	if (this->getBoundingBox().containsPoint(touch->getLocation()))
-	{
-		if (has_project() && can_be_funded())
-			start_project();
-
-		return true;
-	}
-
-	return false;*/
-}
-
 bool Ministry::has_project()
 {
 	return static_cast<int>(get_projects_to_display().size()) > 0;
@@ -202,8 +161,16 @@ bool Ministry::has_project_set_to_start()
 MinistryOfTechnology::MinistryOfTechnology()
 	: persons_on_breakdowns(0)
 {
-	projects.push_back(new TechnologicalProject("Pipes 1", "Build better pipes", 200, 400, 25, 7, 200));
-	projects.push_back(new TechnologicalProject("Pipes 2", "Build even better pipes", 300, 500, 35, 9, 300));
+	projects.push_back(new TechnologicalProject("Pipes 1", "Build better pipes", 750, 5000, 25, 7, 50));
+	projects.push_back(new TechnologicalProject("Pipes 2", "Build even better pipes", 1000, 6000, 35, 7, 50));
+	projects.push_back(new TechnologicalProject("Pipes 3", "Build even better pipes", 1250, 7000, 35, 7, 50));
+	projects.push_back(new TechnologicalProject("Pipes 4", "Build even better pipes", 1500, 8000, 35, 7, 75));
+	projects.push_back(new TechnologicalProject("Pipes 5", "Build even better pipes", 1750, 9000, 35, 7, 75));
+	projects.push_back(new TechnologicalProject("Pipes 6", "Build even better pipes", 2000, 10000, 35, 7, 75));
+	projects.push_back(new TechnologicalProject("Pipes 7", "Build even better pipes", 2225, 11000, 35, 7, 75));
+	projects.push_back(new TechnologicalProject("Pipes 8", "Build even better pipes", 2500, 12000, 35, 7, 100));
+	projects.push_back(new TechnologicalProject("Pipes 9", "Build even better pipes", 2750, 13000, 35, 7, 100));
+	projects.push_back(new TechnologicalProject("Pipes 10", "Build even better pipes", 3000, 14000, 35, 7, 100));
 }
 
 Ministry* MinistryOfTechnology::create(const char* pszFileName, const char* projectsFileName)
@@ -290,7 +257,7 @@ void MinistryOfTechnology::setup_projects(const char* projectsFileName)
 			data_file >> change_in_consumption;
 			data_file.ignore(10, '\n');
 
-			projects.push_back(new TechnologicalProject(name, desc, cash_cost, water_cost, persons_needed, 
+			projects.push_back(new TechnologicalProject(name, desc, cash_cost, water_cost, persons_needed,
 				completion_time, change_in_consumption));
 		}
 	}
@@ -302,8 +269,16 @@ void MinistryOfTechnology::setup_projects(const char* projectsFileName)
 
 MinistryOfEducation::MinistryOfEducation()
 {
-	projects.push_back(new EducationalProject("Tip 1", "Spend less time in the bathtub", 200, 400, 15, 7, 2));
-	projects.push_back(new EducationalProject("Tip 2", "Use a glass for brushing your teeth", 300, 500, 20, 9, 2));
+	projects.push_back(new EducationalProject("Tip 1", "Spend less time in the bathtub", 1500, 3000, 15, 7, 10));
+	projects.push_back(new EducationalProject("Tip 2", "Use a glass for brushing your teeth", 1500, 3000, 20, 7, 10));
+	projects.push_back(new EducationalProject("Tip 3", "Use a glass for brushing your teeth", 1500, 3000, 20, 7, 10));
+	projects.push_back(new EducationalProject("Tip 4", "Use a glass for brushing your teeth", 1750, 3000, 20, 7, 10));
+	projects.push_back(new EducationalProject("Tip 5", "Use a glass for brushing your teeth", 1750, 3000, 20, 7, 10));
+	projects.push_back(new EducationalProject("Tip 6", "Use a glass for brushing your teeth", 1750, 3000, 20, 7, 10));
+	projects.push_back(new EducationalProject("Tip 7", "Use a glass for brushing your teeth", 2000, 3000, 20, 7, 10));
+	projects.push_back(new EducationalProject("Tip 8", "Use a glass for brushing your teeth", 2000, 3000, 20, 7, 10));
+	projects.push_back(new EducationalProject("Tip 9", "Use a glass for brushing your teeth", 2000, 3000, 20, 7, 10));
+	projects.push_back(new EducationalProject("Tip 10", "Use a glass for brushing your teeth", 2250, 3000, 20, 7, 10));
 }
 
 Ministry* MinistryOfEducation::create(const char* pszFileName, const char* projectsFileName)
@@ -349,15 +324,14 @@ bool MinistryOfEducation::on_touch_began(Touch* touch, Event* event)
 
 void MinistryOfEducation::setup_projects(const char* projectsFileName)
 {
-	
+
 }
 
 
 
 MinistryOfCulture::MinistryOfCulture()
 {
-	projects.push_back(new CulturalProject("Gardening fair", "What the name says", 200, 400, 15, 7, 10));
-	projects.push_back(new CulturalProject("Aquatic park", "Yep", 300, 500, 20, 9, 10));
+	projects.push_back(new CulturalProject("Gardening fair", "What the name says", 750, 3000, 15, 7, 20));
 }
 
 Ministry* MinistryOfCulture::create(const char* pszFileName, const char* projectsFileName)
@@ -403,6 +377,5 @@ bool MinistryOfCulture::on_touch_began(Touch* touch, Event* event)
 
 void MinistryOfCulture::setup_projects(const char* projectsFileName)
 {
-	
-}
 
+}

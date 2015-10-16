@@ -7,7 +7,7 @@ ResourceManager::ResourceManager()
 
 void ResourceManager::reset()
 {
-	water_reserves = 100000;
+	water_reserves = 50000;
 	water_inflow = 2000;
 	actual_water_consumption = 2500;
 	initial_actual_water_consumption = actual_water_consumption;
@@ -15,9 +15,9 @@ void ResourceManager::reset()
 	initial_desired_water_consumption = desired_water_consumption;
 	selected_water_consumption = actual_water_consumption;
 
-	cash_total = 2000;
-	fee_per_family = 5;
-	number_of_families = 10;
+	cash_total = 3000;
+	fee_per_family = 10;
+	number_of_families = 20;
 
 	population_total = 50;
 	population_occupied = 0;

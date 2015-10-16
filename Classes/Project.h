@@ -61,11 +61,13 @@ class TechnologicalProject : public Project
 {
 public:
 	TechnologicalProject();
-	TechnologicalProject(std::string name, std::string description, int cash_cost, int water_cost, int persons_needed, 
+	TechnologicalProject(std::string name, std::string description, int cash_cost, int water_cost, int persons_needed,
 							int completion_time, int change_in_consumption);
 	virtual ~TechnologicalProject() {}
 
 	virtual void complete();
+
+	int get_change_in_consumption();
 
 protected:
 	int 	change_in_consumption;
@@ -81,8 +83,10 @@ public:
 	virtual ~EducationalProject() {}
 
 	virtual void complete();
+	int get_change_in_awareness();
 
 protected:
+
 	float 	change_in_awareness;
 	float 	change_in_min_awareness;
 };
@@ -97,6 +101,7 @@ public:
 	virtual ~CulturalProject() {}
 
 	virtual void complete();
+	int get_change_in_happiness();
 
 protected:
 	float 	change_in_happiness;

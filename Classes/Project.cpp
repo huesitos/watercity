@@ -3,8 +3,8 @@
 
 
 Project::Project(std::string name, std::string description, int cash_cost, int water_cost, int persons_needed, int completion_time)
-	: running(false), name(name), description(description), cash_cost(cash_cost), 
-	water_cost(water_cost), persons_needed(persons_needed), completion_time(completion_time), 
+	: running(false), name(name), description(description), cash_cost(cash_cost),
+	water_cost(water_cost), persons_needed(persons_needed), completion_time(completion_time),
 	time_completed(0), persons_assigned(0), to_start(false)
 {}
 
@@ -85,7 +85,7 @@ void Project::decrease_persons_assigned()
 TechnologicalProject::TechnologicalProject()
 {}
 
-TechnologicalProject::TechnologicalProject(std::string name, std::string description, int cash_cost, int water_cost, int persons_needed, 
+TechnologicalProject::TechnologicalProject(std::string name, std::string description, int cash_cost, int water_cost, int persons_needed,
 							int completion_time, int change_in_consumption)
 	: Project(name, description, cash_cost, water_cost, persons_needed, completion_time), change_in_consumption(change_in_consumption)
 {}
@@ -96,6 +96,10 @@ void TechnologicalProject::complete()
 	ResourceManager::getInstance().decrease_actual_consumption(change_in_consumption);
 }
 
+int TechnologicalProject::get_change_in_consumption()
+{
+	return change_in_consumption;
+}
 
 EducationalProject::EducationalProject()
 {}
@@ -112,6 +116,10 @@ void EducationalProject::complete()
 	// ResourceManager::getInstance().increase_awareness_min(change_in_min_awareness);
 }
 
+int EducationalProject::get_change_in_awareness()
+{
+	return change_in_awareness;
+}
 
 
 CulturalProject::CulturalProject()
@@ -126,4 +134,9 @@ void CulturalProject::complete()
 {
 	Project::complete();
 	ResourceManager::getInstance().increase_happiness(change_in_happiness);
+}
+
+int CulturalProject::get_change_in_happiness()
+{
+	return change_in_happiness;
 }

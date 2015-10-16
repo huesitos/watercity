@@ -28,6 +28,7 @@ public:
 	void update_labels();
 
 	void game_over();
+	void finished();
 
 	ProjectMenuItem* get_menu_technology() { return menu_technology; }
 	ProjectMenuItem* get_menu_education() { return menu_education; }

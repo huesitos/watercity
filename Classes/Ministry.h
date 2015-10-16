@@ -33,6 +33,7 @@ protected:
 	bool on_touch_began(cocos2d::Touch* touch, cocos2d::Event* event);
 
 	bool has_project();
+	bool can_be_funded();
 
 	std::vector<Project*> projects;
 };
@@ -85,6 +86,7 @@ public:
 	virtual ~MinistryOfCulture() {}
 
 	static Ministry* create(const char* pszFileName, const char* projectsFileName);
+	virtual void complete_project();
 
 	virtual void setup_projects(const char* projectsFileName);
 

@@ -2,6 +2,7 @@
 #include "Breakdown.h"
 #include "ProhibitedAct.h"
 #include "Rain.h"
+#include "Project.h"
 
 Scene* GameLayer::createScene()
 {
@@ -54,6 +55,7 @@ bool GameLayer::init()
     this->addChild(menu_education, 2);
     menu_education->setVisible(false);
     ministry_of_education->setup_listener();
+
 
 /*  ministry_of_culture = MinistryOfCulture::create("ministerioboton.png", "tech_projects.txt");
     ministry_of_culture->setPosition(origin.x + visible_size.width * 0.75, origin.y + visible_size.height * 0.50);
@@ -115,24 +117,6 @@ bool GameLayer::init()
 
     this->addChild(substract_button, 2);
 
-    auto increase_awareness_button = ui::Button::create("awareness.png");
-    increase_awareness_button->setPosition(Vec2(origin.x + visible_size.width/2, origin.y + visible_size.height/2));
-    increase_awareness_button->addTouchEventListener([this](Ref* sender, ui::Widget::TouchEventType type) {
-        switch (type)
-        {
-            case ui::Widget::TouchEventType::BEGAN:
-                // printf("Actual before decrease: %d\n", get_actual_water_consumption());
-                rm.increase_awareness(1);
-                update_labels();
-                break;
-            default:
-                break;
-        }
-    });
-
-    this->addChild(increase_awareness_button, 2);
-
-
     add_labels();
 
     return true;
@@ -159,16 +143,22 @@ void GameLayer::run_week()
         run_day();
 
     update_labels();
-    if (rm.is_water_depleted())
-    {
-        game_over();
-    }
 
     menu_technology->update_projects();
     menu_education->update_projects();
 
     menu_technology->update_labels();
     menu_education->update_labels();
+
+    if (rm.is_water_depleted())
+    {
+        game_over();
+    }
+
+    if (rm.get_water_reserves() >= 50000 && rm.get_actual_water_consumption())
+    {
+        finished();
+    }
 }
 
 void GameLayer::update_labels()
@@ -178,9 +168,10 @@ void GameLayer::update_labels()
     _awarenessLabel->setString(StringUtils::format("%.0f%%", ResourceManager::getInstance().get_awareness()));
     _waterReservesLabel->setString(StringUtils::format("%d", ResourceManager::getInstance().get_water_reserves()));
     _selectedWaterConsumptionLabel->setString(StringUtils::format("%d gl", ResourceManager::getInstance().get_selected_water_consumption()));
+
     // _actualWaterConsumptionLabel->setString(StringUtils::format("%d", ResourceManager::getInstance().get_actual_water_consumption()));
     // _desiredWaterConsumptionLabel->setString(StringUtils::format("%d", ResourceManager::getInstance().get_desired_water_consumption()));
-    _cashLabel->setString(StringUtils::format("$ %d", ResourceManager::getInstance().get_cash_total()));
+    _cashLabel->setString(StringUtils::format("$%d / $%d", ResourceManager::getInstance().get_cash_total(), rm.get_fee_per_family()*rm.get_number_of_families()*7));
     _populationLabel->setString(StringUtils::format("%d / %d",
         ResourceManager::getInstance().get_population_occupied(),
         ResourceManager::getInstance().get_population_total()));
@@ -230,7 +221,7 @@ void GameLayer::add_labels()
     //         ResourceManager::getInstance().get_desired_water_consumption()), "fonts/Marker Felt.ttf", 12);
     // _desiredWaterConsumptionLabel->setPosition(Vec2(origin.x + visible_size.width*0.03, origin.y + visible_size.height*0.08));
 
-    _cashLabel = Label::createWithTTF(StringUtils::format("$ %d", ResourceManager::getInstance().get_cash_total()), "fonts/Marker Felt.ttf", fontSize);
+    _cashLabel = Label::createWithTTF(StringUtils::format("$%d / $%d", ResourceManager::getInstance().get_cash_total(), rm.get_fee_per_family()*rm.get_number_of_families()*7), "fonts/Marker Felt.ttf", fontSize);
     _cashLabel->setPosition(Vec2(origin.x + visible_size.width * 0.86, origin.y + visible_size.height * 0.255));
 
     _populationLabel = Label::createWithTTF(StringUtils::format("%d / %d",
@@ -310,6 +301,32 @@ void GameLayer::add_labels()
 void GameLayer::game_over()
 {
     auto gameOver = Label::createWithTTF("Game Over", "fonts/Marker Felt.ttf", 50);
+    gameOver->setPosition(visible_size.width/2, visible_size.height/2);
+
+    this->addChild(gameOver, 10);
+
+    auto main_menu = ui::Button::create("play.png");
+    main_menu->setPosition(Vec2(origin.x + visible_size.width/2,
+                                      origin.y + visible_size.height/2 + - main_menu->getContentSize().height));
+    main_menu->addTouchEventListener([this](Ref* sender, ui::Widget::TouchEventType type) {
+        switch (type)
+        {
+            case ui::Widget::TouchEventType::BEGAN:
+                Director::getInstance()->replaceScene(TransitionFade::create(1.0f, GameLayer::createScene()));
+                break;
+            default:
+                break;
+        }
+
+        return true;
+    });
+
+    this->addChild(main_menu, 10);
+}
+
+void GameLayer::finished()
+{
+    auto gameOver = Label::createWithTTF("Congrats!", "fonts/Marker Felt.ttf", 50);
     gameOver->setPosition(visible_size.width/2, visible_size.height/2);
 
     this->addChild(gameOver, 10);
