@@ -6,6 +6,7 @@
 #include "ProjectMenuItem.h"
 #include "ResourceManager.h"
 #include "MainMenu.h"
+#include "Climate.h"
 
 USING_NS_CC;
 
@@ -14,7 +15,7 @@ class GameLayer : public cocos2d::Layer
 {
 public:
 	GameLayer()
-		: rm(ResourceManager::getInstance())
+		: rm(ResourceManager::getInstance()), climate(Climate::getInstance())
 	{
 		rm.reset();
 	}
@@ -43,8 +44,12 @@ private:
 	void 	add_labels();
 
 	ResourceManager &rm;
+	Climate &climate;
 
 	Sprite* 	background_town;
+	Sprite* sunny;
+  Sprite* cloudy;
+  Sprite* rainy;
 
 	Ministry* 	ministry_of_technology;
 	Ministry* 	ministry_of_education;
