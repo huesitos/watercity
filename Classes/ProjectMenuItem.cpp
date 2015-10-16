@@ -173,6 +173,16 @@ void ProjectMenuItem::update_labels()
 		persons_on_projects += projs[i]->get_persons_assigned();
 	}
 
+	if (num_projs == 0)
+	{
+		projs = ministry->get_projects_running();
+		num_projs = static_cast<int>(projs.size());
+		for (int i = 0; i < num_projs; ++i)
+		{
+			persons_on_projects += projs[i]->get_persons_assigned();
+		}
+	}
+
 	persons_project_label->setString(StringUtils::format("%d", persons_on_projects));
 
 	projs = ministry->get_projects_to_display();

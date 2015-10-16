@@ -124,8 +124,33 @@ bool GameLayer::init()
 
 void GameLayer::run_day()
 {
-    ministry_of_technology->develop_project();
-    ministry_of_education->develop_project();
+    if (ministry_of_technology->has_project_running() ||
+        ministry_of_education->has_project_running())
+    {
+        auto hap = rm.get_happiness();
+        int chance;
+        if (hap >= 70)
+            chance = 0;
+        else
+            chance = static_cast<int>(50 * (70 - hap) / 70);
+
+        if (chance > RandomHelper::random_int(0, 100))
+        {
+            did_riot_happen = true;
+        }
+        else
+        {
+            ministry_of_technology->develop_project();
+            ministry_of_education->develop_project();
+
+            if (hap >= 70 && 20 > RandomHelper::random_int(0, 100))
+            {
+                will_reward = true;
+                cash_reward = RandomHelper::random_int(500, 1000);
+            }
+        }
+    }
+
     Rain::rain();
 
     rm.update_day();
@@ -133,6 +158,10 @@ void GameLayer::run_day()
 
 void GameLayer::run_week()
 {
+    did_riot_happen = false;
+    will_reward = false;
+    cash_reward = 0;
+
     menu_technology->setVisible(false);
     menu_education->setVisible(false);
 
@@ -158,9 +187,30 @@ void GameLayer::run_week()
         game_over();
     }
 
-    if (rm.get_water_reserves() >= 50000 && rm.get_actual_water_consumption())
+    if (rm.get_water_reserves() >= 50000 && rm.get_actual_water_consumption() == rm.get_desired_water_consumption())
     {
         finished();
+    }
+
+    if (did_riot_happen && (ministry_of_technology->has_project_running() || ministry_of_education->has_project_running()))
+    {
+        auto label = Label::createWithTTF("Oh no! The people rioted. Your projects were not completed.", 
+            "fonts/Marker Felt.ttf", 30);
+        label->setTextColor(Color4B::BLACK);
+        label->setPosition(Vec2(origin.x + visible_size.width * 0.40, origin.y + visible_size.height * 0.60));
+        this->addChild(label, 5);
+        label->setOpacity(0.0f);
+
+        auto get_removed = CallFunc::create([this, label](){
+            this->removeChild(label);
+        });
+
+        label->runAction(Sequence::create(FadeIn::create(1.0f), DelayTime::create(1.0f), 
+            FadeOut::create(1.0f), get_removed, nullptr));
+    }
+    else if (will_reward)
+    {
+
     }
 }
 

@@ -5,7 +5,7 @@
 Project::Project(std::string name, std::string description, int cash_cost, int water_cost, int persons_needed, int completion_time)
 	: running(false), name(name), description(description), cash_cost(cash_cost),
 	water_cost(water_cost), persons_needed(persons_needed), completion_time(completion_time),
-	time_completed(0), persons_assigned(0), to_start(false)
+	time_completed(0), persons_assigned(0), to_start(false), completed(false), reported(false)
 {}
 
 void Project::start_project()
@@ -23,11 +23,8 @@ void Project::complete()
 void Project::develop()
 {
 	time_completed++;
-}
-
-bool Project::is_running()
-{
-	return running;
+	if (time_completed >= completion_time)
+		completed = true;
 }
 
 void Project::set_to_start(bool starting)
@@ -35,14 +32,9 @@ void Project::set_to_start(bool starting)
 	to_start = starting;
 }
 
-bool Project::is_set_to_start()
+void Project::set_reported(bool reported)
 {
-	return to_start;
-}
-
-bool Project::is_completed()
-{
-	return time_completed >= completion_time;
+	this->reported = reported;
 }
 
 void Project::assign_persons_needed()

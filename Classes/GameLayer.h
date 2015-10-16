@@ -80,6 +80,10 @@ private:
 
 	Sprite* 			desired_consumption;
 	Sprite* 			actual_consumption;
+
+	bool 		did_riot_happen;
+	bool 		will_reward;
+	int 		cash_reward;
 };
 
 #endif // __GAME_LAYER_H__

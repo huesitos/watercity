@@ -15,10 +15,12 @@ public:
 
 	virtual void start_project();
 	virtual void develop();
-	virtual bool is_running();
 	virtual void set_to_start(bool starting);
-	virtual bool is_set_to_start();
-	virtual bool is_completed();
+	virtual void set_reported(bool reported);
+	virtual bool is_running() { return running; }
+	virtual bool is_set_to_start() { return to_start; }
+	virtual bool is_completed() { return completed; }
+	virtual bool is_reported() { return reported; }
 
 	virtual void assign_persons_needed();
 	virtual void empty_persons_assigned();
@@ -54,6 +56,8 @@ protected:
 
 	bool 	running;
 	bool 	to_start;
+	bool 	completed;
+	bool 	reported;
 };
 
 
