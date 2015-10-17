@@ -57,6 +57,7 @@ private:
 	Climate &climate;
 
 	Sprite* 	background_town;
+	Sprite* 	sky;
 	Sprite* sunny;
   Sprite* cloudy;
   Sprite* rainy;

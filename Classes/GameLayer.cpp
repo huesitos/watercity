@@ -17,37 +17,115 @@ Scene* GameLayer::createScene()
 
 bool GameLayer::init()
 {
-	if (!Layer::init())
-	{
-		return false;
-	}
+    if (!Layer::init())
+    {
+        return false;
+    }
 
     amount_of_line = 40.0f;
     amount_of_line_reserves = 103.0f;
 
-	visible_size = Director::getInstance()->getVisibleSize();
-	origin = Director::getInstance()->getVisibleOrigin();
+    visible_size = Director::getInstance()->getVisibleSize();
+    origin = Director::getInstance()->getVisibleOrigin();
 
-	top_right.x = origin.x + visible_size.width;
+    top_right.x = origin.x + visible_size.width;
     top_right.y = origin.y + visible_size.height;
 
-    // initialize sprites
+     // add sky background
+    sky = Sprite::create("images/sky.png");
+    sky->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
+    sky->setPosition(origin);
+
+    this->addChild(sky, 0);
+
+    // add background
+    background_town = Sprite::create("images/back.png");
+    background_town->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
+    background_town->setPosition(origin);
+
+    this->addChild(background_town, 1);
+
+
+    // add river animation
+    auto river = Sprite::create("images/river_anim/river1.png");
+    river->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
+    river->setPosition(origin);
+
+    this->addChild(river, 1);
+
+    Vector<SpriteFrame*> frames;
+
+    frames.pushBack(SpriteFrame::create("images/river_anim/river1.png", Rect(0, 0, visible_size.width, visible_size.height)));
+    frames.pushBack(SpriteFrame::create("images/river_anim/river2.png", Rect(0, 0, visible_size.width, visible_size.height)));
+    frames.pushBack(SpriteFrame::create("images/river_anim/river3.png", Rect(0, 0, visible_size.width, visible_size.height)));
+
+    auto animation = Animation::createWithSpriteFrames(frames, 3.0f);
+    auto animate = Animate::create(animation);
+    river->runAction(RepeatForever::create(animate));
+    frames.clear();
+
+    // climate sprites
     sunny = Sprite::create("images/sunny.png");
     cloudy = Sprite::create("images/cloudy.png");
     rainy = Sprite::create("images/rainy.png");
 
-    sunny->setPosition(Vec2(origin.x + visible_size.width * 0.97, origin.y + visible_size.height * 0.40));
-    cloudy->setPosition(Vec2(origin.x + visible_size.width * 0.97, origin.y + visible_size.height * 0.40));
-    rainy->setPosition(Vec2(origin.x + visible_size.width * 0.97, origin.y + visible_size.height * 0.40));
+    sunny->setPosition(Vec2(origin.x + visible_size.width * 0.945, origin.y + visible_size.height * 0.34));
+    cloudy->setPosition(Vec2(origin.x + visible_size.width * 0.945, origin.y + visible_size.height * 0.34));
+    rainy->setPosition(Vec2(origin.x + visible_size.width * 0.945, origin.y + visible_size.height * 0.34));
 
     this->addChild(sunny, 3);
     this->addChild(cloudy, 3);
     this->addChild(rainy, 3);
 
-    sunny->setVisible(false);
-    cloudy->setVisible(false);
-    rainy->setVisible(false);
+    sunny->setOpacity(0);
+    cloudy->setOpacity(0);
+    rainy->setOpacity(0);
 
+    // Vector<SpriteFrame*> frames;
+
+    frames.pushBack(SpriteFrame::create("images/sunny_anim/sunny.png", Rect(0, 0, sunny->getContentSize().width, sunny->getContentSize().height)));
+    frames.pushBack(SpriteFrame::create("images/sunny_anim/sunny2.png", Rect(0, 0, sunny->getContentSize().width, sunny->getContentSize().height)));
+    frames.pushBack(SpriteFrame::create("images/sunny_anim/sunny3.png", Rect(0, 0, sunny->getContentSize().width, sunny->getContentSize().height)));
+
+    animation = Animation::createWithSpriteFrames(frames, 1.0f);
+    animate = Animate::create(animation);
+    sunny->runAction(RepeatForever::create(animate));
+    frames.clear();
+
+
+    frames.pushBack(SpriteFrame::create("images/cloudy_anim/cloudy.png", Rect(0, 0, cloudy->getContentSize().width, cloudy->getContentSize().height)));
+    frames.pushBack(SpriteFrame::create("images/cloudy_anim/cloudy2.png", Rect(0, 0, cloudy->getContentSize().width, cloudy->getContentSize().height)));
+    frames.pushBack(SpriteFrame::create("images/cloudy_anim/cloudy3.png", Rect(0, 0, cloudy->getContentSize().width, cloudy->getContentSize().height)));
+
+    animation = Animation::createWithSpriteFrames(frames, 1.0f);
+    animate = Animate::create(animation);
+    cloudy->runAction(RepeatForever::create(animate));
+    frames.clear();
+
+
+    frames.pushBack(SpriteFrame::create("images/rainy_anim/rainy.png", Rect(0, 0, rainy->getContentSize().width, rainy->getContentSize().height)));
+    frames.pushBack(SpriteFrame::create("images/rainy_anim/rainy2.png", Rect(0, 0, rainy->getContentSize().width, rainy->getContentSize().height)));
+    frames.pushBack(SpriteFrame::create("images/rainy_anim/rainy3.png", Rect(0, 0, rainy->getContentSize().width, rainy->getContentSize().height)));
+
+    animation = Animation::createWithSpriteFrames(frames, 1.0f);
+    animate = Animate::create(animation);
+    rainy->runAction(RepeatForever::create(animate));
+
+    if (climate.get_climate()==climate.SUNNY)
+    {
+        this->sunny->runAction(FadeIn::create(0.5f));
+    }
+    else if (climate.get_climate()==climate.CLOUDY)
+    {
+        this->cloudy->runAction(FadeIn::create(0.5f));
+    }
+    else
+    {
+        this->rainy->runAction(FadeIn::create(0.5f));
+    }
+
+
+    // resources sprites
     happy = Sprite::create("images/happy.png");
     mad = Sprite::create("images/mad.png");
 
@@ -87,27 +165,6 @@ bool GameLayer::init()
     water_gallon->setPosition(Vec2(origin.x + visible_size.width * 0.05, origin.y + visible_size.height * 0.03));
     water_gallon->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
     this->addChild(water_gallon, 2);
-
-
-
-    if (climate.get_climate()==climate.SUNNY)
-    {
-        this->sunny->setVisible(true);
-    }
-    else if (climate.get_climate()==climate.CLOUDY)
-    {
-        this->cloudy->setVisible(true);
-    }
-    else
-    {
-        this->rainy->setVisible(true);
-    }
-
-    background_town = Sprite::create("images/back.png");
-    background_town->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
-    background_town->setPosition(origin);
-
-    this->addChild(background_town, 1);
 
     background_consumption = Sprite::create("images/consumptionback.png");
     background_consumption->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
@@ -305,10 +362,10 @@ void GameLayer::start_breakdown_minigame()
        this->removeChild(label);
     });
 
-    label->runAction(Sequence::create(FadeIn::create(1.0f), DelayTime::create(1.0f), 
+    label->runAction(Sequence::create(FadeIn::create(1.0f), DelayTime::create(1.0f),
         FadeOut::create(1.0f), get_removed, nullptr));
 
-    this->runAction(Sequence::create(DelayTime::create(3.0f), 
+    this->runAction(Sequence::create(DelayTime::create(3.0f),
         CallFunc::create(CC_CALLBACK_0(GameLayer::run_breakdown_minigame, this)), nullptr));
 }
 
@@ -366,7 +423,7 @@ void GameLayer::run_breakdown_minigame()
 
     breakdowns_countdown = 14.99f;
 
-    breakdowns_clock = Label::createWithTTF(StringUtils::format("%d", static_cast<int>(breakdowns_countdown + 1)), 
+    breakdowns_clock = Label::createWithTTF(StringUtils::format("%d", static_cast<int>(breakdowns_countdown + 1)),
         "fonts/Marker Felt.ttf", 60);
     breakdowns_clock->setTextColor(Color4B::BLACK);
     breakdowns_clock->setPosition(Vec2(origin.x + visible_size.width * 0.08, origin.y + visible_size.height * 0.80));
@@ -392,7 +449,7 @@ void GameLayer::end_breakdown_minigame()
             this->removeChild(label);
         });
 
-        label->runAction(Sequence::create(FadeIn::create(1.0f), DelayTime::create(2.0f), 
+        label->runAction(Sequence::create(FadeIn::create(1.0f), DelayTime::create(2.0f),
             FadeOut::create(1.0f), get_removed, nullptr));
 
         int breakdowns_cash_reward = RandomHelper::random_int(0, 2);
@@ -412,7 +469,7 @@ void GameLayer::end_breakdown_minigame()
             this->removeChild(label_reward);
         });
 
-        label_reward->runAction(Sequence::create(DelayTime::create(2.0f), FadeIn::create(1.0f), DelayTime::create(2.0f), 
+        label_reward->runAction(Sequence::create(DelayTime::create(2.0f), FadeIn::create(1.0f), DelayTime::create(2.0f),
             FadeOut::create(1.0f), get_reward_removed, nullptr));
     }
     else
@@ -440,7 +497,7 @@ void GameLayer::end_breakdown_minigame()
             this->removeChild(label);
         });
 
-        label->runAction(Sequence::create(FadeIn::create(1.0f), DelayTime::create(1.0f), 
+        label->runAction(Sequence::create(FadeIn::create(1.0f), DelayTime::create(1.0f),
             FadeOut::create(1.0f), get_removed, nullptr));
     }
 
@@ -469,8 +526,8 @@ void GameLayer::on_correct_breakdown(ui::Button* breakdown_to_remove)
         int breakdowns_left = static_cast<int>(breakdown_sprites.size());
 
         breakdown_sprites.at(0)->runAction(Sequence::create(
-            Spawn::createWithTwoActions(MoveBy::create(0.25f, Vec2(visible_size.width * 0.10, 0)), 
-                                        ScaleTo::create(0.25f, 1.0f)), 
+            Spawn::createWithTwoActions(MoveBy::create(0.25f, Vec2(visible_size.width * 0.10, 0)),
+                                        ScaleTo::create(0.25f, 1.0f)),
             FadeIn::create(0.10f), nullptr));
 
         if (breakdowns_left > 1)
@@ -534,21 +591,21 @@ void GameLayer::report()
     }
 
     climate.set_week_climate();
-    sunny->setVisible(false);
-    cloudy->setVisible(false);
-    rainy->setVisible(false);
+    sunny->setOpacity(0);
+    cloudy->setOpacity(0);
+    rainy->setOpacity(0);
 
     if (climate.get_climate()==climate.SUNNY)
     {
-        this->sunny->setVisible(true);
+        this->sunny->runAction(FadeIn::create(0.5f));
     }
     else if (climate.get_climate()==climate.CLOUDY)
     {
-        this->cloudy->setVisible(true);
+        this->cloudy->runAction(FadeIn::create(0.5f));
     }
     else
     {
-        this->rainy->setVisible(true);
+        this->rainy->runAction(FadeIn::create(0.5f));
     }
 }
 
