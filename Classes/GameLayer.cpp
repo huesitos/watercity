@@ -1144,7 +1144,7 @@ void GameLayer::run_clouds()
         Vec2 final_pos(origin.x + visible_size.width * 1.50, 
                        origin.y + visible_size.height * (0.85 + RandomHelper::random_real(0.0, 0.15)));
 
-        float travel_time = RandomHelper::random_real(10.0, 15.0);
+        float travel_time = RandomHelper::random_real(30.0, 45.0);
 
         cloud->setVisible(true);
 
