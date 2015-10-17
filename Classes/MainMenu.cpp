@@ -60,10 +60,11 @@ void MainMenu::setup_listener()
 bool MainMenu::on_touch_began(cocos2d::Touch* touch, cocos2d::Event* event)
 {
 	disable_listener();
+	SimpleAudioEngine::getInstance()->playEffect("sounds/intro.mp3", false);
 	Size visibleSize = Director::getInstance()->getVisibleSize();
 	this->background->runAction(
 		Sequence::create(
-			MoveBy::create(3.0f, Vec2(0, background->getContentSize().height-visibleSize.height)),
+			MoveBy::create(6.0f, Vec2(0, background->getContentSize().height-visibleSize.height)),
 			CallFunc::create(CC_CALLBACK_0(MainMenu::start_game, this)),
 			nullptr
 			)

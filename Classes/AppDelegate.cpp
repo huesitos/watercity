@@ -62,13 +62,20 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     register_all_packages();
 
-    SimpleAudioEngine::getInstance()->preloadEffect("button.wav");
-    SimpleAudioEngine::getInstance()->preloadEffect("clock_tick.wav");
-    SimpleAudioEngine::getInstance()->preloadEffect("rain.mp3");
-    SimpleAudioEngine::getInstance()->preloadEffect("droplet.wav");
+    SimpleAudioEngine::getInstance()->preloadEffect("sounds/button.wav");
+    SimpleAudioEngine::getInstance()->preloadEffect("sounds/clock_tick.wav");
+    SimpleAudioEngine::getInstance()->preloadEffect("sounds/rain.mp3");
+    SimpleAudioEngine::getInstance()->preloadEffect("sounds/water-drop.mp3");
+    SimpleAudioEngine::getInstance()->preloadEffect("sounds/ambiance.mp3");
+    SimpleAudioEngine::getInstance()->preloadEffect("sounds/countdown.wav");
+    SimpleAudioEngine::getInstance()->preloadEffect("sounds/good.wav");
+    SimpleAudioEngine::getInstance()->preloadEffect("sounds/lose.mp3");
+    SimpleAudioEngine::getInstance()->preloadEffect("sounds/win-game.mp3");
+    SimpleAudioEngine::getInstance()->preloadEffect("sounds/win-minigame.wav");
+    SimpleAudioEngine::getInstance()->preloadEffect("sounds/intro.mp3");
 
     // create a scene. it's an autorelease object
-    auto scene = GameLayer::createScene();
+    auto scene = MainMenu::createScene();
 
     // run
     director->runWithScene(scene);

@@ -19,6 +19,8 @@ bool GameLayer::init()
         return false;
     }
 
+    SimpleAudioEngine::getInstance()->playEffect("sounds/ambiance.mp3", true);
+
     amount_of_line = 40.0f;
     amount_of_line_reserves = 103.0f;
 
@@ -341,7 +343,7 @@ bool GameLayer::init()
         switch (type)
         {
             case ui::Widget::TouchEventType::BEGAN:
-                SimpleAudioEngine::getInstance()->playEffect("droplet.wav");
+                SimpleAudioEngine::getInstance()->playEffect("sounds/water-drop.mp3");
                 rm.increase_selected_consumption(amount_of_line);
                 this->update_labels();
                 break;
@@ -358,7 +360,7 @@ bool GameLayer::init()
         switch (type)
         {
             case ui::Widget::TouchEventType::BEGAN:
-                SimpleAudioEngine::getInstance()->playEffect("droplet.wav");
+                SimpleAudioEngine::getInstance()->playEffect("sounds/water-drop.mp3");
                 rm.decrease_selected_consumption(amount_of_line);
                 this->update_labels();
                 break;
@@ -629,6 +631,8 @@ void GameLayer::initial_countdown_breakdown_minigame()
         CallFunc::create([this](){ this->runAction(CallFunc::create(CC_CALLBACK_0(GameLayer::run_breakdown_minigame, this))); }),
         RemoveSelf::create(),
         nullptr));
+
+    SimpleAudioEngine::getInstance()->playEffect("sounds/countdown.wav", false);
 }
 
 void GameLayer::run_breakdown_minigame()
@@ -668,6 +672,7 @@ void GameLayer::run_breakdown_minigame()
                 case ui::Widget::TouchEventType::BEGAN:
                     if (breakdown->getTag() % 10 == breakdown_sprites.at(0)->getTag() % 10)
                     {
+                        SimpleAudioEngine::getInstance()->playEffect("sounds/good.mp3", false);
                         this->on_correct_breakdown(breakdown);
                     }
                     else
@@ -693,7 +698,7 @@ void GameLayer::run_breakdown_minigame()
 
     is_running_breakdowns_minigame = true;
 
-    clock_tick_id = SimpleAudioEngine::getInstance()->playEffect("clock_tick.wav", true);
+    clock_tick_id = SimpleAudioEngine::getInstance()->playEffect("sounds/clock_tick.wav", true);
 }
 
 void GameLayer::end_breakdown_minigame()
@@ -814,7 +819,7 @@ void GameLayer::report_breakdown_minigame()
                     break;
             }
 
-            return true; 
+            return true;
         });
     }
     else
@@ -837,7 +842,7 @@ void GameLayer::report_breakdown_minigame()
                     break;
             }
 
-            return true; 
+            return true;
         });
     }
 }
@@ -1412,6 +1417,8 @@ void GameLayer::game_over()
 
     printf("game over\n");
 
+    SimpleAudioEngine::getInstance()->playEffect("sounds/lose.mp3", false);
+
     auto main_menu = ui::Button::create("images/goal/gameover.png");
     main_menu->setPosition(Vec2(origin.x, origin.y + visible_size.height));
     main_menu->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
@@ -1436,6 +1443,8 @@ void GameLayer::finished()
     menu_technology->setVisible(false);
     menu_education->setVisible(false);
     turn_off_listeners();
+
+    SimpleAudioEngine::getInstance()->playEffect("sounds/win-game.mp3", false);
 
     auto main_menu = ui::Button::create("images/goal/goalcompletado.png");
     main_menu->setPosition(Vec2(origin.x, origin.y + visible_size.height));
