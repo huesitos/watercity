@@ -24,7 +24,7 @@ void ResourceManager::reset()
 	population_total = 2;
 	population_occupied = 0;
 
-	happiness = 60.0f;
+	happiness = 70.0f;
 	awareness = 0.0f;
 	awareness_min = 0.0f;
 }

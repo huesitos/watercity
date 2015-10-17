@@ -390,7 +390,7 @@ bool GameLayer::init()
 
     this->addChild(goal_bubble, 3);
 
-    _goalLabel = Label::createWithTTF(StringUtils::format("Lleva el consumo de agua de la poblacion a %d.", rm.get_desired_water_consumption() * 7), "fonts/Marker Felt.ttf", 28);
+    _goalLabel = Label::createWithTTF(StringUtils::format("Lleva el consumo de agua de la poblacion a %d.", rm.get_desired_water_consumption()*2 * 7), "fonts/Marker Felt.ttf", 28);
     _goalLabel->setPosition(Vec2(origin.x + visible_size.width - goal_bubble->getContentSize().width/2, origin.y + visible_size.height * 0.69));
     _goalLabel->setDimensions(goal_bubble->getContentSize().width - 50, goal_bubble->getContentSize().height - 50);
     _goalLabel->setTextColor(Color4B::BLACK);
@@ -525,7 +525,6 @@ void GameLayer::run_week()
 
         this->shadow->setVisible(true);
         this->shadow2->setVisible(true);
-
     }
     else
     {
@@ -884,7 +883,7 @@ void GameLayer::report()
         game_over();
     }
 
-    if (rm.get_actual_water_consumption() <= rm.get_desired_water_consumption())
+    if (rm.get_actual_water_consumption() <= rm.get_desired_water_consumption()*2)
     {
         finished();
     }
