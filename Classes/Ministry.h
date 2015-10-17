@@ -18,6 +18,8 @@ public:
 
 	bool can_be_funded();
 	void start_project();
+	virtual void animate_icon() {}
+	virtual void stop_animate_icon() {}
 
 	void develop_project();
 
@@ -50,6 +52,8 @@ public:
 	virtual void setup_projects(const char* projectsFileName);
 
 	virtual void setup_listener();
+	virtual void animate_icon();
+	virtual void stop_animate_icon();
 
 	int get_persons_on_breakdowns() { return persons_on_breakdowns; }
 
@@ -74,6 +78,8 @@ public:
 	virtual void setup_projects(const char* projectsFileName);
 
 	virtual void setup_listener();
+	virtual void animate_icon();
+	virtual void stop_animate_icon();
 
 protected:
 	bool on_touch_began(cocos2d::Touch* touch, cocos2d::Event* event);
@@ -90,6 +96,8 @@ public:
 
 	virtual void setup_projects(const char* projectsFileName);
 	virtual void stop_project();
+	virtual void animate_icon();
+	virtual void stop_animate_icon();
 
 	virtual void setup_listener();
 

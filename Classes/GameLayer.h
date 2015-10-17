@@ -58,16 +58,16 @@ private:
 
 	Sprite* 	background_town;
 	Sprite* sunny;
-  	Sprite* cloudy;
-  	Sprite* rainy;
+  Sprite* cloudy;
+  Sprite* rainy;
 
-  	Sprite* happy;
-  	Sprite* mad;
+  Sprite* happy;
+  Sprite* mad;
 
-  	Sprite* water_meter;
-  	Sprite* water_reserves;
+  Sprite* water_meter;
+  Sprite* water_reserves;
 
-  	Sprite* water_gallon;
+  Sprite* water_gallon;
 
 	Ministry* 	ministry_of_technology;
 	Ministry* 	ministry_of_education;

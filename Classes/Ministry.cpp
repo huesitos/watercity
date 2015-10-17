@@ -130,6 +130,8 @@ void Ministry::start_project()
 	}
 
 	((GameLayer*) this->getParent())->update_labels();
+
+	animate_icon();
 }
 
 void Ministry::develop_project()
@@ -143,6 +145,7 @@ void Ministry::develop_project()
 		if (p[i]->is_completed())
 		{
 			p[i]->complete();
+			stop_animate_icon();
 		}
 	}
 }
@@ -266,6 +269,28 @@ void MinistryOfTechnology::setup_projects(const char* projectsFileName)
 	data_file.close();*/
 }
 
+void MinistryOfTechnology::animate_icon()
+{
+	Vector<SpriteFrame*> frames;
+	Size mSize = this->getContentSize();
+
+	frames.pushBack(SpriteFrame::create("images/technology_anim/technology.png", Rect(0, 0, mSize.width, mSize.height)));
+	frames.pushBack(SpriteFrame::create("images/technology_anim/technology2.png", Rect(0, 0, mSize.width, mSize.height)));
+	frames.pushBack(SpriteFrame::create("images/technology_anim/technology3.png", Rect(0, 0, mSize.width, mSize.height)));
+	frames.pushBack(SpriteFrame::create("images/technology_anim/technology4.png", Rect(0, 0, mSize.width, mSize.height)));
+	frames.pushBack(SpriteFrame::create("images/technology_anim/technology5.png", Rect(0, 0, mSize.width, mSize.height)));
+
+	auto animation = Animation::createWithSpriteFrames(frames, 0.2f);
+	auto animate = Animate::create(animation);
+	this->runAction(RepeatForever::create(animate));
+}
+
+void MinistryOfTechnology::stop_animate_icon()
+{
+	this->stopAllActions();
+}
+
+
 
 
 MinistryOfEducation::MinistryOfEducation()
@@ -328,6 +353,27 @@ void MinistryOfEducation::setup_projects(const char* projectsFileName)
 
 }
 
+void MinistryOfEducation::animate_icon()
+{
+	Vector<SpriteFrame*> frames;
+	Size mSize = this->getContentSize();
+
+	frames.pushBack(SpriteFrame::create("images/education_anim/education.png", Rect(0, 0, mSize.width, mSize.height)));
+	frames.pushBack(SpriteFrame::create("images/education_anim/education2.png", Rect(0, 0, mSize.width, mSize.height)));
+	frames.pushBack(SpriteFrame::create("images/education_anim/education3.png", Rect(0, 0, mSize.width, mSize.height)));
+	frames.pushBack(SpriteFrame::create("images/education_anim/education4.png", Rect(0, 0, mSize.width, mSize.height)));
+	frames.pushBack(SpriteFrame::create("images/education_anim/education5.png", Rect(0, 0, mSize.width, mSize.height)));
+
+	auto animation = Animation::createWithSpriteFrames(frames, 0.2f);
+	auto animate = Animate::create(animation);
+	this->runAction(RepeatForever::create(animate));
+}
+
+void MinistryOfEducation::stop_animate_icon()
+{
+	this->stopAllActions();
+}
+
 
 
 MinistryOfCulture::MinistryOfCulture()
@@ -385,10 +431,32 @@ void MinistryOfCulture::stop_project()
 		p[i]->stop_project();
 		p[i]->empty_persons_assigned();
 		p[i]->set_to_start(false);
+		stop_animate_icon();
 	}
 }
 
 void MinistryOfCulture::setup_projects(const char* projectsFileName)
 {
 
+}
+
+void MinistryOfCulture::animate_icon()
+{
+	Vector<SpriteFrame*> frames;
+	Size mSize = this->getContentSize();
+
+	frames.pushBack(SpriteFrame::create("images/park_anim/park.png", Rect(0, 0, mSize.width, mSize.height)));
+	frames.pushBack(SpriteFrame::create("images/park_anim/park2.png", Rect(0, 0, mSize.width, mSize.height)));
+	frames.pushBack(SpriteFrame::create("images/park_anim/park3.png", Rect(0, 0, mSize.width, mSize.height)));
+	frames.pushBack(SpriteFrame::create("images/park_anim/park2.png", Rect(0, 0, mSize.width, mSize.height)));
+	frames.pushBack(SpriteFrame::create("images/park_anim/park.png", Rect(0, 0, mSize.width, mSize.height)));
+
+	auto animation = Animation::createWithSpriteFrames(frames, 0.2f);
+	auto animate = Animate::create(animation);
+	this->runAction(RepeatForever::create(animate));
+}
+
+void MinistryOfCulture::stop_animate_icon()
+{
+	this->stopAllActions();
 }
