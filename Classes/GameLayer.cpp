@@ -19,7 +19,7 @@ bool GameLayer::init()
         return false;
     }
 
-    SimpleAudioEngine::getInstance()->playEffect("sounds/ambiance.mp3", true);
+    SimpleAudioEngine::getInstance()->playBackgroundMusic("sounds/ambiance.mp3", true);
 
     amount_of_line = 40.0f;
     amount_of_line_reserves = 103.0f;
