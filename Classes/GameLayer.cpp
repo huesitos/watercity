@@ -332,7 +332,7 @@ bool GameLayer::init()
 		switch (type)
 		{
 			case ui::Widget::TouchEventType::BEGAN:
-                SimpleAudioEngine::getInstance()->playEffect("button.wav");
+                SimpleAudioEngine::getInstance()->playEffect("sounds/button.wav");
 				this->run_week();
 				break;
 			default:
@@ -532,7 +532,7 @@ void GameLayer::run_week()
         this->sun_bg->setVisible(false);
         this->rain_bg->setVisible(true);
         this->rain_drops->setVisible(true);
-        water_sound_id = SimpleAudioEngine::getInstance()->playEffect("rain.mp3", true);
+        water_sound_id = SimpleAudioEngine::getInstance()->playEffect("sounds/rain.mp3", true);
         this->cloudy_bg->setVisible(false);
 
         this->stop_clouds();
@@ -1042,7 +1042,7 @@ void GameLayer::run_prohibited_act_minigame()
 
     is_running_prohibited_acts_minigame = true;
 
-    clock_tick_id = SimpleAudioEngine::getInstance()->playEffect("clock_tick.wav", true);
+    clock_tick_id = SimpleAudioEngine::getInstance()->playEffect("sounds/clock_tick.wav", true);
 }
 
 void GameLayer::end_prohibited_act_minigame()
