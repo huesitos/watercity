@@ -277,6 +277,11 @@ bool GameLayer::init()
     water_gallon->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
     this->addChild(water_gallon, 2);
 
+    auto happy_small = Sprite::create("images/happy-small.png");
+    happy_small->Sprite::create("images/happy-small.png");
+    happy_small->setPosition(Vec2(origin.x + visible_size.width * 0.11, origin.y + visible_size.width * 0.015));
+    this->addChild(happy_small, 2);
+
     background_consumption = Sprite::create("images/consumptionback.png");
     background_consumption->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
     background_consumption->setPosition(origin);
@@ -627,25 +632,25 @@ void GameLayer::initial_countdown_breakdown_minigame()
     auto fade = FadeIn::create(0.50f);
 
     three->runAction(Sequence::create(
-        Spawn::createWithTwoActions(scale, fade), 
-        DelayTime::create(0.50f), 
+        Spawn::createWithTwoActions(scale, fade),
+        DelayTime::create(0.50f),
         RemoveSelf::create(), nullptr));
 
     two->runAction(Sequence::create(
-        DelayTime::create(1.0f), 
-        Spawn::createWithTwoActions(scale, fade), 
-        DelayTime::create(0.50f), 
+        DelayTime::create(1.0f),
+        Spawn::createWithTwoActions(scale, fade),
+        DelayTime::create(0.50f),
         RemoveSelf::create(), nullptr));
 
     one->runAction(Sequence::create(
-        DelayTime::create(2.0f), 
-        Spawn::createWithTwoActions(scale, fade), 
-        DelayTime::create(0.50f), 
+        DelayTime::create(2.0f),
+        Spawn::createWithTwoActions(scale, fade),
+        DelayTime::create(0.50f),
         RemoveSelf::create(), nullptr));
 
     this->runAction(Sequence::create(
-        DelayTime::create(3.0f), 
-        CallFunc::create(CC_CALLBACK_0(GameLayer::run_breakdown_minigame, this)), 
+        DelayTime::create(3.0f),
+        CallFunc::create(CC_CALLBACK_0(GameLayer::run_breakdown_minigame, this)),
         nullptr));
 
     SimpleAudioEngine::getInstance()->playEffect("sounds/countdown.wav", false);
