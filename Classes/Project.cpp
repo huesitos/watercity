@@ -78,7 +78,7 @@ bool Project::can_be_funded()
 {
 	ResourceManager &rm = ResourceManager::getInstance();
 
-	return rm.has_enough_water(this->get_water_cost()) && rm.has_enough_cash(this->get_cash_cost());
+	return rm.has_enough_water(this->get_water_cost()) && rm.has_enough_cash(this->get_cash_cost()) && rm.has_enough_unoccupied(this->get_persons_needed());
 }
 
 

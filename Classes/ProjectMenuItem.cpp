@@ -48,7 +48,7 @@ void ProjectMenuItem::setup(Ministry* ministry)
         case ui::Widget::TouchEventType::BEGAN:
                 break;
         case ui::Widget::TouchEventType::ENDED:
-                if (proj && !proj->is_set_to_start() && proj->can_be_funded())
+                if (proj && !proj->is_set_to_start() && !proj->is_running() && proj->can_be_funded())
 								{
 									proj->assign_persons_needed();
 									this->ministry->start_project();

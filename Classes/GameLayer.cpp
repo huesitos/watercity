@@ -549,13 +549,13 @@ void GameLayer::end_breakdown_minigame()
         label->runAction(Sequence::create(FadeIn::create(1.0f), DelayTime::create(2.0f),
             FadeOut::create(1.0f), get_removed, nullptr));
 
-        int breakdowns_cash_reward = RandomHelper::random_int(0, 2);
-        breakdowns_cash_reward = 500 + 250 * breakdowns_cash_reward;
+        int breakdowns_water_reward = RandomHelper::random_int(0, 2);
+        breakdowns_water_reward = 500 + 250 * breakdowns_water_reward;
 
-        rm.spend_cash(-breakdowns_cash_reward);
+        rm.spend_water(-breakdowns_water_reward);
         update_labels();
 
-        auto label_reward = Label::createWithTTF(StringUtils::format("You earned $ %d", breakdowns_cash_reward), "fonts/Marker Felt.ttf", 50);
+        auto label_reward = Label::createWithTTF(StringUtils::format("You saved %d gallons of water!", breakdowns_water_reward), "fonts/Marker Felt.ttf", 50);
         label_reward->setTextColor(Color4B::BLACK);
         label_reward->setDimensions(visible_size.width * 0.30, visible_size.height * 0.30);
         label_reward->setPosition(Vec2(origin.x + visible_size.width * 0.40, origin.y + visible_size.height * 0.40));
