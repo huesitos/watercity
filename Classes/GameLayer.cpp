@@ -349,7 +349,7 @@ void GameLayer::run_breakdown_minigame()
                 case ui::Widget::TouchEventType::BEGAN:
                     if (breakdown->getTag() % 10 == breakdown_sprites.at(0)->getTag() % 10)
                     {
-                        this->on_correct_breakdown();
+                        this->on_correct_breakdown(breakdown);
                     }
                     else
                     {
@@ -451,12 +451,12 @@ void GameLayer::end_breakdown_minigame()
     report();
 }
 
-void GameLayer::on_correct_breakdown()
+void GameLayer::on_correct_breakdown(ui::Button* breakdown_to_remove)
 {
-    this->removeChild(breakdowns.at(0));
+    this->removeChild(breakdown_to_remove);
     this->removeChild(breakdown_sprites.at(0));
 
-    breakdowns.erase(breakdowns.begin());
+    breakdowns.erase(std::find(breakdowns.begin(), breakdowns.end(), breakdown_to_remove));
     breakdown_sprites.erase(breakdown_sprites.begin());
 
     if (static_cast<int>(breakdowns.size()) == 0)

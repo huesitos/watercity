@@ -48,7 +48,7 @@ private:
 	void 	start_breakdown_minigame();
 	void 	run_breakdown_minigame();
 	void 	end_breakdown_minigame();
-	void 	on_correct_breakdown();
+	void 	on_correct_breakdown(ui::Button* breakdown_to_remove);
 	void 	on_incorrect_breakdown();
 
 	void 	report();
