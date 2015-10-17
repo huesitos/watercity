@@ -797,9 +797,9 @@ void GameLayer::report_breakdown_minigame()
 
         cash_label->setTextColor(Color4B::WHITE);
         cash_label->setPosition(Vec2(origin.x + visible_size.width * 0.64, origin.y + visible_size.height * 0.32));
-        water_label->setOpacity(0.0f);
+        cash_label->setOpacity(0.0f);
         this->addChild(cash_label, 5);
-        water_label->runAction(FadeIn::create(0.25f));
+        cash_label->runAction(FadeIn::create(0.25f));
 
         button->addTouchEventListener([this, button, water_label, cash_label](Ref* sender, ui::Widget::TouchEventType type) {
             switch (type)
