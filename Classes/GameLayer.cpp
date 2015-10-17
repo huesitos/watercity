@@ -998,11 +998,13 @@ void GameLayer::report()
 
     if (rm.is_water_depleted())
     {
+        printf("perdi\n");
         game_over();
     }
 
-    if (rm.get_desired_water_consumption() <= rm.get_actual_water_consumption())
+    if (rm.get_actual_water_consumption() <= rm.get_desired_water_consumption())
     {
+        printf("gane\n");
         finished();
     }
 
@@ -1349,14 +1351,11 @@ void GameLayer::game_over()
     menu_education->setVisible(false);
     turn_off_listeners();
 
-    auto gameOver = Label::createWithTTF("Game Over", "fonts/Marker Felt.ttf", 50);
-    gameOver->setPosition(visible_size.width/2, visible_size.height/2);
+    printf("game over\n");
 
-    this->addChild(gameOver, 10);
-
-    auto main_menu = ui::Button::create("images/play.png");
-    main_menu->setPosition(Vec2(origin.x + visible_size.width/2,
-                                      origin.y + visible_size.height/2 + - main_menu->getContentSize().height));
+    auto main_menu = ui::Button::create("images/goal/gameover.png");
+    main_menu->setPosition(Vec2(origin.x, origin.y + visible_size.height));
+    main_menu->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
     main_menu->addTouchEventListener([this](Ref* sender, ui::Widget::TouchEventType type) {
         switch (type)
         {
@@ -1379,14 +1378,9 @@ void GameLayer::finished()
     menu_education->setVisible(false);
     turn_off_listeners();
 
-    auto gameOver = Label::createWithTTF("Congrats!", "fonts/Marker Felt.ttf", 50);
-    gameOver->setPosition(visible_size.width/2, visible_size.height/2);
-
-    this->addChild(gameOver, 10);
-
-    auto main_menu = ui::Button::create("images/play.png");
-    main_menu->setPosition(Vec2(origin.x + visible_size.width/2,
-                                      origin.y + visible_size.height/2 + - main_menu->getContentSize().height));
+    auto main_menu = ui::Button::create("images/goal/goalcompletado.png");
+    main_menu->setPosition(Vec2(origin.x, origin.y + visible_size.height));
+    main_menu->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
     main_menu->addTouchEventListener([this](Ref* sender, ui::Widget::TouchEventType type) {
         switch (type)
         {
