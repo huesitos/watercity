@@ -52,9 +52,8 @@ bool TutorialScene::init()
     sun_bg = Sprite::create("images/sun_anim/sun.png");
     sun_bg->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
     sun_bg->setPosition(origin);
-    sun_bg->setVisible(false);
 
-    this->addChild(sun_bg, 1);
+    this->addChild(sun_bg, 2);
 
     sunny = Sprite::create("images/sunny.png");
     sunny->setPosition(Vec2(origin.x + visible_size.width * 0.94, origin.y + visible_size.height * 0.34));

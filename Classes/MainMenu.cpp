@@ -1,5 +1,5 @@
 #include "MainMenu.h"
-#include "GameLayer.h"
+
 
 USING_NS_CC;
 
@@ -24,25 +24,55 @@ bool MainMenu::init()
 	Size visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-	auto start_image = MenuItemImage::create("play.png", "play.png", CC_CALLBACK_1(MainMenu::start_game, this));
-	start_image->setPosition(Vec2(origin.x + visibleSize.width / 2, origin.y + visibleSize.height * 3 / 4));
+	background = Sprite::create("images/mainmenu.png");
+	background->setPosition(Vec2(origin.x, origin.y + visibleSize.height));
+	background->setAnchorPoint(Vec2(Vec2::ANCHOR_TOP_LEFT));
 
-	auto exit_image = MenuItemImage::create("exit.png", "exit.png", CC_CALLBACK_1(MainMenu::exit_game, this));
-	exit_image->setPosition(Vec2(origin.x + visibleSize.width / 2, origin.y + visibleSize.height * 1 / 4));
+	this->addChild(background, 1);
 
-	auto menu = Menu::create(start_image, exit_image, nullptr);
-	menu->setPosition(Vec2::ZERO);
-	this->addChild(menu, 1);
+	setup_listener();
 
 	return true;
 }
 
-void MainMenu::start_game(Ref *pSender)
+void MainMenu::start_game()
 {
-	Director::getInstance()->replaceScene(TransitionFade::create(0.5f, GameLayer::createScene()));
+	Director::getInstance()->replaceScene(TransitionFade::create(0.5f, TutorialScene::createScene()));
 }
 
-void MainMenu::exit_game(Ref *pSender)
+void MainMenu::exit_game()
 {
 	Director::getInstance()->end();
+}
+
+void MainMenu::setup_listener()
+{
+	listener = EventListenerTouchOneByOne::create();
+	listener->setSwallowTouches(true);
+
+	listener->onTouchBegan = CC_CALLBACK_2(MainMenu::on_touch_began, this);
+	listener->onTouchMoved = [] (Touch* touch, Event* event) {};
+	listener->onTouchEnded = [] (Touch* touch, Event* event) {};
+
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
+}
+
+bool MainMenu::on_touch_began(cocos2d::Touch* touch, cocos2d::Event* event)
+{
+	disable_listener();
+	Size visibleSize = Director::getInstance()->getVisibleSize();
+	this->background->runAction(
+		Sequence::create(
+			MoveBy::create(5.0f, Vec2(0, background->getContentSize().height-visibleSize.height)),
+			CallFunc::create(CC_CALLBACK_0(MainMenu::start_game, this)),
+			nullptr
+			)
+		);
+
+	return true;
+}
+
+void MainMenu::disable_listener()
+{
+	listener->setEnabled(false);
 }

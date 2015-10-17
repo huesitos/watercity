@@ -67,7 +67,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     SimpleAudioEngine::getInstance()->preloadEffect("rain.mp3");
 
     // create a scene. it's an autorelease object
-    auto scene = TutorialScene::createScene();
+    auto scene = MainMenu::createScene();
 
     // run
     director->runWithScene(scene);
