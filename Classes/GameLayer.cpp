@@ -428,6 +428,11 @@ void GameLayer::update(float dt)
 
         breakdowns_clock->setString(StringUtils::format("%.0f", breakdowns_countdown + 0.5f));
 
+        if (breakdowns_countdown < 3.0f)
+        {
+            breakdowns_clock->setTextColor(Color4B::RED);
+        }
+
         if (breakdowns_countdown < 0.0f)
         {
             is_running_breakdowns_minigame = false;
@@ -598,38 +603,49 @@ void GameLayer::start_breakdown_minigame()
 
 void GameLayer::initial_countdown_breakdown_minigame()
 {
-    auto label = Label::createWithTTF("3", "fonts/Marker Felt.ttf", 80);
-    label->setTextColor(Color4B::BLACK);
-    label->setPosition(Vec2(origin.x + visible_size.width * 0.08, origin.y + visible_size.height * 0.80));
-    label->setOpacity(0.0f);
-    this->addChild(label, 3);
+    auto three = Sprite::create("images/3.png");
+    auto two = Sprite::create("images/2.png");
+    auto one = Sprite::create("images/1.png");
 
-    auto move = MoveTo::create(0.50f, Vec2(origin.x + visible_size.width * 0.30, origin.y + visible_size.height * 0.60));
-    auto scale = ScaleTo::create(0.50f, 3);
+    three->setOpacity(0.0f);
+    two->setOpacity(0.0f);
+    one->setOpacity(0.0f);
+
+    three->setPosition(origin.x + visible_size.width * 0.20, origin.y + visible_size.height * 0.75);
+    two->setPosition(origin.x + visible_size.width * 0.20, origin.y + visible_size.height * 0.75);
+    one->setPosition(origin.x + visible_size.width * 0.20, origin.y + visible_size.height * 0.75);
+
+    three->setScale(0.01f);
+    two->setScale(0.01f);
+    one->setScale(0.01f);
+
+    this->addChild(three, 7);
+    this->addChild(two, 6);
+    this->addChild(one, 5);
+
+    auto scale = ScaleTo::create(0.50f, 1);
     auto fade = FadeIn::create(0.50f);
 
-    Vector<FiniteTimeAction*> msf;
-    msf.pushBack(move);
-    msf.pushBack(scale);
-    msf.pushBack(fade);
+    three->runAction(Sequence::create(
+        Spawn::createWithTwoActions(scale, fade), 
+        DelayTime::create(0.50f), 
+        RemoveSelf::create(), nullptr));
 
-    auto move_scale_fade = Spawn::create(msf);
+    two->runAction(Sequence::create(
+        DelayTime::create(1.0f), 
+        Spawn::createWithTwoActions(scale, fade), 
+        DelayTime::create(0.50f), 
+        RemoveSelf::create(), nullptr));
 
-    label->runAction(Sequence::create(
-        move_scale_fade,
-        DelayTime::create(0.50f),
-        Place::create(Vec2(origin.x + visible_size.width * 0.08, origin.y + visible_size.height * 0.80)),
-        CallFunc::create([label](){ label->setScale(1); }),
-        CallFunc::create([label](){ label->setString("2"); }),
-        move_scale_fade->clone(),
-        DelayTime::create(0.50f),
-        Place::create(Vec2(origin.x + visible_size.width * 0.08, origin.y + visible_size.height * 0.80)),
-        CallFunc::create([label](){ label->setScale(1); }),
-        CallFunc::create([label](){ label->setString("1"); }),
-        move_scale_fade->clone(),
-        DelayTime::create(0.50f),
-        CallFunc::create([this](){ this->runAction(CallFunc::create(CC_CALLBACK_0(GameLayer::run_breakdown_minigame, this))); }),
-        RemoveSelf::create(),
+    one->runAction(Sequence::create(
+        DelayTime::create(2.0f), 
+        Spawn::createWithTwoActions(scale, fade), 
+        DelayTime::create(0.50f), 
+        RemoveSelf::create(), nullptr));
+
+    this->runAction(Sequence::create(
+        DelayTime::create(3.0f), 
+        CallFunc::create(CC_CALLBACK_0(GameLayer::run_breakdown_minigame, this)), 
         nullptr));
 
     SimpleAudioEngine::getInstance()->playEffect("sounds/countdown.wav", false);
@@ -637,7 +653,7 @@ void GameLayer::initial_countdown_breakdown_minigame()
 
 void GameLayer::run_breakdown_minigame()
 {
-    Breakdown b(10);
+    Breakdown b(RandomHelper::random_int(6, 9));
 
     breakdowns = b.get_breakdowns();
     breakdown_sprites = b.get_breakdown_sprites();
@@ -692,8 +708,8 @@ void GameLayer::run_breakdown_minigame()
 
     breakdowns_clock = Label::createWithTTF(StringUtils::format("%d", static_cast<int>(breakdowns_countdown + 1)),
         "fonts/Marker Felt.ttf", 60);
-    breakdowns_clock->setTextColor(Color4B::BLACK);
-    breakdowns_clock->setPosition(Vec2(origin.x + visible_size.width * 0.08, origin.y + visible_size.height * 0.80));
+    breakdowns_clock->setTextColor(Color4B::YELLOW);
+    breakdowns_clock->setPosition(Vec2(origin.x + visible_size.width * 0.10, origin.y + visible_size.height * 0.80));
     this->addChild(breakdowns_clock, 3);
 
     is_running_breakdowns_minigame = true;
@@ -810,9 +826,9 @@ void GameLayer::report_breakdown_minigame()
             switch (type)
             {
                 case ui::Widget::TouchEventType::BEGAN:
-                    this->removeChild(button);
                     this->removeChild(water_label);
                     this->removeChild(cash_label);
+                    this->removeChild(button);
                     this->runAction(CallFunc::create(CC_CALLBACK_0(GameLayer::report_riots, this)));
                     break;
                 default:
@@ -849,9 +865,78 @@ void GameLayer::report_breakdown_minigame()
 
 void GameLayer::report_riots()
 {
-    turn_on_listeners();
-
     report();
+}
+
+void GameLayer::report()
+{
+    update_labels();
+
+    if (rm.is_water_depleted())
+    {
+        printf("perdi\n");
+        game_over();
+    }
+
+    if (rm.get_actual_water_consumption() <= rm.get_desired_water_consumption())
+    {
+        printf("gane\n");
+        finished();
+    }
+
+    if (ministry_of_culture->has_project_running())
+    {
+        ministry_of_culture->stop_project();
+        this->update_labels();
+        menu_culture->update_labels();
+    }
+
+    sunny->setOpacity(0);
+    cloudy->setOpacity(0);
+    rainy->setOpacity(0);
+
+    climate.set_week_climate();
+
+    if (climate.get_climate()==climate.SUNNY)
+    {
+        this->sunny->runAction(FadeIn::create(0.5f));
+    }
+    else if (climate.get_climate()==climate.CLOUDY)
+    {
+        this->cloudy->runAction(FadeIn::create(0.5f));
+    }
+    else
+    {
+        this->rainy->runAction(FadeIn::create(0.5f));
+    }
+
+    if (did_riot_happen && (ministry_of_technology->has_project_running() || ministry_of_education->has_project_running()))
+    {
+        auto button = ui::Button::create("images/riot.png");
+        button->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
+        button->setPosition(origin);
+        this->addChild(button, 5);
+        button->setOpacity(0.0f);
+        button->runAction(FadeIn::create(0.20f));
+
+        button->addTouchEventListener([this, button](Ref* sender, ui::Widget::TouchEventType type) {
+            switch (type)
+            {
+                case ui::Widget::TouchEventType::BEGAN:
+                    this->removeChild(button);
+                    this->turn_on_listeners();
+                    break;
+                default:
+                    break;
+            }
+
+            return true;
+        });
+    }
+    else
+    {
+        turn_on_listeners();
+    }
 }
 
 void GameLayer::start_prohibited_act_minigame()
@@ -1083,86 +1168,6 @@ void GameLayer::on_incorrect_prohibited_act()
 {
     is_running_prohibited_acts_minigame = false;
     end_prohibited_act_minigame();
-}
-
-void GameLayer::report()
-{
-    update_labels();
-
-    if (rm.is_water_depleted())
-    {
-        printf("perdi\n");
-        game_over();
-    }
-
-    if (rm.get_actual_water_consumption() <= rm.get_desired_water_consumption())
-    {
-        printf("gane\n");
-        finished();
-    }
-
-    if (did_riot_happen && (ministry_of_technology->has_project_running() || ministry_of_education->has_project_running()))
-    {
-        auto text_box = ui::Button::create("images/box.png");
-        text_box->setPosition(Vec2(origin.x + visible_size.width * 0.40, origin.y + visible_size.height * 0.40));
-        this->addChild(text_box, 5);
-        text_box->setOpacity(0.0f);
-        text_box->runAction(FadeIn::create(0.20f));
-
-        auto label = Label::createWithTTF("Oh no! The people rioted. Some of your projects were not completed.",
-            "fonts/Marker Felt.ttf", 40);
-        label->setTextColor(Color4B::WHITE);
-        label->setDimensions(text_box->getContentSize().width * 0.80, text_box->getContentSize().height * 0.80);
-        label->setPosition(Vec2(text_box->getContentSize().width * 0.50, text_box->getContentSize().height * 0.50));
-        text_box->addChild(label, 1);
-
-        turn_off_listeners();
-
-        text_box->addTouchEventListener([this, text_box, label](Ref* sender, ui::Widget::TouchEventType type) {
-            switch (type)
-            {
-                case ui::Widget::TouchEventType::BEGAN:
-                    text_box->removeChild(label);
-                    this->removeChild(text_box);
-                    this->turn_on_listeners();
-                    break;
-                default:
-                    break;
-            }
-
-            return true;
-        });
-    }
-    else if (will_reward)
-    {
-
-    }
-
-    if (ministry_of_culture->has_project_running())
-    {
-        ministry_of_culture->stop_project();
-        this->update_labels();
-        menu_culture->update_labels();
-    }
-
-    sunny->setOpacity(0);
-    cloudy->setOpacity(0);
-    rainy->setOpacity(0);
-
-    climate.set_week_climate();
-
-    if (climate.get_climate()==climate.SUNNY)
-    {
-        this->sunny->runAction(FadeIn::create(0.5f));
-    }
-    else if (climate.get_climate()==climate.CLOUDY)
-    {
-        this->cloudy->runAction(FadeIn::create(0.5f));
-    }
-    else
-    {
-        this->rainy->runAction(FadeIn::create(0.5f));
-    }
 }
 
 void GameLayer::update_labels()
