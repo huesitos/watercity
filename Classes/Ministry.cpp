@@ -178,35 +178,35 @@ MinistryOfTechnology::MinistryOfTechnology()
 {
 	projects.push_back(new TechnologicalProject("Reemplaza tu tuberia vieja", 
 		"Una de las mayores causas de desperdicio de agua es a traves de tuberias rotas causando goteras. Reemplazar estas tuberias ahorraria casi un 20%% del consumo total de la casa.", 
-		750, 5000, 1, 7, 50));
+		750, 5000, 1, 7, 100));
 
 	projects.push_back(new TechnologicalProject("Renovacion de inodoros I", 
 		"Reemplaza los inodoros convencionales que gastan de 5 galones por flush por inodoros de menor consumo que solo gastan 3.5 galones por flush.", 
-		1000, 6000, 1, 7, 50));
+		1000, 6000, 1, 7, 100));
 
 	projects.push_back(new TechnologicalProject("Renovacion de inodoros II", 
 		"Reemplaza los inodoros convencionales que gastan de 3.5 galones por flush por inodoros de bajo consumo que gastan el mínimo de 1.6 galones por flush.", 
-		1250, 7000, 1, 7, 50));
+		1250, 7000, 1, 7, 100));
 
 	projects.push_back(new TechnologicalProject("Renovacion de duchas I", 
 		"Cambia las duchas convencionales que gastan hasta 4.5 galones por minuto por duchas de bajo consumo que gastan solo 3.5 galones de agua por minuto.", 
-		1500, 8000, 1, 7, 75));
+		1500, 8000, 1, 7, 150));
 
 	projects.push_back(new TechnologicalProject("Renovacion de duchas II", 
 		"Cambia las duchas convencionales que gastan hasta 3.5 galones por minuto por duchas de bajo consumo que gastan solo el minimo de 2.5 galones de agua por minuto.", 
-		1750, 9000, 1, 7, 75));
+		1750, 9000, 1, 7, 150));
 
 	projects.push_back(new TechnologicalProject("Instalar Sistema de reciclaje de agua", 
 		"Con sistemas que reutilizan el agua usada en las cocinas, lavamanos y lavadoras, podemos ahorrar agua usandola para mantener plantas.", 
-		2000, 10000, 1, 7, 75));
+		2000, 10000, 1, 7, 150));
 
 	projects.push_back(new TechnologicalProject("Instalar recolector de agua en el techo", 
 		"Con un Sistema de recoleccion del agua de lluvia podemos obtener agua en buenas condiciones para limpiar y regar las plantas.", 
-		2225, 11000, 1, 7, 75));
+		2225, 11000, 1, 7, 175));
 
 	projects.push_back(new TechnologicalProject("Instalar cisterna", 
 		"La instalacion de una cisterna en las casas ayuda a la recoleccion del agua sobrante para uso en emergencias.", 
-		2500, 12000, 1, 7, 100));	
+		2500, 12000, 1, 7, 175));	
 }
 
 Ministry* MinistryOfTechnology::create(const char* pszFileName, const char* projectsFileName)
