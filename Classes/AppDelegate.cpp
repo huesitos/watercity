@@ -2,8 +2,10 @@
 #include "MainMenu.h"
 #include "GameLayer.h"
 #include "TutorialScene.h"
+#include "SimpleAudioEngine.h"
 
 USING_NS_CC;
+using namespace CocosDenshion;
 
 static cocos2d::Size designResolutionSize = cocos2d::Size(1280, 800);
 static cocos2d::Size smallResolutionSize = cocos2d::Size(480, 320);
@@ -59,6 +61,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
     glview->setDesignResolutionSize(designResolutionSize.width, designResolutionSize.height, ResolutionPolicy::NO_BORDER);
 
     register_all_packages();
+
+    SimpleAudioEngine::getInstance()->preloadEffect("rain.mp3");
 
     // create a scene. it's an autorelease object
     auto scene = TutorialScene::createScene();

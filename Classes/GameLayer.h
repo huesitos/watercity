@@ -10,9 +10,10 @@
 #include "Breakdown.h"
 #include "ProhibitedAct.h"
 #include "Project.h"
+#include "SimpleAudioEngine.h"
 
 USING_NS_CC;
-
+using namespace CocosDenshion;
 
 class GameLayer : public cocos2d::Layer
 {
@@ -74,19 +75,17 @@ private:
 	Sprite* 	shadow;
 	Sprite* 	shadow2;
 
-
-
 	Sprite* sunny;
-  Sprite* cloudy;
-  Sprite* rainy;
+  	Sprite* cloudy;
+  	Sprite* rainy;
 
-  Sprite* happy;
-  Sprite* mad;
+  	Sprite* happy;
+  	Sprite* mad;
 
-  Sprite* water_meter;
-  Sprite* water_reserves;
+  	Sprite* water_meter;
+  	Sprite* water_reserves;
 
-  Sprite* water_gallon;
+  	Sprite* water_gallon;
 
 	Ministry* 	ministry_of_technology;
 	Ministry* 	ministry_of_education;
@@ -154,6 +153,10 @@ private:
 	bool 		did_riot_happen;
 	bool 		will_reward;
 	int 		cash_reward;
+
+	// Sounds
+
+	int 	water_sound_id = -1;
 };
 
 #endif // __GAME_LAYER_H__

@@ -1,5 +1,6 @@
 #include "GameLayer.h"
 
+
 Scene* GameLayer::createScene()
 {
 	auto scene = Scene::create();
@@ -268,7 +269,7 @@ bool GameLayer::init()
     this->addChild(ministry_of_technology, 1);
 
     menu_technology = ProjectMenuItem::create("images/techmenu.png", ministry_of_technology);
-    menu_technology->setPosition(Vec2(origin.x + visible_size.width * 0.45, origin.y + visible_size.height * 0.60));
+    menu_technology->setPosition(Vec2(origin.x + visible_size.width * 0.40, origin.y + visible_size.height * 0.50));
     this->addChild(menu_technology, 2);
     menu_technology->setVisible(false);
     ministry_of_technology->setup_listener();
@@ -278,7 +279,7 @@ bool GameLayer::init()
     this->addChild(ministry_of_education, 1);
 
     menu_education = ProjectMenuItem::create("images/edumenu.png", ministry_of_education);
-    menu_education->setPosition(Vec2(origin.x + visible_size.width * 0.50, origin.y + visible_size.height * 0.60));
+    menu_education->setPosition(Vec2(origin.x + visible_size.width * 0.40, origin.y + visible_size.height * 0.50));
     this->addChild(menu_education, 2);
     menu_education->setVisible(false);
     ministry_of_education->setup_listener();
@@ -287,8 +288,8 @@ bool GameLayer::init()
     ministry_of_culture->setPosition(origin.x + visible_size.width * 0.64, origin.y + visible_size.height * 0.52);
     this->addChild(ministry_of_culture, 1);
 
-    menu_culture = ProjectMenuItem::create("images/edumenu.png", ministry_of_culture);
-    menu_culture->setPosition(Vec2(origin.x + visible_size.width * 0.45, origin.y + visible_size.height * 0.60));
+    menu_culture = ProjectMenuItem::create("images/cultmenu.png", ministry_of_culture);
+    menu_culture->setPosition(Vec2(origin.x + visible_size.width * 0.40, origin.y + visible_size.height * 0.50));
     this->addChild(menu_culture, 2);
     menu_culture->setVisible(false);
     ministry_of_culture->setup_listener();
@@ -917,6 +918,9 @@ void GameLayer::report()
     cloudy->setOpacity(0);
     rainy->setOpacity(0);
 
+    if (water_sound_id > -1)
+        SimpleAudioEngine::getInstance()->pauseEffect(water_sound_id);
+
     if (climate.get_climate()==climate.SUNNY)
     {
         this->sunny->runAction(FadeIn::create(0.5f));
@@ -946,6 +950,7 @@ void GameLayer::report()
         this->sun_bg->setVisible(false);
         this->rain_bg->setVisible(true);
         this->rain_drops->setVisible(true);
+        water_sound_id = SimpleAudioEngine::getInstance()->playEffect("rain.mp3", true);
         this->cloudy_bg->setVisible(false);
 
         this->shadow->setVisible(false);
