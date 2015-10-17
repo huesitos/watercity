@@ -176,16 +176,37 @@ void Ministry::enable_listener()
 MinistryOfTechnology::MinistryOfTechnology()
 	: persons_on_breakdowns(0)
 {
-	projects.push_back(new TechnologicalProject("Pipes 1", "Build better pipes", 750, 5000, 1, 7, 50));
-	projects.push_back(new TechnologicalProject("Pipes 2", "Build even better pipes", 1000, 6000, 1, 7, 50));
-	projects.push_back(new TechnologicalProject("Pipes 3", "Build even better pipes", 1250, 7000, 1, 7, 50));
-	projects.push_back(new TechnologicalProject("Pipes 4", "Build even better pipes", 1500, 8000, 1, 7, 75));
-	projects.push_back(new TechnologicalProject("Pipes 5", "Build even better pipes", 1750, 9000, 1, 7, 75));
-	projects.push_back(new TechnologicalProject("Pipes 6", "Build even better pipes", 2000, 10000, 1, 7, 75));
-	projects.push_back(new TechnologicalProject("Pipes 7", "Build even better pipes", 2225, 11000, 1, 7, 75));
-	projects.push_back(new TechnologicalProject("Pipes 8", "Build even better pipes", 2500, 12000, 1, 7, 100));
-	projects.push_back(new TechnologicalProject("Pipes 9", "Build even better pipes", 2750, 13000, 1, 7, 100));
-	projects.push_back(new TechnologicalProject("Pipes 10", "Build even better pipes", 3000, 14000, 1, 7, 100));
+	projects.push_back(new TechnologicalProject("Reemplaza tu tuberia vieja", 
+		"Una de las mayores causas de desperdicio de agua es a traves de tuberias rotas causando goteras. Reemplazar estas tuberias ahorraria casi un 20%% del consumo total de la casa.", 
+		750, 5000, 1, 7, 50));
+
+	projects.push_back(new TechnologicalProject("Renovacion de inodoros I", 
+		"Reemplaza los inodoros convencionales que gastan de 5 galones por flush por inodoros de menor consumo que solo gastan 3.5 galones por flush.", 
+		1000, 6000, 1, 7, 50));
+
+	projects.push_back(new TechnologicalProject("Renovacion de inodoros II", 
+		"Reemplaza los inodoros convencionales que gastan de 3.5 galones por flush por inodoros de bajo consumo que gastan el mínimo de 1.6 galones por flush.", 
+		1250, 7000, 1, 7, 50));
+
+	projects.push_back(new TechnologicalProject("Renovacion de duchas I", 
+		"Cambia las duchas convencionales que gastan hasta 4.5 galones por minuto por duchas de bajo consumo que gastan solo 3.5 galones de agua por minuto.", 
+		1500, 8000, 1, 7, 75));
+
+	projects.push_back(new TechnologicalProject("Renovacion de duchas II", 
+		"Cambia las duchas convencionales que gastan hasta 3.5 galones por minuto por duchas de bajo consumo que gastan solo el minimo de 2.5 galones de agua por minuto.", 
+		1750, 9000, 1, 7, 75));
+
+	projects.push_back(new TechnologicalProject("Instalar Sistema de reciclaje de agua", 
+		"Con sistemas que reutilizan el agua usada en las cocinas, lavamanos y lavadoras, podemos ahorrar agua usandola para mantener plantas.", 
+		2000, 10000, 1, 7, 75));
+
+	projects.push_back(new TechnologicalProject("Instalar recolector de agua en el techo", 
+		"Con un Sistema de recoleccion del agua de lluvia podemos obtener agua en buenas condiciones para limpiar y regar las plantas.", 
+		2225, 11000, 1, 7, 75));
+
+	projects.push_back(new TechnologicalProject("Instalar cisterna", 
+		"La instalacion de una cisterna en las casas ayuda a la recoleccion del agua sobrante para uso en emergencias.", 
+		2500, 12000, 1, 7, 100));	
 }
 
 Ministry* MinistryOfTechnology::create(const char* pszFileName, const char* projectsFileName)
@@ -219,6 +240,8 @@ bool MinistryOfTechnology::on_touch_began(Touch* touch, Event* event)
 	if (this->getBoundingBox().containsPoint(touch->getLocation()))
 	{
 		layer->get_menu_technology()->update_projects();
+		layer->get_menu_education()->setVisible(false);
+		layer->get_menu_culture()->setVisible(false);
 		layer->get_menu_technology()->setVisible(true);
 		SimpleAudioEngine::getInstance()->playEffect("button.wav");
 		return true;
@@ -306,16 +329,27 @@ void MinistryOfTechnology::stop_animate_icon()
 
 MinistryOfEducation::MinistryOfEducation()
 {
-	projects.push_back(new EducationalProject("Tip 1", "Spend less time in the bathtub", 1500, 3000, 1, 7, 10));
-	projects.push_back(new EducationalProject("Tip 2", "Use a glass for brushing your teeth", 1500, 3000, 1, 7, 10));
-	projects.push_back(new EducationalProject("Tip 3", "Use a glass for brushing your teeth", 1500, 3000, 1, 7, 10));
-	projects.push_back(new EducationalProject("Tip 4", "Use a glass for brushing your teeth", 1750, 3000, 1, 7, 10));
-	projects.push_back(new EducationalProject("Tip 5", "Use a glass for brushing your teeth", 1750, 3000, 1, 7, 10));
-	projects.push_back(new EducationalProject("Tip 6", "Use a glass for brushing your teeth", 1750, 3000, 1, 7, 10));
-	projects.push_back(new EducationalProject("Tip 7", "Use a glass for brushing your teeth", 2000, 3000, 1, 7, 10));
-	projects.push_back(new EducationalProject("Tip 8", "Use a glass for brushing your teeth", 2000, 3000, 1, 7, 10));
-	projects.push_back(new EducationalProject("Tip 9", "Use a glass for brushing your teeth", 2000, 3000, 1, 7, 10));
-	projects.push_back(new EducationalProject("Tip 10", "Use a glass for brushing your teeth", 2250, 3000, 1, 7, 10));
+	projects.push_back(new EducationalProject("Ahorra en la ducha", 
+		"No seas manoso y deja de durar 30 minutos en el bano. Si reduces tus duchas a 10 mins ahorrarias hasta 15 galones de agua al dia.", 
+		1500, 3000, 1, 7, 10));
+	projects.push_back(new EducationalProject("Duchate, no te banes", 
+		"Es decir, no llenes tu tina hasta el tope y mejor usa la ducha para bañarte. Una tina puede usar hasta 70 galones de agua en una sola lavada.", 
+		1500, 3000, 1, 7, 10));
+	projects.push_back(new EducationalProject("Cepillate con un vaso de agua", 
+		"En vez de dejar la llave corriendo cuando te estes cepillando, llena un vaso con agua y usalo para enjuagarte para no desperdiciar el agua no utilizada.", 
+		1500, 3000, 1, 7, 10));
+	projects.push_back(new EducationalProject("Cierra la ducha mientras te enjabonas", 
+		"Cuando estes tomando tus duchas recuerda cerrar la llave mientras usas el jabon. Esto no solo ayuda a que te puedas enjabonar mejor (duh), sino que ahorra mucha agua que se desperdicia por el caño.", 
+		1750, 3000, 1, 7, 10));
+	projects.push_back(new EducationalProject("No laves tu carro con manguera", 
+		"Lavar tu carro con manguera utiliza alrededor de 150 galones de agua. Existen muchos sistemas de limpieza en seco para carros que son eficientes tanto en el ahorro de agua como en la limpieza.", 
+		1750, 3000, 1, 7, 10));
+	projects.push_back(new EducationalProject("Lava menos frecuentemente", 
+		"Lava tu ropa con menos frecuencia, pero con mayores cargas. Que conste, dijimos menos frecuencia, ¡no andes con ropa sucia!", 
+		1750, 3000, 1, 7, 10));
+	projects.push_back(new EducationalProject("Lava los platos utilizando envases", 
+		"En vez de dejar el agua cayendo, retenla en un contenedor y reutilizala tanto como puedas.", 
+		2000, 3000, 1, 7, 10));
 }
 
 Ministry* MinistryOfEducation::create(const char* pszFileName, const char* projectsFileName)
@@ -349,6 +383,8 @@ bool MinistryOfEducation::on_touch_began(Touch* touch, Event* event)
 	if (this->getBoundingBox().containsPoint(touch->getLocation()))
 	{
 		layer->get_menu_education()->update_projects();
+		layer->get_menu_technology()->setVisible(false);
+		layer->get_menu_culture()->setVisible(false);
 		layer->get_menu_education()->setVisible(true);
 		SimpleAudioEngine::getInstance()->playEffect("button.wav");
 		return true;
@@ -390,7 +426,8 @@ void MinistryOfEducation::stop_animate_icon()
 
 MinistryOfCulture::MinistryOfCulture()
 {
-	projects.push_back(new CulturalProject("Gardening fair", "What the name says", 0, 3500, 1, 7, 2));
+	projects.push_back(new CulturalProject("Parque Acuatico", 
+		"Disfruta con toda tu familia de un hermoso dia lleno de diversiones!", 0, 3500, 1, 7, 2));
 }
 
 Ministry* MinistryOfCulture::create(const char* pszFileName, const char* projectsFileName)
@@ -424,6 +461,8 @@ bool MinistryOfCulture::on_touch_began(Touch* touch, Event* event)
 	if (this->getBoundingBox().containsPoint(touch->getLocation()))
 	{
 		layer->get_menu_culture()->update_projects();
+		layer->get_menu_technology()->setVisible(false);
+		layer->get_menu_education()->setVisible(false);
 		layer->get_menu_culture()->setVisible(true);
 		SimpleAudioEngine::getInstance()->playEffect("button.wav");
 		return true;

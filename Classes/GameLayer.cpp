@@ -341,7 +341,7 @@ bool GameLayer::init()
         switch (type)
         {
             case ui::Widget::TouchEventType::BEGAN:
-                SimpleAudioEngine::getInstance()->playEffect("button.wav");
+                SimpleAudioEngine::getInstance()->playEffect("droplet.wav");
                 rm.increase_selected_consumption(amount_of_line);
                 this->update_labels();
                 break;
@@ -358,7 +358,7 @@ bool GameLayer::init()
         switch (type)
         {
             case ui::Widget::TouchEventType::BEGAN:
-                SimpleAudioEngine::getInstance()->playEffect("button.wav");
+                SimpleAudioEngine::getInstance()->playEffect("droplet.wav");
                 rm.decrease_selected_consumption(amount_of_line);
                 this->update_labels();
                 break;
@@ -411,6 +411,8 @@ bool GameLayer::init()
 
     this->addChild(goal_button, 3);
 
+    first_breakdown_minigame = true;
+
     this->scheduleUpdate();
 
     return true;
@@ -455,7 +457,7 @@ void GameLayer::run_day()
         if (hap >= 70)
             chance = 0;
         else
-            chance = static_cast<int>(50 * (70 - hap) / 70);
+            chance = static_cast<int>(50 * ((70 - hap) / 70) * ((70 - hap) / 70));
 
         if (chance > RandomHelper::random_int(0, 100))
         {
@@ -469,7 +471,6 @@ void GameLayer::run_day()
             if (hap >= 70 && 20 > RandomHelper::random_int(0, 100))
             {
                 will_reward = true;
-                cash_reward = RandomHelper::random_int(500, 1000);
             }
         }
     }
@@ -485,9 +486,51 @@ void GameLayer::run_day()
 
 void GameLayer::run_week()
 {
+    if (water_sound_id > -1)
+        SimpleAudioEngine::getInstance()->pauseEffect(water_sound_id);
+
+    if (climate.get_climate()==climate.SUNNY)
+    {
+        this->sun_bg->setVisible(true);
+        this->rain_bg->setVisible(false);
+        this->rain_drops->setVisible(false);
+        this->cloudy_bg->setVisible(false);
+
+        this->stop_clouds();
+
+        this->shadow->setVisible(false);
+        this->shadow2->setVisible(false);
+
+    }
+    else if (climate.get_climate()==climate.CLOUDY)
+    {
+        this->sun_bg->setVisible(false);
+        this->rain_bg->setVisible(false);
+        this->rain_drops->setVisible(false);
+        this->cloudy_bg->setVisible(true);
+
+        this->run_clouds();
+
+        this->shadow->setVisible(true);
+        this->shadow2->setVisible(true);
+
+    }
+    else
+    {
+        this->sun_bg->setVisible(false);
+        this->rain_bg->setVisible(true);
+        this->rain_drops->setVisible(true);
+        water_sound_id = SimpleAudioEngine::getInstance()->playEffect("rain.mp3", true);
+        this->cloudy_bg->setVisible(false);
+
+        this->stop_clouds();
+
+        this->shadow->setVisible(false);
+        this->shadow2->setVisible(false);
+    }
+
     did_riot_happen = false;
     will_reward = false;
-    cash_reward = 0;
 
     menu_technology->setVisible(false);
     menu_education->setVisible(false);
@@ -495,6 +538,11 @@ void GameLayer::run_week()
 
     for (int i = 0; i < 7; ++i)
         run_day();
+
+    if (did_riot_happen)
+    {
+        will_reward = false;
+    }
 
     update_labels();
 
@@ -512,26 +560,29 @@ void GameLayer::run_week()
 
 void GameLayer::start_breakdown_minigame()
 {
-    auto text_box = ui::Button::create("images/box.png");
-    text_box->setPosition(Vec2(origin.x + visible_size.width * 0.40, origin.y + visible_size.height * 0.60));
+    ui::Button* text_box;
+    if (first_breakdown_minigame)
+    {
+        first_breakdown_minigame = false;
+        text_box = ui::Button::create("images/tutomini.png");
+    }
+    else
+    {
+        text_box = ui::Button::create("images/minigameintro.png");
+    }
+
+    text_box->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
+    text_box->setPosition(origin);
     this->addChild(text_box, 5);
     text_box->setOpacity(0.0f);
     text_box->runAction(FadeIn::create(0.20f));
 
-    auto label = Label::createWithTTF("Se le dañaron las tuberias a algunas casas del vecindario! Tienes que arreglarlas!",
-        "fonts/Marker Felt.ttf", 40);
-    label->setTextColor(Color4B::WHITE);
-    label->setDimensions(text_box->getContentSize().width * 0.80, text_box->getContentSize().height * 0.80);
-    label->setPosition(Vec2(text_box->getContentSize().width * 0.50, text_box->getContentSize().height * 0.50));
-    text_box->addChild(label, 1);
-
     turn_off_listeners();
 
-    text_box->addTouchEventListener([this, text_box, label](Ref* sender, ui::Widget::TouchEventType type) {
+    text_box->addTouchEventListener([this, text_box](Ref* sender, ui::Widget::TouchEventType type) {
         switch (type)
         {
             case ui::Widget::TouchEventType::BEGAN:
-                text_box->removeChild(label);
                 this->removeChild(text_box);
                 this->runAction(CallFunc::create(CC_CALLBACK_0(GameLayer::initial_countdown_breakdown_minigame, this)));
                 break;
@@ -653,42 +704,12 @@ void GameLayer::end_breakdown_minigame()
 
     if (static_cast<int>(breakdowns.size()) == 0)
     {
-        auto label = Label::createWithTTF("You fixed all of the breakdowns!", "fonts/Marker Felt.ttf", 50);
-        label->setTextColor(Color4B::BLACK);
-        label->setDimensions(visible_size.width * 0.30, visible_size.height * 0.30);
-        label->setPosition(Vec2(origin.x + visible_size.width * 0.40, origin.y + visible_size.height * 0.60));
-        this->addChild(label, 5);
-        label->setOpacity(0.0f);
-
-        auto get_removed = CallFunc::create([this, label](){
-            this->removeChild(label);
-        });
-
-        label->runAction(Sequence::create(FadeIn::create(1.0f), DelayTime::create(2.0f),
-            FadeOut::create(1.0f), get_removed, nullptr));
-
-        int breakdowns_water_reward = RandomHelper::random_int(0, 2);
-        breakdowns_water_reward = 5000 + 1000 * breakdowns_water_reward;
-
-        rm.spend_water(-breakdowns_water_reward);
-        update_labels();
-
-        auto label_reward = Label::createWithTTF(StringUtils::format("You saved %d gallons of water!", breakdowns_water_reward), "fonts/Marker Felt.ttf", 50);
-        label_reward->setTextColor(Color4B::BLACK);
-        label_reward->setDimensions(visible_size.width * 0.30, visible_size.height * 0.30);
-        label_reward->setPosition(Vec2(origin.x + visible_size.width * 0.40, origin.y + visible_size.height * 0.40));
-        this->addChild(label_reward, 5);
-        label_reward->setOpacity(0.0f);
-
-        auto get_reward_removed = CallFunc::create([this, label_reward](){
-            this->removeChild(label_reward);
-        });
-
-        label_reward->runAction(Sequence::create(DelayTime::create(2.0f), FadeIn::create(1.0f), DelayTime::create(2.0f),
-            FadeOut::create(1.0f), get_reward_removed, nullptr));
+        did_win = true;
     }
     else
     {
+        did_win = false;
+
         for (auto breakdown : breakdowns)
         {
             this->removeChild(breakdown);
@@ -701,24 +722,9 @@ void GameLayer::end_breakdown_minigame()
 
         breakdowns.clear();
         breakdown_sprites.clear();
-
-        auto label = Label::createWithTTF("You couldn't fix all of the breakdowns :(", "fonts/Marker Felt.ttf", 30);
-        label->setTextColor(Color4B::BLACK);
-        label->setPosition(Vec2(origin.x + visible_size.width * 0.40, origin.y + visible_size.height * 0.60));
-        this->addChild(label, 5);
-        label->setOpacity(0.0f);
-
-        auto get_removed = CallFunc::create([this, label](){
-            this->removeChild(label);
-        });
-
-        label->runAction(Sequence::create(FadeIn::create(1.0f), DelayTime::create(1.0f),
-            FadeOut::create(1.0f), get_removed, nullptr));
     }
 
-    turn_on_listeners();
-
-    report();
+    report_breakdown_minigame();
 }
 
 void GameLayer::on_correct_breakdown(ui::Button* breakdown_to_remove)
@@ -759,6 +765,88 @@ void GameLayer::on_incorrect_breakdown()
 {
     is_running_breakdowns_minigame = false;
     end_breakdown_minigame();
+}
+
+void GameLayer::report_breakdown_minigame()
+{
+    ui::Button* button;
+
+    if (did_win)
+    {
+        int water_reward = 3000 + 100 * RandomHelper::random_int(-5, 5);
+        int cash_reward = 2000 + 200 * RandomHelper::random_int(-5, 5);
+
+        rm.increase_water_reserves(water_reward);
+        rm.spend_cash(-cash_reward);
+
+        auto water_label = Label::createWithTTF(StringUtils::format("%d", water_reward), "fonts/Marker Felt.ttf", 30);
+        auto cash_label = Label::createWithTTF(StringUtils::format("%d", cash_reward), "fonts/Marker Felt.ttf", 30);
+
+        button = ui::Button::create("images/minigoalcompletado.png");
+        button->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
+        button->setPosition(origin);
+        this->addChild(button, 5);
+        button->setOpacity(0.0f);
+        button->runAction(FadeIn::create(0.20f));
+
+        water_label->setTextColor(Color4B::WHITE);
+        water_label->setPosition(Vec2(origin.x + visible_size.width * 0.44, origin.y + visible_size.height * 0.32));
+        water_label->setOpacity(0.0f);
+        this->addChild(water_label, 5);
+        water_label->runAction(FadeIn::create(0.25f));
+
+        cash_label->setTextColor(Color4B::WHITE);
+        cash_label->setPosition(Vec2(origin.x + visible_size.width * 0.64, origin.y + visible_size.height * 0.32));
+        water_label->setOpacity(0.0f);
+        this->addChild(cash_label, 5);
+        water_label->runAction(FadeIn::create(0.25f));
+
+        button->addTouchEventListener([this, button, water_label, cash_label](Ref* sender, ui::Widget::TouchEventType type) {
+            switch (type)
+            {
+                case ui::Widget::TouchEventType::BEGAN:
+                    this->removeChild(button);
+                    this->removeChild(water_label);
+                    this->removeChild(cash_label);
+                    this->runAction(CallFunc::create(CC_CALLBACK_0(GameLayer::report_riots, this)));
+                    break;
+                default:
+                    break;
+            }
+
+            return true; 
+        });
+    }
+    else
+    {
+        button = ui::Button::create("images/minigamefallaste.png");
+        button->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
+        button->setPosition(origin);
+        this->addChild(button, 5);
+        button->setOpacity(0.0f);
+        button->runAction(FadeIn::create(0.20f));
+
+        button->addTouchEventListener([this, button](Ref* sender, ui::Widget::TouchEventType type) {
+            switch (type)
+            {
+                case ui::Widget::TouchEventType::BEGAN:
+                    this->removeChild(button);
+                    this->runAction(CallFunc::create(CC_CALLBACK_0(GameLayer::report_riots, this)));
+                    break;
+                default:
+                    break;
+            }
+
+            return true; 
+        });
+    }
+}
+
+void GameLayer::report_riots()
+{
+    turn_on_listeners();
+
+    report();
 }
 
 void GameLayer::start_prohibited_act_minigame()
@@ -1052,54 +1140,23 @@ void GameLayer::report()
         menu_culture->update_labels();
     }
 
-    climate.set_week_climate();
     sunny->setOpacity(0);
     cloudy->setOpacity(0);
     rainy->setOpacity(0);
 
-    if (water_sound_id > -1)
-        SimpleAudioEngine::getInstance()->pauseEffect(water_sound_id);
+    climate.set_week_climate();
 
     if (climate.get_climate()==climate.SUNNY)
     {
         this->sunny->runAction(FadeIn::create(0.5f));
-        this->sun_bg->setVisible(true);
-        this->rain_bg->setVisible(false);
-        this->rain_drops->setVisible(false);
-        this->cloudy_bg->setVisible(false);
-
-        this->stop_clouds();
-
-        this->shadow->setVisible(false);
-        this->shadow2->setVisible(false);
-
     }
     else if (climate.get_climate()==climate.CLOUDY)
     {
         this->cloudy->runAction(FadeIn::create(0.5f));
-        this->sun_bg->setVisible(false);
-        this->rain_bg->setVisible(false);
-        this->rain_drops->setVisible(false);
-        this->cloudy_bg->setVisible(true);
-
-        this->run_clouds();
-
-        this->shadow->setVisible(true);
-        this->shadow2->setVisible(true);
     }
     else
     {
         this->rainy->runAction(FadeIn::create(0.5f));
-        this->sun_bg->setVisible(false);
-        this->rain_bg->setVisible(true);
-        this->rain_drops->setVisible(true);
-        water_sound_id = SimpleAudioEngine::getInstance()->playEffect("rain.mp3", true);
-        this->cloudy_bg->setVisible(false);
-
-        this->stop_clouds();
-
-        this->shadow->setVisible(false);
-        this->shadow2->setVisible(false);
     }
 }
 
@@ -1172,6 +1229,8 @@ void GameLayer::update_labels()
 
 void GameLayer::run_clouds()
 {
+    stop_clouds();
+
     for (auto cloud : clouds)
     {
         Vec2 initial_pos(origin.x - visible_size.width * 0.50,

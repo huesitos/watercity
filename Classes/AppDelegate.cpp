@@ -65,6 +65,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     SimpleAudioEngine::getInstance()->preloadEffect("button.wav");
     SimpleAudioEngine::getInstance()->preloadEffect("clock_tick.wav");
     SimpleAudioEngine::getInstance()->preloadEffect("rain.mp3");
+    SimpleAudioEngine::getInstance()->preloadEffect("droplet.wav");
 
     // create a scene. it's an autorelease object
     auto scene = MainMenu::createScene();
@@ -80,7 +81,7 @@ void AppDelegate::applicationDidEnterBackground() {
     Director::getInstance()->stopAnimation();
 
     // if you use SimpleAudioEngine, it must be pause
-    // SimpleAudioEngine::getInstance()->pauseBackgroundMusic();
+    SimpleAudioEngine::getInstance()->pauseBackgroundMusic();
 }
 
 // this function will be called when the app is active again
@@ -88,5 +89,5 @@ void AppDelegate::applicationWillEnterForeground() {
     Director::getInstance()->startAnimation();
 
     // if you use SimpleAudioEngine, it must resume here
-    // SimpleAudioEngine::getInstance()->resumeBackgroundMusic();
+    SimpleAudioEngine::getInstance()->resumeBackgroundMusic();
 }

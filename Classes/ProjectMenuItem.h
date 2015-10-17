@@ -40,12 +40,7 @@ private:
 
 	bool 		filled;
 
-	Vector<Sprite*> 	project_images;
-
 	ui::Button* 	fund_project;
-
-	Label* 			persons_project_label;
-	Label* 			persons_work_label;
 
 	Vector<Label*> 	name_labels;
 	Vector<Label*> 	description_labels;
@@ -53,6 +48,7 @@ private:
 	Vector<Label*> 	water_labels;
 	Vector<Label*> 	persons_labels;
 	Vector<Label*> 	time_labels;
+	Vector<Label*> 	change_labels;
 };
 
 #endif // __PROJECT_MENU_ITEM_H__

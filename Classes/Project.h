@@ -23,6 +23,8 @@ public:
 	virtual bool is_reported() { return reported; }
 	virtual void stop_project() {};
 
+	virtual int get_change() = 0;
+
 	virtual void assign_persons_needed();
 	virtual void empty_persons_assigned();
 	virtual void increase_persons_assigned();
@@ -75,6 +77,11 @@ public:
 
 	int get_change_in_consumption();
 
+	virtual int get_change()
+	{
+		return get_change_in_consumption();
+	}
+
 protected:
 	int 	change_in_consumption;
 };
@@ -90,6 +97,11 @@ public:
 
 	virtual void complete();
 	int get_change_in_awareness();
+
+	virtual int get_change()
+	{
+		return get_change_in_awareness();
+	}
 
 protected:
 
@@ -109,6 +121,11 @@ public:
 	virtual void develop();
 	void stop_project();
 	int get_change_in_happiness();
+
+	virtual int get_change()
+	{
+		return get_change_in_happiness();
+	}
 
 protected:
 	float 	change_in_happiness;

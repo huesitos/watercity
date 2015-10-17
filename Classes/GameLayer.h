@@ -58,7 +58,8 @@ private:
 
 	// Report methods (end of week)
 
-
+	void 	report_breakdown_minigame();
+	void 	report_riots();
 
 	void 	start_prohibited_act_minigame();
 	void 	run_prohibited_act_minigame();
@@ -152,6 +153,10 @@ private:
 	bool 	is_running_breakdowns_minigame;
 	float 	breakdowns_countdown;
 
+	bool 	did_win;
+
+	bool 	first_breakdown_minigame;
+
 	// Prohibited Acts minigame
 
 	Vector<ui::Button*> prohibited_acts;
@@ -176,7 +181,6 @@ private:
 
 	bool 		did_riot_happen;
 	bool 		will_reward;
-	int 		cash_reward;
 
 	// Sounds
 

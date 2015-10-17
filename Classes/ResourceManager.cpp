@@ -196,7 +196,6 @@ float ResourceManager::awareness_actual_consumption_conversion(float awareness_a
 {
 	// the awareness affects half of the actual consumption
 	double conversion_rate = ((initial_actual_water_consumption - initial_desired_water_consumption)/2.0f)/100.0f;
-	printf("%f\n", conversion_rate);
 
 	return awareness_amount * conversion_rate;
 }
