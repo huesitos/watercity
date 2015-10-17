@@ -108,6 +108,8 @@ private:
 	float 	awareness;
 	float 	awareness_min;
 
+	int water_reserves_goal;
+
 	// Decay rate in percentage points per second
 
 	const float awareness_decay_rate = 5.0 / 60;
@@ -129,6 +131,10 @@ public:
 	int 	get_population_total() { return population_total; }
 	int 	get_population_occupied() { return population_occupied; }
 	int 	get_population_unoccupied() { return population_total - population_occupied; }
+
+	int get_water_reserves_goal() {
+		return water_reserves_goal;
+	}
 
 	float 	get_happiness_penalty();
 

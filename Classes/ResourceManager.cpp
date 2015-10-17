@@ -7,8 +7,9 @@ ResourceManager::ResourceManager()
 
 void ResourceManager::reset()
 {
-	water_reserves = 50000;
+	water_reserves = 40000;
 	water_reserves_limit = 50000;
+	water_reserves = 50000;
 	water_inflow = 2000;
 	actual_water_consumption = 2500;
 	initial_actual_water_consumption = actual_water_consumption;

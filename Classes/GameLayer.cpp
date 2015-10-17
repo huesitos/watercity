@@ -377,6 +377,40 @@ bool GameLayer::init()
     advance_to_minigame = false;
     advance_from_minigame = false;
 
+    goal_bubble = Sprite::create("images/goal/goalbubble.png");
+    goal_bubble->setPosition(Vec2(origin.x + visible_size.width - goal_bubble->getContentSize().width/2, origin.y + visible_size.height * 0.70));
+    goal_bubble->setOpacity(0);
+
+    this->addChild(goal_bubble, 3);
+
+    _goalLabel = Label::createWithTTF(StringUtils::format("Lleva el consumo de agua de la poblacion a %d.", rm.get_desired_water_consumption() * 7), "fonts/Marker Felt.ttf", 28);
+    _goalLabel->setPosition(Vec2(origin.x + visible_size.width - goal_bubble->getContentSize().width/2, origin.y + visible_size.height * 0.69));
+    _goalLabel->setDimensions(goal_bubble->getContentSize().width - 50, goal_bubble->getContentSize().height - 50);
+    _goalLabel->setTextColor(Color4B::BLACK);
+    _goalLabel->setOpacity(0);
+
+    this->addChild(_goalLabel, 4);
+
+    this->goal_bubble->runAction(Sequence::create(FadeIn::create(0.5f), DelayTime::create(3.0f), FadeOut::create(0.5f), nullptr));
+    this->_goalLabel->runAction(Sequence::create(FadeIn::create(0.5f), DelayTime::create(3.0f), FadeOut::create(0.5f), nullptr));
+
+    goal_button = ui::Button::create("images/goal/goalactive.png");
+    goal_button->setPosition(Vec2(origin.x + visible_size.width - goal_button->getContentSize().width/2, origin.y + visible_size.height * 0.52));
+
+    goal_button->addTouchEventListener([this](Ref* sender, ui::Widget::TouchEventType type) {
+        switch (type)
+        {
+            case ui::Widget::TouchEventType::BEGAN:
+                this->goal_bubble->runAction(Sequence::create(FadeIn::create(0.5f), DelayTime::create(3.0f), FadeOut::create(0.5f), nullptr));
+                this->_goalLabel->runAction(Sequence::create(FadeIn::create(0.5f), DelayTime::create(3.0f), FadeOut::create(0.5f), nullptr));
+                break;
+            default:
+                break;
+        }
+    });
+
+    this->addChild(goal_button, 3);
+
     this->scheduleUpdate();
 
     return true;
@@ -505,7 +539,7 @@ void GameLayer::start_breakdown_minigame()
                 break;
         }
 
-        return true; 
+        return true;
     });
 }
 
@@ -529,20 +563,20 @@ void GameLayer::initial_countdown_breakdown_minigame()
     auto move_scale_fade = Spawn::create(msf);
 
     label->runAction(Sequence::create(
-        move_scale_fade, 
-        DelayTime::create(0.50f), 
-        Place::create(Vec2(origin.x + visible_size.width * 0.08, origin.y + visible_size.height * 0.80)), 
-        CallFunc::create([label](){ label->setScale(1); }), 
-        CallFunc::create([label](){ label->setString("2"); }), 
-        move_scale_fade->clone(), 
-        DelayTime::create(0.50f), 
-        Place::create(Vec2(origin.x + visible_size.width * 0.08, origin.y + visible_size.height * 0.80)), 
-        CallFunc::create([label](){ label->setScale(1); }), 
-        CallFunc::create([label](){ label->setString("1"); }), 
-        move_scale_fade->clone(), 
-        DelayTime::create(0.50f), 
-        CallFunc::create([this](){ this->runAction(CallFunc::create(CC_CALLBACK_0(GameLayer::run_breakdown_minigame, this))); }), 
-        RemoveSelf::create(), 
+        move_scale_fade,
+        DelayTime::create(0.50f),
+        Place::create(Vec2(origin.x + visible_size.width * 0.08, origin.y + visible_size.height * 0.80)),
+        CallFunc::create([label](){ label->setScale(1); }),
+        CallFunc::create([label](){ label->setString("2"); }),
+        move_scale_fade->clone(),
+        DelayTime::create(0.50f),
+        Place::create(Vec2(origin.x + visible_size.width * 0.08, origin.y + visible_size.height * 0.80)),
+        CallFunc::create([label](){ label->setScale(1); }),
+        CallFunc::create([label](){ label->setString("1"); }),
+        move_scale_fade->clone(),
+        DelayTime::create(0.50f),
+        CallFunc::create([this](){ this->runAction(CallFunc::create(CC_CALLBACK_0(GameLayer::run_breakdown_minigame, this))); }),
+        RemoveSelf::create(),
         nullptr));
 }
 
@@ -967,7 +1001,7 @@ void GameLayer::report()
         game_over();
     }
 
-    if (rm.get_water_reserves() >= 50000 && rm.get_actual_water_consumption() == rm.get_desired_water_consumption())
+    if (rm.get_desired_water_consumption() <= rm.get_actual_water_consumption())
     {
         finished();
     }
@@ -1001,7 +1035,7 @@ void GameLayer::report()
                     break;
             }
 
-            return true; 
+            return true;
         });
     }
     else if (will_reward)
@@ -1141,7 +1175,7 @@ void GameLayer::run_clouds()
         Vec2 initial_pos(origin.x - visible_size.width * 0.50,
                          origin.y + visible_size.height * (0.85 + RandomHelper::random_real(0.0, 0.15)));
 
-        Vec2 final_pos(origin.x + visible_size.width * 1.50, 
+        Vec2 final_pos(origin.x + visible_size.width * 1.50,
                        origin.y + visible_size.height * (0.85 + RandomHelper::random_real(0.0, 0.15)));
 
         float travel_time = RandomHelper::random_real(30.0, 45.0);
@@ -1150,7 +1184,7 @@ void GameLayer::run_clouds()
 
         cloud->runAction(RepeatForever::create(
             Sequence::create(
-                Place::create(initial_pos), MoveTo::create(travel_time, final_pos), 
+                Place::create(initial_pos), MoveTo::create(travel_time, final_pos),
                 DelayTime::create(1.0f), nullptr)));
     }
 }

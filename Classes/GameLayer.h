@@ -58,7 +58,7 @@ private:
 
 	// Report methods (end of week)
 
-	
+
 
 	void 	start_prohibited_act_minigame();
 	void 	run_prohibited_act_minigame();
@@ -77,6 +77,8 @@ private:
 	Sprite* 	rain_bg;
 	Sprite* 	cloudy_bg;
 	Sprite* 	rain_drops;
+
+	Sprite* 	goal_bubble;
 
 	// Clouds in the sky
 
@@ -126,10 +128,13 @@ private:
 	Label* _feeLabel;
 	Label* _populationLabel;
 
+	Label* 	_goalLabel;
+
 	Label* _selectedWaterConsumptionLabel;
 	Label* _actualWaterConsumptionLabel;
 	Label* _desiredWaterConsumptionLabel;
 
+	ui::Button* goal_button;
 	ui::Button* run_week_button;
 	ui::Button* add_button;
 	ui::Button* substract_button;
