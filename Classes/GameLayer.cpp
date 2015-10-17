@@ -135,9 +135,9 @@ bool GameLayer::init()
     cloudy = Sprite::create("images/cloudy.png");
     rainy = Sprite::create("images/rainy.png");
 
-    sunny->setPosition(Vec2(origin.x + visible_size.width * 0.945, origin.y + visible_size.height * 0.34));
-    cloudy->setPosition(Vec2(origin.x + visible_size.width * 0.945, origin.y + visible_size.height * 0.34));
-    rainy->setPosition(Vec2(origin.x + visible_size.width * 0.945, origin.y + visible_size.height * 0.34));
+    sunny->setPosition(Vec2(origin.x + visible_size.width * 0.94, origin.y + visible_size.height * 0.34));
+    cloudy->setPosition(Vec2(origin.x + visible_size.width * 0.94, origin.y + visible_size.height * 0.34));
+    rainy->setPosition(Vec2(origin.x + visible_size.width * 0.94, origin.y + visible_size.height * 0.34));
 
     this->addChild(sunny, 3);
     this->addChild(cloudy, 3);
@@ -152,7 +152,7 @@ bool GameLayer::init()
     frames.pushBack(SpriteFrame::create("images/sunny_anim/sunny2.png", Rect(0, 0, sunny->getContentSize().width, sunny->getContentSize().height)));
     frames.pushBack(SpriteFrame::create("images/sunny_anim/sunny3.png", Rect(0, 0, sunny->getContentSize().width, sunny->getContentSize().height)));
 
-    animation = Animation::createWithSpriteFrames(frames, 1.0f);
+    animation = Animation::createWithSpriteFrames(frames, 0.5f);
     animate = Animate::create(animation);
     sunny->runAction(RepeatForever::create(animate));
     frames.clear();
@@ -162,7 +162,7 @@ bool GameLayer::init()
     frames.pushBack(SpriteFrame::create("images/cloudy_anim/cloudy2.png", Rect(0, 0, cloudy->getContentSize().width, cloudy->getContentSize().height)));
     frames.pushBack(SpriteFrame::create("images/cloudy_anim/cloudy3.png", Rect(0, 0, cloudy->getContentSize().width, cloudy->getContentSize().height)));
 
-    animation = Animation::createWithSpriteFrames(frames, 1.0f);
+    animation = Animation::createWithSpriteFrames(frames, 0.5f);
     animate = Animate::create(animation);
     cloudy->runAction(RepeatForever::create(animate));
     frames.clear();
@@ -172,7 +172,7 @@ bool GameLayer::init()
     frames.pushBack(SpriteFrame::create("images/rainy_anim/rainy2.png", Rect(0, 0, rainy->getContentSize().width, rainy->getContentSize().height)));
     frames.pushBack(SpriteFrame::create("images/rainy_anim/rainy3.png", Rect(0, 0, rainy->getContentSize().width, rainy->getContentSize().height)));
 
-    animation = Animation::createWithSpriteFrames(frames, 1.0f);
+    animation = Animation::createWithSpriteFrames(frames, 0.5f);
     animate = Animate::create(animation);
     rainy->runAction(RepeatForever::create(animate));
 
