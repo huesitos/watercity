@@ -104,6 +104,8 @@ private:
   	Sprite* happy;
   	Sprite* mad;
 
+  	Sprite* happy_small;
+
   	Sprite* water_meter;
   	Sprite* water_reserves;
 
