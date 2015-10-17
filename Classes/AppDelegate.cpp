@@ -68,7 +68,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     SimpleAudioEngine::getInstance()->preloadEffect("droplet.wav");
 
     // create a scene. it's an autorelease object
-    auto scene = MainMenu::createScene();
+    auto scene = GameLayer::createScene();
 
     // run
     director->runWithScene(scene);

@@ -116,9 +116,9 @@ void ProjectMenuItem::update_projects()
 		int font_size = 20;
 
 		auto name_label = Label::createWithTTF(projs[i]->get_name(), "fonts/Marker Felt.ttf", 35);
-		name_label->setDimensions(rect_size.width * 0.45, rect_size.height * 0.30);
+		name_label->setDimensions(rect_size.width * 0.45, rect_size.height * 0.28);
 		name_label->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
-		name_label->setPosition(Vec2(rect_size.width * 0.38, rect_size.height * 0.70));
+		name_label->setPosition(Vec2(rect_size.width * 0.40, rect_size.height * 0.70));
 		name_label->setTextColor(Color4B::WHITE);
 		name_labels.pushBack(name_label);
 		this->addChild(name_label, 1, -999);
@@ -126,47 +126,37 @@ void ProjectMenuItem::update_projects()
 		auto description_label = Label::createWithTTF(projs[i]->get_description(), "fonts/Marker Felt.ttf", 25);
 		description_label->setDimensions(rect_size.width * 0.45, rect_size.height * 0.45);
 		description_label->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
-		description_label->setPosition(Vec2(rect_size.width * 0.38, rect_size.height * 0.50));
+		description_label->setPosition(Vec2(rect_size.width * 0.42, rect_size.height * 0.56));
 		description_label->setTextColor(Color4B::WHITE);
 		description_labels.pushBack(description_label);
 		this->addChild(description_label, 1, -999);
 
 		auto cash_label = Label::createWithTTF(StringUtils::format("%d", projs[i]->get_cash_cost()), "fonts/Marker Felt.ttf", font_size);
-		/*cash_label->setDimensions(rect_size.width * 0.10, rect_size.height * 0.15);*/
-		cash_label->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
-		cash_label->setPosition(Vec2(rect_size.width * 0.27, rect_size.height * 0.55));
+		cash_label->setPosition(Vec2(rect_size.width * 0.32, rect_size.height * 0.54));
 		cash_label->setTextColor(Color4B::WHITE);
 		cash_labels.pushBack(cash_label);
 		this->addChild(cash_label, 1, -999);
 
 		auto water_label = Label::createWithTTF(StringUtils::format("%d", projs[i]->get_water_cost()), "fonts/Marker Felt.ttf", font_size);
-		/*water_label->setDimensions(rect_size.width * 0.10, rect_size.height * 0.15);*/
-		water_label->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
-		water_label->setPosition(Vec2(rect_size.width * 0.31, rect_size.height * 0.63));
+		water_label->setPosition(Vec2(rect_size.width * 0.32, rect_size.height * 0.62));
 		water_label->setTextColor(Color4B::WHITE);
 		water_labels.pushBack(water_label);
 		this->addChild(water_label, 1, -999);
 
 		auto persons_label = Label::createWithTTF(StringUtils::format("%d", projs[i]->get_persons_assigned()), "fonts/Marker Felt.ttf", font_size);
-		/*persons_label->setDimensions(rect_size.width * 0.10, rect_size.height * 0.15);*/
-		persons_label->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
-		persons_label->setPosition(Vec2(rect_size.width * 0.31, rect_size.height * 0.40));
+		persons_label->setPosition(Vec2(rect_size.width * 0.32, rect_size.height * 0.40));
 		persons_label->setTextColor(Color4B::WHITE);
 		persons_labels.pushBack(persons_label);
 		this->addChild(persons_label, 1, -999);
 
 		auto time_label = Label::createWithTTF(StringUtils::format("%d / %d", projs[i]->get_time_completed(), projs[i]->get_completion_time()), "fonts/Marker Felt.ttf", font_size);
-		/*time_label->setDimensions(rect_size.width * 0.10, rect_size.height * 0.15);*/
-		time_label->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
-		time_label->setPosition(Vec2(rect_size.width * 0.29, rect_size.height * 0.48));
+		time_label->setPosition(Vec2(rect_size.width * 0.32, rect_size.height * 0.47));
 		time_label->setTextColor(Color4B::WHITE);
 		time_labels.pushBack(time_label);
 		this->addChild(time_label, 1, -999);
 
-		auto change_label = Label::createWithTTF(StringUtils::format("%d", projs[i]->get_change()), "fonts/Marker Felt.ttf", font_size);
-		/*change_label->setDimensions(rect_size.width * 0.10, rect_size.height * 0.15);*/
-		change_label->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
-		change_label->setPosition(Vec2(rect_size.width * 0.34, rect_size.height * 0.30));
+		auto change_label = Label::createWithTTF(StringUtils::format("%d", projs[i]->get_change()*7), "fonts/Marker Felt.ttf", font_size);
+		change_label->setPosition(Vec2(rect_size.width * 0.35, rect_size.height * 0.29));
 		change_label->setTextColor(Color4B::WHITE);
 		change_labels.pushBack(change_label);
 		this->addChild(change_label, 1, -999);
