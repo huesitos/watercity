@@ -56,6 +56,10 @@ private:
 	void 	on_correct_breakdown(ui::Button* breakdown_to_remove);
 	void 	on_incorrect_breakdown();
 
+	// Report methods (end of week)
+
+	
+
 	void 	start_prohibited_act_minigame();
 	void 	run_prohibited_act_minigame();
 	void 	end_prohibited_act_minigame();
