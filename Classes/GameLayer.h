@@ -50,6 +50,7 @@ private:
 	void 	add_labels();
 
 	void 	start_breakdown_minigame();
+	void 	initial_countdown_breakdown_minigame();
 	void 	run_breakdown_minigame();
 	void 	end_breakdown_minigame();
 	void 	on_correct_breakdown(ui::Button* breakdown_to_remove);
@@ -72,6 +73,20 @@ private:
 	Sprite* 	rain_bg;
 	Sprite* 	cloudy_bg;
 	Sprite* 	rain_drops;
+
+	// Clouds in the sky
+
+	Sprite* 	cloud1;
+	Sprite* 	cloud2;
+	Sprite* 	cloud3;
+	Sprite* 	cloud4;
+	Sprite* 	cloud5;
+
+	Vector<Sprite*> clouds;
+
+	void 		run_clouds();
+	void 		stop_clouds();
+
 	Sprite* 	shadow;
 	Sprite* 	shadow2;
 
@@ -157,6 +172,12 @@ private:
 	// Sounds
 
 	int 	water_sound_id = -1;
+	int 	clock_tick_id = -1;
+
+	// Weekly flow
+
+	bool 	advance_to_minigame;
+	bool 	advance_from_minigame;
 };
 
 #endif // __GAME_LAYER_H__

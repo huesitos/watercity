@@ -4,8 +4,10 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include "SimpleAudioEngine.h"
 
 USING_NS_CC;
+using namespace CocosDenshion;
 
 
 Ministry::Ministry()
@@ -218,6 +220,7 @@ bool MinistryOfTechnology::on_touch_began(Touch* touch, Event* event)
 	{
 		layer->get_menu_technology()->update_projects();
 		layer->get_menu_technology()->setVisible(true);
+		SimpleAudioEngine::getInstance()->playEffect("button.wav");
 		return true;
 	}
 	else
@@ -301,7 +304,6 @@ void MinistryOfTechnology::stop_animate_icon()
 
 
 
-
 MinistryOfEducation::MinistryOfEducation()
 {
 	projects.push_back(new EducationalProject("Tip 1", "Spend less time in the bathtub", 1500, 3000, 1, 7, 10));
@@ -348,6 +350,7 @@ bool MinistryOfEducation::on_touch_began(Touch* touch, Event* event)
 	{
 		layer->get_menu_education()->update_projects();
 		layer->get_menu_education()->setVisible(true);
+		SimpleAudioEngine::getInstance()->playEffect("button.wav");
 		return true;
 	}
 	else
@@ -422,6 +425,7 @@ bool MinistryOfCulture::on_touch_began(Touch* touch, Event* event)
 	{
 		layer->get_menu_culture()->update_projects();
 		layer->get_menu_culture()->setVisible(true);
+		SimpleAudioEngine::getInstance()->playEffect("button.wav");
 		return true;
 	}
 	else

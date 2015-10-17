@@ -62,6 +62,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     register_all_packages();
 
+    SimpleAudioEngine::getInstance()->preloadEffect("button.wav");
+    SimpleAudioEngine::getInstance()->preloadEffect("clock_tick.wav");
     SimpleAudioEngine::getInstance()->preloadEffect("rain.mp3");
 
     // create a scene. it's an autorelease object

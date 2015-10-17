@@ -35,6 +35,30 @@ bool GameLayer::init()
 
     this->addChild(sky, -1);
 
+    cloud1 = Sprite::create("images/clouds/cloud1.png");
+    cloud2 = Sprite::create("images/clouds/cloud2.png");
+    cloud3 = Sprite::create("images/clouds/cloud3.png");
+    cloud4 = Sprite::create("images/clouds/cloud4.png");
+    cloud5 = Sprite::create("images/clouds/cloud5.png");
+
+    cloud1->setVisible(false);
+    cloud2->setVisible(false);
+    cloud3->setVisible(false);
+    cloud4->setVisible(false);
+    cloud5->setVisible(false);
+
+    clouds.pushBack(cloud1);
+    clouds.pushBack(cloud2);
+    clouds.pushBack(cloud3);
+    clouds.pushBack(cloud4);
+    clouds.pushBack(cloud5);
+
+    this->addChild(cloud1, 0);
+    this->addChild(cloud2, 0);
+    this->addChild(cloud3, 0);
+    this->addChild(cloud4, 0);
+    this->addChild(cloud5, 0);
+
     // add background
     background_town = Sprite::create("images/back.png");
     background_town->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
@@ -269,7 +293,7 @@ bool GameLayer::init()
     this->addChild(ministry_of_technology, 1);
 
     menu_technology = ProjectMenuItem::create("images/techmenu.png", ministry_of_technology);
-    menu_technology->setPosition(Vec2(origin.x + visible_size.width * 0.40, origin.y + visible_size.height * 0.50));
+    menu_technology->setPosition(Vec2(origin.x + visible_size.width * 0.45, origin.y + visible_size.height * 0.52));
     this->addChild(menu_technology, 2);
     menu_technology->setVisible(false);
     ministry_of_technology->setup_listener();
@@ -279,7 +303,7 @@ bool GameLayer::init()
     this->addChild(ministry_of_education, 1);
 
     menu_education = ProjectMenuItem::create("images/edumenu.png", ministry_of_education);
-    menu_education->setPosition(Vec2(origin.x + visible_size.width * 0.40, origin.y + visible_size.height * 0.50));
+    menu_education->setPosition(Vec2(origin.x + visible_size.width * 0.45, origin.y + visible_size.height * 0.52));
     this->addChild(menu_education, 2);
     menu_education->setVisible(false);
     ministry_of_education->setup_listener();
@@ -289,7 +313,7 @@ bool GameLayer::init()
     this->addChild(ministry_of_culture, 1);
 
     menu_culture = ProjectMenuItem::create("images/cultmenu.png", ministry_of_culture);
-    menu_culture->setPosition(Vec2(origin.x + visible_size.width * 0.40, origin.y + visible_size.height * 0.50));
+    menu_culture->setPosition(Vec2(origin.x + visible_size.width * 0.45, origin.y + visible_size.height * 0.52));
     this->addChild(menu_culture, 2);
     menu_culture->setVisible(false);
     ministry_of_culture->setup_listener();
@@ -301,6 +325,7 @@ bool GameLayer::init()
 		switch (type)
 		{
 			case ui::Widget::TouchEventType::BEGAN:
+                SimpleAudioEngine::getInstance()->playEffect("button.wav");
 				this->run_week();
 				break;
 			default:
@@ -316,6 +341,7 @@ bool GameLayer::init()
         switch (type)
         {
             case ui::Widget::TouchEventType::BEGAN:
+                SimpleAudioEngine::getInstance()->playEffect("button.wav");
                 rm.increase_selected_consumption(amount_of_line);
                 this->update_labels();
                 break;
@@ -332,6 +358,7 @@ bool GameLayer::init()
         switch (type)
         {
             case ui::Widget::TouchEventType::BEGAN:
+                SimpleAudioEngine::getInstance()->playEffect("button.wav");
                 rm.decrease_selected_consumption(amount_of_line);
                 this->update_labels();
                 break;
@@ -346,6 +373,9 @@ bool GameLayer::init()
 
     is_running_breakdowns_minigame = false;
     is_running_prohibited_acts_minigame = false;
+
+    advance_to_minigame = false;
+    advance_from_minigame = false;
 
     this->scheduleUpdate();
 
@@ -448,23 +478,72 @@ void GameLayer::run_week()
 
 void GameLayer::start_breakdown_minigame()
 {
+    auto text_box = ui::Button::create("images/box.png");
+    text_box->setPosition(Vec2(origin.x + visible_size.width * 0.40, origin.y + visible_size.height * 0.60));
+    this->addChild(text_box, 5);
+    text_box->setOpacity(0.0f);
+    text_box->runAction(FadeIn::create(0.20f));
+
+    auto label = Label::createWithTTF("Se le dañaron las tuberias a algunas casas del vecindario! Tienes que arreglarlas!",
+        "fonts/Marker Felt.ttf", 40);
+    label->setTextColor(Color4B::WHITE);
+    label->setDimensions(text_box->getContentSize().width * 0.80, text_box->getContentSize().height * 0.80);
+    label->setPosition(Vec2(text_box->getContentSize().width * 0.50, text_box->getContentSize().height * 0.50));
+    text_box->addChild(label, 1);
+
     turn_off_listeners();
 
-    auto label = Label::createWithTTF("Oh no! There's been some breakdowns in the neighborhood!", "fonts/Marker Felt.ttf", 40);
-    label->setTextColor(Color4B::BLACK);
-    label->setPosition(Vec2(origin.x + visible_size.width * 0.40, origin.y + visible_size.height * 0.60));
-    this->addChild(label, 5);
-    label->setOpacity(0.0f);
+    text_box->addTouchEventListener([this, text_box, label](Ref* sender, ui::Widget::TouchEventType type) {
+        switch (type)
+        {
+            case ui::Widget::TouchEventType::BEGAN:
+                text_box->removeChild(label);
+                this->removeChild(text_box);
+                this->runAction(CallFunc::create(CC_CALLBACK_0(GameLayer::initial_countdown_breakdown_minigame, this)));
+                break;
+            default:
+                break;
+        }
 
-    auto get_removed = CallFunc::create([this, label](){
-       this->removeChild(label);
+        return true; 
     });
+}
 
-    label->runAction(Sequence::create(FadeIn::create(1.0f), DelayTime::create(1.0f),
-        FadeOut::create(1.0f), get_removed, nullptr));
+void GameLayer::initial_countdown_breakdown_minigame()
+{
+    auto label = Label::createWithTTF("3", "fonts/Marker Felt.ttf", 80);
+    label->setTextColor(Color4B::BLACK);
+    label->setPosition(Vec2(origin.x + visible_size.width * 0.08, origin.y + visible_size.height * 0.80));
+    label->setOpacity(0.0f);
+    this->addChild(label, 3);
 
-    this->runAction(Sequence::create(DelayTime::create(3.0f),
-        CallFunc::create(CC_CALLBACK_0(GameLayer::run_breakdown_minigame, this)), nullptr));
+    auto move = MoveTo::create(0.50f, Vec2(origin.x + visible_size.width * 0.30, origin.y + visible_size.height * 0.60));
+    auto scale = ScaleTo::create(0.50f, 3);
+    auto fade = FadeIn::create(0.50f);
+
+    Vector<FiniteTimeAction*> msf;
+    msf.pushBack(move);
+    msf.pushBack(scale);
+    msf.pushBack(fade);
+
+    auto move_scale_fade = Spawn::create(msf);
+
+    label->runAction(Sequence::create(
+        move_scale_fade, 
+        DelayTime::create(0.50f), 
+        Place::create(Vec2(origin.x + visible_size.width * 0.08, origin.y + visible_size.height * 0.80)), 
+        CallFunc::create([label](){ label->setScale(1); }), 
+        CallFunc::create([label](){ label->setString("2"); }), 
+        move_scale_fade->clone(), 
+        DelayTime::create(0.50f), 
+        Place::create(Vec2(origin.x + visible_size.width * 0.08, origin.y + visible_size.height * 0.80)), 
+        CallFunc::create([label](){ label->setScale(1); }), 
+        CallFunc::create([label](){ label->setString("1"); }), 
+        move_scale_fade->clone(), 
+        DelayTime::create(0.50f), 
+        CallFunc::create([this](){ this->runAction(CallFunc::create(CC_CALLBACK_0(GameLayer::run_breakdown_minigame, this))); }), 
+        RemoveSelf::create(), 
+        nullptr));
 }
 
 void GameLayer::run_breakdown_minigame()
@@ -489,10 +568,10 @@ void GameLayer::run_breakdown_minigame()
 
     breakdown_sprites.at(0)->setScale(1.0f);
     breakdown_sprites.at(0)->runAction(FadeIn::create(0.5f));
-    breakdown_sprites.at(0)->setPosition(Vec2(origin.x + visible_size.width * 0.38, origin.y + visible_size.height * 0.80));
+    breakdown_sprites.at(0)->setPosition(Vec2(origin.x + visible_size.width * 0.50, origin.y + visible_size.height * 0.80));
 
     breakdown_sprites.at(1)->runAction(FadeTo::create(0.5f, 150.0f));
-    breakdown_sprites.at(1)->setPosition(Vec2(origin.x + visible_size.width * 0.28, origin.y + visible_size.height * 0.80));
+    breakdown_sprites.at(1)->setPosition(Vec2(origin.x + visible_size.width * 0.35, origin.y + visible_size.height * 0.80));
 
     breakdown_sprites.at(2)->runAction(FadeTo::create(0.5f, 150.0f));
 
@@ -528,10 +607,14 @@ void GameLayer::run_breakdown_minigame()
     this->addChild(breakdowns_clock, 3);
 
     is_running_breakdowns_minigame = true;
+
+    clock_tick_id = SimpleAudioEngine::getInstance()->playEffect("clock_tick.wav", true);
 }
 
 void GameLayer::end_breakdown_minigame()
 {
+    SimpleAudioEngine::getInstance()->pauseEffect(clock_tick_id);
+
     this->removeChild(breakdowns_clock);
 
     if (static_cast<int>(breakdowns.size()) == 0)
@@ -551,7 +634,7 @@ void GameLayer::end_breakdown_minigame()
             FadeOut::create(1.0f), get_removed, nullptr));
 
         int breakdowns_water_reward = RandomHelper::random_int(0, 2);
-        breakdowns_water_reward = 500 + 250 * breakdowns_water_reward;
+        breakdowns_water_reward = 5000 + 1000 * breakdowns_water_reward;
 
         rm.spend_water(-breakdowns_water_reward);
         update_labels();
@@ -622,13 +705,13 @@ void GameLayer::on_correct_breakdown(ui::Button* breakdown_to_remove)
         int breakdowns_left = static_cast<int>(breakdown_sprites.size());
 
         breakdown_sprites.at(0)->runAction(Sequence::create(
-            Spawn::createWithTwoActions(MoveBy::create(0.25f, Vec2(visible_size.width * 0.10, 0)),
+            Spawn::createWithTwoActions(MoveBy::create(0.25f, Vec2(visible_size.width * 0.15, 0)),
                                         ScaleTo::create(0.25f, 1.0f)),
             FadeIn::create(0.10f), nullptr));
 
         if (breakdowns_left > 1)
         {
-            breakdown_sprites.at(1)->runAction(MoveBy::create(0.25f, Vec2(visible_size.width * 0.03, 0)));
+            breakdown_sprites.at(1)->runAction(MoveBy::create(0.25f, Vec2(visible_size.width * 0.05, 0)));
         }
 
         if (breakdowns_left > 2)
@@ -741,10 +824,14 @@ void GameLayer::run_prohibited_act_minigame()
     this->addChild(prohibited_acts_clock, 3);
 
     is_running_prohibited_acts_minigame = true;
+
+    clock_tick_id = SimpleAudioEngine::getInstance()->playEffect("clock_tick.wav", true);
 }
 
 void GameLayer::end_prohibited_act_minigame()
 {
+    SimpleAudioEngine::getInstance()->pauseEffect(clock_tick_id);
+
     this->removeChild(prohibited_acts_clock);
 
     if (static_cast<int>(prohibited_acts.size()) == 0)
@@ -887,19 +974,35 @@ void GameLayer::report()
 
     if (did_riot_happen && (ministry_of_technology->has_project_running() || ministry_of_education->has_project_running()))
     {
-        auto label = Label::createWithTTF("Oh no! The people rioted. Your projects were not completed.",
-            "fonts/Marker Felt.ttf", 30);
-        label->setTextColor(Color4B::BLACK);
-        label->setPosition(Vec2(origin.x + visible_size.width * 0.40, origin.y + visible_size.height * 0.60));
-        this->addChild(label, 5);
-        label->setOpacity(0.0f);
+        auto text_box = ui::Button::create("images/box.png");
+        text_box->setPosition(Vec2(origin.x + visible_size.width * 0.40, origin.y + visible_size.height * 0.40));
+        this->addChild(text_box, 5);
+        text_box->setOpacity(0.0f);
+        text_box->runAction(FadeIn::create(0.20f));
 
-        auto get_removed = CallFunc::create([this, label](){
-            this->removeChild(label);
+        auto label = Label::createWithTTF("Oh no! The people rioted. Some of your projects were not completed.",
+            "fonts/Marker Felt.ttf", 40);
+        label->setTextColor(Color4B::WHITE);
+        label->setDimensions(text_box->getContentSize().width * 0.80, text_box->getContentSize().height * 0.80);
+        label->setPosition(Vec2(text_box->getContentSize().width * 0.50, text_box->getContentSize().height * 0.50));
+        text_box->addChild(label, 1);
+
+        turn_off_listeners();
+
+        text_box->addTouchEventListener([this, text_box, label](Ref* sender, ui::Widget::TouchEventType type) {
+            switch (type)
+            {
+                case ui::Widget::TouchEventType::BEGAN:
+                    text_box->removeChild(label);
+                    this->removeChild(text_box);
+                    this->turn_on_listeners();
+                    break;
+                default:
+                    break;
+            }
+
+            return true; 
         });
-
-        label->runAction(Sequence::create(FadeIn::create(1.0f), DelayTime::create(1.0f),
-            FadeOut::create(1.0f), get_removed, nullptr));
     }
     else if (will_reward)
     {
@@ -929,6 +1032,8 @@ void GameLayer::report()
         this->rain_drops->setVisible(false);
         this->cloudy_bg->setVisible(false);
 
+        this->stop_clouds();
+
         this->shadow->setVisible(false);
         this->shadow2->setVisible(false);
 
@@ -941,6 +1046,8 @@ void GameLayer::report()
         this->rain_drops->setVisible(false);
         this->cloudy_bg->setVisible(true);
 
+        this->run_clouds();
+
         this->shadow->setVisible(true);
         this->shadow2->setVisible(true);
     }
@@ -952,6 +1059,8 @@ void GameLayer::report()
         this->rain_drops->setVisible(true);
         water_sound_id = SimpleAudioEngine::getInstance()->playEffect("rain.mp3", true);
         this->cloudy_bg->setVisible(false);
+
+        this->stop_clouds();
 
         this->shadow->setVisible(false);
         this->shadow2->setVisible(false);
@@ -1022,6 +1131,36 @@ void GameLayer::update_labels()
     {
         happy->setVisible(true);
         mad->setVisible(false);
+    }
+}
+
+void GameLayer::run_clouds()
+{
+    for (auto cloud : clouds)
+    {
+        Vec2 initial_pos(origin.x - visible_size.width * 0.50,
+                         origin.y + visible_size.height * (0.85 + RandomHelper::random_real(0.0, 0.15)));
+
+        Vec2 final_pos(origin.x + visible_size.width * 1.50, 
+                       origin.y + visible_size.height * (0.85 + RandomHelper::random_real(0.0, 0.15)));
+
+        float travel_time = RandomHelper::random_real(10.0, 15.0);
+
+        cloud->setVisible(true);
+
+        cloud->runAction(RepeatForever::create(
+            Sequence::create(
+                Place::create(initial_pos), MoveTo::create(travel_time, final_pos), 
+                DelayTime::create(1.0f), nullptr)));
+    }
+}
+
+void GameLayer::stop_clouds()
+{
+    for (auto cloud : clouds)
+    {
+        cloud->setVisible(false);
+        cloud->stopAllActions();
     }
 }
 
