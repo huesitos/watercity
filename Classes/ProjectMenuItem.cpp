@@ -34,7 +34,7 @@ void ProjectMenuItem::setup(Ministry* ministry)
 
 	// Fund/defund project
 	// Assign persons and check if can be funded
-	fund_project = ui::Button::create("up.png");
+	fund_project = ui::Button::create("images/more.png");
 	fund_project->setPosition(Vec2(rect_size.width * 0.80, rect_size.height * 0.45));
 
  	fund_project->addTouchEventListener([this](Ref* sender, ui::Widget::TouchEventType type){
@@ -121,7 +121,7 @@ void ProjectMenuItem::update_projects()
 
 	for (int i = 0; i < num_projs; ++i)
 	{
-		auto project_image = Sprite::create("proyectos.png");
+		auto project_image = Sprite::create("images/proyectos.png");
 		project_images.pushBack(project_image);
 		this->addChild(project_image, 1, -999);
 		project_image->setPosition(Vec2(rect_size.width * 0.65, rect_size.height * (0.70 - 0.25 * i)));

@@ -8,6 +8,7 @@ ResourceManager::ResourceManager()
 void ResourceManager::reset()
 {
 	water_reserves = 50000;
+	water_reserves_limit = 50000;
 	water_inflow = 2000;
 	actual_water_consumption = 2500;
 	initial_actual_water_consumption = actual_water_consumption;
@@ -22,7 +23,7 @@ void ResourceManager::reset()
 	population_total = 2;
 	population_occupied = 0;
 
-	happiness = 50.0f;
+	happiness = 60.0f;
 	awareness = 0.0f;
 	awareness_min = 0.0f;
 }

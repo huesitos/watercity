@@ -51,6 +51,14 @@ private:
   Sprite* cloudy;
   Sprite* rainy;
 
+  Sprite* happy;
+  Sprite* mad;
+
+  Sprite* water_meter;
+  Sprite* water_reserves;
+
+  Sprite* water_gallon;
+
 	Ministry* 	ministry_of_technology;
 	Ministry* 	ministry_of_education;
 	Ministry* 	ministry_of_culture;
@@ -68,6 +76,7 @@ private:
 	Label* _awarenessLabel;
 	Label* _waterReservesLabel;
 	Label* _cashLabel;
+	Label* _feeLabel;
 	Label* _populationLabel;
 
 	Label* _selectedWaterConsumptionLabel;
@@ -78,10 +87,17 @@ private:
 	ui::Button* add_button;
 	ui::Button* substract_button;
 
+	Sprite* background_consumption;
+	Sprite* background_resources;
+
 	// Water consumption gallon
 
 	Vector<Sprite*> 	water_lines;
-	int 				num_of_water_lines;
+	Vector<Sprite*> 	water_lines_meter;
+	int 				num_of_water_lines_gallon;
+	int 				num_of_water_lines_meter;
+	float 				amount_of_line;
+	float 				amount_of_line_reserves;
 
 	Sprite* 			desired_consumption;
 	Sprite* 			actual_consumption;

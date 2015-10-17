@@ -89,6 +89,7 @@ private:
 	// Resource Variables
 
 	int 	water_reserves;
+	int 	water_reserves_limit;
 	int 	water_inflow;
 	int 	initial_actual_water_consumption;
 	int 	actual_water_consumption;
@@ -115,6 +116,7 @@ public:
 	bool 	is_water_depleted() { return water_reserves <= 0; }
 
 	int 	get_water_reserves() { return water_reserves; }
+	int 	get_water_reserves_limit() { return water_reserves_limit; }
 	int 	get_water_inflow() { return water_inflow; }
 	int 	get_actual_water_consumption() { return actual_water_consumption; }
 	int 	get_desired_water_consumption() { return desired_water_consumption; }
