@@ -794,6 +794,8 @@ void GameLayer::report_breakdown_minigame()
 
     if (did_win)
     {
+        SimpleAudioEngine::getInstance()->playEffect("sounds/win-minigame.wav", true);
+
         int water_reward = 3000 + 100 * RandomHelper::random_int(-5, 5);
         int cash_reward = 2000 + 200 * RandomHelper::random_int(-5, 5);
 
@@ -874,13 +876,11 @@ void GameLayer::report()
 
     if (rm.is_water_depleted())
     {
-        printf("perdi\n");
         game_over();
     }
 
     if (rm.get_actual_water_consumption() <= rm.get_desired_water_consumption())
     {
-        printf("gane\n");
         finished();
     }
 
@@ -1419,8 +1419,6 @@ void GameLayer::game_over()
     menu_technology->setVisible(false);
     menu_education->setVisible(false);
     turn_off_listeners();
-
-    printf("game over\n");
 
     SimpleAudioEngine::getInstance()->playEffect("sounds/lose.mp3", false);
 
