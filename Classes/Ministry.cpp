@@ -159,6 +159,16 @@ bool Ministry::has_project_set_to_start()
 	return static_cast<int>(get_projects_set_to_start().size()) > 0;
 }
 
+void Ministry::disable_listener()
+{
+	listener->setEnabled(false);
+}
+
+void Ministry::enable_listener()
+{
+	listener->setEnabled(true);
+}
+
 
 
 MinistryOfTechnology::MinistryOfTechnology()
@@ -190,7 +200,7 @@ Ministry* MinistryOfTechnology::create(const char* pszFileName, const char* proj
 
 void MinistryOfTechnology::setup_listener()
 {
-	auto listener = EventListenerTouchOneByOne::create();
+	listener = EventListenerTouchOneByOne::create();
 	listener->setSwallowTouches(true);
 
 	listener->onTouchBegan = CC_CALLBACK_2(MinistryOfTechnology::on_touch_began, this);
@@ -320,7 +330,7 @@ Ministry* MinistryOfEducation::create(const char* pszFileName, const char* proje
 
 void MinistryOfEducation::setup_listener()
 {
-	auto listener = EventListenerTouchOneByOne::create();
+	listener = EventListenerTouchOneByOne::create();
 	listener->setSwallowTouches(true);
 
 	listener->onTouchBegan = CC_CALLBACK_2(MinistryOfEducation::on_touch_began, this);
@@ -394,7 +404,7 @@ Ministry* MinistryOfCulture::create(const char* pszFileName, const char* project
 
 void MinistryOfCulture::setup_listener()
 {
-	auto listener = EventListenerTouchOneByOne::create();
+	listener = EventListenerTouchOneByOne::create();
 	listener->setSwallowTouches(true);
 
 	listener->onTouchBegan = CC_CALLBACK_2(MinistryOfCulture::on_touch_began, this);

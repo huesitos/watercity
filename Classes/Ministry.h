@@ -28,6 +28,9 @@ public:
 	bool has_project_running();
 	bool has_project_set_to_start();
 
+	void 	disable_listener();
+	void 	enable_listener();
+
 	std::vector<Project*> get_projects_to_display();
 	std::vector<Project*> get_projects_running();
 	std::vector<Project*> get_projects_set_to_start();
@@ -39,6 +42,8 @@ protected:
 	bool has_project();
 
 	std::vector<Project*> projects;
+
+	cocos2d::EventListenerTouchOneByOne* listener;
 };
 
 class MinistryOfTechnology : public Ministry

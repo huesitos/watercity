@@ -1141,9 +1141,9 @@ void GameLayer::add_labels()
 
 void GameLayer::turn_off_listeners()
 {
-    ministry_of_technology->pause();
-    ministry_of_education->pause();
-    ministry_of_culture->pause();
+    ministry_of_technology->disable_listener();
+    ministry_of_education->disable_listener();
+    ministry_of_culture->disable_listener();
     menu_technology->pause();
     menu_education->pause();
     menu_culture->pause();
@@ -1154,9 +1154,9 @@ void GameLayer::turn_off_listeners()
 
 void GameLayer::turn_on_listeners()
 {
-    ministry_of_technology->resume();
-    ministry_of_education->resume();
-    ministry_of_culture->resume();
+    ministry_of_technology->enable_listener();
+    ministry_of_education->enable_listener();
+    ministry_of_culture->enable_listener();
     menu_technology->resume();
     menu_education->resume();
     menu_culture->resume();
