@@ -58,6 +58,20 @@ private:
 
 	Sprite* 	background_town;
 	Sprite* 	sky;
+	Sprite* 	sun_bg;
+	Sprite* 	rain_bg;
+	Sprite* 	cloudy_bg;
+	Sprite* 	rain_drops;
+	// Sprite* 	cloud1;
+	// Sprite* 	cloud2;
+	// Sprite* 	cloud3;
+	// Sprite* 	cloud4;
+	// Sprite* 	cloud5;
+	Sprite* 	shadow;
+	Sprite* 	shadow2;
+
+
+
 	Sprite* sunny;
   Sprite* cloudy;
   Sprite* rainy;

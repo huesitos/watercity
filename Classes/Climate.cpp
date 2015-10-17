@@ -37,7 +37,7 @@ void Climate::set_week_climate()
 {
   int chance = RandomHelper::random_int(0, 100);
 
-  if (chance < 50)
+  if (chance < 10)
   {
     climate = SUNNY;
   }

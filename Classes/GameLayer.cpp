@@ -36,7 +36,7 @@ bool GameLayer::init()
     sky->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
     sky->setPosition(origin);
 
-    this->addChild(sky, 0);
+    this->addChild(sky, -1);
 
     // add background
     background_town = Sprite::create("images/back.png");
@@ -44,6 +44,33 @@ bool GameLayer::init()
     background_town->setPosition(origin);
 
     this->addChild(background_town, 1);
+
+
+    shadow = Sprite::create("images/shadows/shadow.png");
+    shadow->setPosition(Vec2(origin.x - shadow->getContentSize().width, origin.y + visible_size.height * 0.3));
+    this->addChild(shadow, 1);
+
+    shadow->runAction(
+        RepeatForever::create(
+            Sequence::create(
+                MoveTo::create(120.0f, Vec2(origin.x + visible_size.width + shadow->getContentSize().width, origin.y + visible_size.height * 0.3)),
+                Place::create(Vec2(origin.x - shadow->getContentSize().width, origin.y + visible_size.height * 0.3)),
+                nullptr
+            ))
+        );
+
+    shadow2 = Sprite::create("images/shadows/shadow2.png");
+    shadow2->setPosition(Vec2(origin.x - shadow2->getContentSize().width, origin.y + visible_size.height * 0.6));
+    this->addChild(shadow2, 1);
+
+    shadow2->runAction(
+        RepeatForever::create(
+            Sequence::create(
+                MoveTo::create(60.0f, Vec2(origin.x + visible_size.width + shadow2->getContentSize().width, origin.y + visible_size.height * 0.6)),
+                Place::create(Vec2(origin.x - shadow2->getContentSize().width, origin.y + visible_size.height * 0.6)),
+                        nullptr
+            ))
+        );
 
 
     // add river animation
@@ -65,6 +92,45 @@ bool GameLayer::init()
     frames.clear();
 
     // climate sprites
+    sun_bg = Sprite::create("images/sun_anim/sun.png");
+    sun_bg->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
+    sun_bg->setPosition(origin);
+    sun_bg->setVisible(false);
+
+    this->addChild(sun_bg, 1);
+
+    rain_bg = Sprite::create("images/rainclouds.png");
+    rain_bg->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
+    rain_bg->setPosition(origin);
+    rain_bg->setVisible(false);
+
+    this->addChild(rain_bg, 0);
+
+    cloudy_bg = Sprite::create("images/cloudback.png");
+    cloudy_bg->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
+    cloudy_bg->setPosition(origin);
+    cloudy_bg->setVisible(false);
+
+    this->addChild(cloudy_bg, -1);
+
+    rain_drops = Sprite::create("images/rain_anim/raintop.png");
+    rain_drops->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
+    rain_drops->setPosition(origin);
+    rain_drops->setVisible(false);
+
+    this->addChild(rain_drops, 1);
+
+    frames.pushBack(SpriteFrame::create("images/rain_anim/raintop.png", Rect(0, 0, rain_drops->getContentSize().width, rain_drops->getContentSize().height)));
+    frames.pushBack(SpriteFrame::create("images/rain_anim/raintop2.png", Rect(0, 0, rain_drops->getContentSize().width, rain_drops->getContentSize().height)));
+    frames.pushBack(SpriteFrame::create("images/rain_anim/raintop3.png", Rect(0, 0, rain_drops->getContentSize().width, rain_drops->getContentSize().height)));
+    frames.pushBack(SpriteFrame::create("images/rain_anim/raintop4.png", Rect(0, 0, rain_drops->getContentSize().width, rain_drops->getContentSize().height)));
+
+    animation = Animation::createWithSpriteFrames(frames, 0.5f);
+    animate = Animate::create(animation);
+    rain_drops->runAction(RepeatForever::create(animate));
+    frames.clear();
+
+
     sunny = Sprite::create("images/sunny.png");
     cloudy = Sprite::create("images/cloudy.png");
     rainy = Sprite::create("images/rainy.png");
@@ -81,7 +147,6 @@ bool GameLayer::init()
     cloudy->setOpacity(0);
     rainy->setOpacity(0);
 
-    // Vector<SpriteFrame*> frames;
 
     frames.pushBack(SpriteFrame::create("images/sunny_anim/sunny.png", Rect(0, 0, sunny->getContentSize().width, sunny->getContentSize().height)));
     frames.pushBack(SpriteFrame::create("images/sunny_anim/sunny2.png", Rect(0, 0, sunny->getContentSize().width, sunny->getContentSize().height)));
@@ -114,14 +179,37 @@ bool GameLayer::init()
     if (climate.get_climate()==climate.SUNNY)
     {
         this->sunny->runAction(FadeIn::create(0.5f));
+        this->sun_bg->setVisible(true);
+        this->rain_bg->setVisible(false);
+        this->rain_drops->setVisible(false);
+        this->cloudy_bg->setVisible(false);
+
+        this->shadow->setVisible(false);
+        this->shadow2->setVisible(false);
+
     }
     else if (climate.get_climate()==climate.CLOUDY)
     {
         this->cloudy->runAction(FadeIn::create(0.5f));
+        this->sun_bg->setVisible(false);
+        this->rain_bg->setVisible(false);
+        this->rain_drops->setVisible(false);
+        this->cloudy_bg->setVisible(true);
+
+        this->shadow->setVisible(true);
+        this->shadow2->setVisible(true);
+
     }
     else
     {
         this->rainy->runAction(FadeIn::create(0.5f));
+        this->sun_bg->setVisible(false);
+        this->rain_bg->setVisible(true);
+        this->rain_drops->setVisible(true);
+        this->cloudy_bg->setVisible(false);
+
+        this->shadow->setVisible(false);
+        this->shadow2->setVisible(false);
     }
 
 
@@ -598,14 +686,37 @@ void GameLayer::report()
     if (climate.get_climate()==climate.SUNNY)
     {
         this->sunny->runAction(FadeIn::create(0.5f));
+        this->sun_bg->setVisible(true);
+        this->rain_bg->setVisible(false);
+        this->rain_drops->setVisible(false);
+        this->cloudy_bg->setVisible(false);
+
+        this->shadow->setVisible(false);
+        this->shadow2->setVisible(false);
+
     }
     else if (climate.get_climate()==climate.CLOUDY)
     {
         this->cloudy->runAction(FadeIn::create(0.5f));
+        this->sun_bg->setVisible(false);
+        this->rain_bg->setVisible(false);
+        this->rain_drops->setVisible(false);
+        this->cloudy_bg->setVisible(true);
+
+        this->shadow->setVisible(true);
+        this->shadow2->setVisible(true);
+
     }
     else
     {
         this->rainy->runAction(FadeIn::create(0.5f));
+        this->sun_bg->setVisible(false);
+        this->rain_bg->setVisible(true);
+        this->rain_drops->setVisible(true);
+        this->cloudy_bg->setVisible(false);
+
+        this->shadow->setVisible(false);
+        this->shadow2->setVisible(false);
     }
 }
 
