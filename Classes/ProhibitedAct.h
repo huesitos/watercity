@@ -27,8 +27,8 @@ private:
 	std::vector<const char*> file_names;
 	std::vector<const char*> file_names_sprites;
 
-	bool 	is_occupied[7][2] = {{0}};
-	bool 	is_open_space(int x, int y);
+	bool 	is_occupied[10][7][2] = {{{0}}};
+	bool 	is_open_space(int n, int x, int y);
 };
 
 #endif // __PROHIBITED_ACT_H__

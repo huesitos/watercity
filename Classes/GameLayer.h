@@ -51,6 +51,12 @@ private:
 	void 	on_correct_breakdown(ui::Button* breakdown_to_remove);
 	void 	on_incorrect_breakdown();
 
+	void 	start_prohibited_act_minigame();
+	void 	run_prohibited_act_minigame();
+	void 	end_prohibited_act_minigame();
+	void 	on_correct_prohibited_act();
+	void 	on_incorrect_prohibited_act();
+
 	void 	report();
 
 	ResourceManager &rm;
@@ -124,6 +130,16 @@ private:
 
 	bool 	is_running_breakdowns_minigame;
 	float 	breakdowns_countdown;
+
+	// Prohibited Acts minigame
+
+	Vector<ui::Button*> prohibited_acts;
+	Vector<Sprite*> 	prohibited_act_sprites;
+
+	Label* 	prohibited_acts_clock;
+
+	bool 	is_running_prohibited_acts_minigame;
+	float 	prohibited_acts_countdown;
 
 	// Water consumption gallon
 

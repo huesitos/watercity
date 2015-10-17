@@ -7,15 +7,15 @@ Breakdown::Breakdown(int num_breakdowns)
 	if (num_breakdowns < 3)
 		num_breakdowns = 3;
 
-	file_names.push_back("a1.png");
-	file_names.push_back("a2.png");
-	file_names.push_back("a3.png");
-	file_names.push_back("a4.png");
+	file_names.push_back("images/a1.png");
+	file_names.push_back("images/a2.png");
+	file_names.push_back("images/a3.png");
+	file_names.push_back("images/a4.png");
 
-	file_names_sprites.push_back("a11.png");
-	file_names_sprites.push_back("a22.png");
-	file_names_sprites.push_back("a33.png");
-	file_names_sprites.push_back("a44.png");
+	file_names_sprites.push_back("images/a11.png");
+	file_names_sprites.push_back("images/a22.png");
+	file_names_sprites.push_back("images/a33.png");
+	file_names_sprites.push_back("images/a44.png");
 
 	Size visible_size = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();

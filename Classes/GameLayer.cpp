@@ -348,6 +348,7 @@ bool GameLayer::init()
     add_labels();
 
     is_running_breakdowns_minigame = false;
+    is_running_prohibited_acts_minigame = false;
 
     this->scheduleUpdate();
 
@@ -366,6 +367,19 @@ void GameLayer::update(float dt)
         {
             is_running_breakdowns_minigame = false;
             end_breakdown_minigame();
+        }
+    }
+
+    if (is_running_prohibited_acts_minigame)
+    {
+        prohibited_acts_countdown -= dt;
+
+        prohibited_acts_clock->setString(StringUtils::format("%.0f", prohibited_acts_countdown + 0.5f));
+
+        if (prohibited_acts_countdown < 0.0f)
+        {
+            is_running_prohibited_acts_minigame = false;
+            end_prohibited_act_minigame();
         }
     }
 }
@@ -432,13 +446,12 @@ void GameLayer::run_week()
     menu_culture->update_labels();
 
     start_breakdown_minigame();
+    //start_prohibited_act_minigame();
 }
 
 void GameLayer::start_breakdown_minigame()
 {
     turn_off_listeners();
-    ministry_of_technology->setVisible(false);
-    ministry_of_education->setVisible(false);
 
     auto label = Label::createWithTTF("Oh no! There's been some breakdowns in the neighborhood!", "fonts/Marker Felt.ttf", 40);
     label->setTextColor(Color4B::BLACK);
@@ -589,8 +602,6 @@ void GameLayer::end_breakdown_minigame()
             FadeOut::create(1.0f), get_removed, nullptr));
     }
 
-    ministry_of_technology->setVisible(true);
-    ministry_of_education->setVisible(true);
     turn_on_listeners();
 
     report();
@@ -634,6 +645,233 @@ void GameLayer::on_incorrect_breakdown()
 {
     is_running_breakdowns_minigame = false;
     end_breakdown_minigame();
+}
+
+void GameLayer::start_prohibited_act_minigame()
+{
+    turn_off_listeners();
+
+    auto label = Label::createWithTTF("Oh no! Some of them are wasting water!", "fonts/Marker Felt.ttf", 40);
+    label->setTextColor(Color4B::BLACK);
+    label->setPosition(Vec2(origin.x + visible_size.width * 0.40, origin.y + visible_size.height * 0.60));
+    this->addChild(label, 5);
+    label->setOpacity(0.0f);
+
+    auto get_removed = CallFunc::create([this, label](){
+       this->removeChild(label);
+    });
+
+    label->runAction(Sequence::create(FadeIn::create(1.0f), DelayTime::create(1.0f), 
+        FadeOut::create(1.0f), get_removed, nullptr));
+
+    this->runAction(Sequence::create(DelayTime::create(3.0f), 
+        CallFunc::create(CC_CALLBACK_0(GameLayer::run_prohibited_act_minigame, this)), nullptr));
+}
+
+void GameLayer::run_prohibited_act_minigame()
+{
+    ProhibitedAct p(8);
+
+    prohibited_acts = p.get_prohibited_acts();
+    prohibited_act_sprites = p.get_prohibited_act_sprites();
+
+    for (int i = 0; i < static_cast<int>(prohibited_acts.size()); ++i)
+    {
+        //prohibited_acts.at(i)->setOpacity(0.0f);
+        prohibited_acts.at(i)->setVisible(false);
+        this->addChild(prohibited_acts.at(i), 90 - i);
+    }
+
+    prohibited_acts.at(0)->setTag(prohibited_acts.at(0)->getTag() + 200);
+    prohibited_acts.at(1)->setTag(prohibited_acts.at(1)->getTag() + 200);
+    prohibited_acts.at(2)->setTag(prohibited_acts.at(2)->getTag() + 200);
+
+    prohibited_acts.at(0)->setVisible(true);
+    prohibited_acts.at(1)->setVisible(true);
+    prohibited_acts.at(2)->setVisible(true);
+
+/*    prohibited_acts.at(0)->runAction(FadeIn::create(0.5f));
+    prohibited_acts.at(1)->runAction(FadeIn::create(0.5f));
+    prohibited_acts.at(2)->runAction(FadeIn::create(0.5f));*/
+
+    for (int i = 0; i < static_cast<int>(prohibited_act_sprites.size()); ++i)
+    {
+        this->addChild(prohibited_act_sprites.at(i), 30 - i);
+        prohibited_act_sprites.at(i)->setOpacity(0.0f);
+    }
+
+    prohibited_act_sprites.at(0)->setScale(1.0f);
+    prohibited_act_sprites.at(0)->runAction(FadeIn::create(0.5f));
+    prohibited_act_sprites.at(0)->setPosition(Vec2(origin.x + visible_size.width * 0.38, origin.y + visible_size.height * 0.80));
+
+    prohibited_act_sprites.at(1)->runAction(FadeTo::create(0.5f, 150.0f));
+    prohibited_act_sprites.at(1)->setPosition(Vec2(origin.x + visible_size.width * 0.28, origin.y + visible_size.height * 0.80));
+
+    prohibited_act_sprites.at(2)->runAction(FadeTo::create(0.5f, 150.0f));
+
+    for (auto prohibited_act : prohibited_acts)
+    {
+        prohibited_act->addTouchEventListener([this, prohibited_act](Ref* sender, ui::Widget::TouchEventType type) {
+            switch (type)
+            {
+                case ui::Widget::TouchEventType::BEGAN:
+                    if (prohibited_act->isVisible() && prohibited_act->getTag() > 100)
+                    {
+                        if (prohibited_act->getTag() % 10 == prohibited_act_sprites.at(0)->getTag() % 10)
+                        {
+                            this->on_correct_prohibited_act();
+                        }
+                        else
+                        {
+                            this->on_incorrect_prohibited_act();
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+            return true;
+        });
+    }
+
+    prohibited_acts_countdown = 14.99f;
+
+    prohibited_acts_clock = Label::createWithTTF(StringUtils::format("%d", static_cast<int>(prohibited_acts_countdown + 1)), 
+        "fonts/Marker Felt.ttf", 60);
+    prohibited_acts_clock->setTextColor(Color4B::BLACK);
+    prohibited_acts_clock->setPosition(Vec2(origin.x + visible_size.width * 0.08, origin.y + visible_size.height * 0.80));
+    this->addChild(prohibited_acts_clock, 3);
+
+    is_running_prohibited_acts_minigame = true;
+}
+
+void GameLayer::end_prohibited_act_minigame()
+{
+    this->removeChild(prohibited_acts_clock);
+
+    if (static_cast<int>(prohibited_acts.size()) == 0)
+    {
+        auto label = Label::createWithTTF("You stopped all of that water wasting!", "fonts/Marker Felt.ttf", 50);
+        label->setTextColor(Color4B::BLACK);
+        label->setDimensions(visible_size.width * 0.30, visible_size.height * 0.30);
+        label->setPosition(Vec2(origin.x + visible_size.width * 0.40, origin.y + visible_size.height * 0.60));
+        this->addChild(label, 5);
+        label->setOpacity(0.0f);
+
+        auto get_removed = CallFunc::create([this, label](){
+            this->removeChild(label);
+        });
+
+        label->runAction(Sequence::create(FadeIn::create(1.0f), DelayTime::create(2.0f), 
+            FadeOut::create(1.0f), get_removed, nullptr));
+
+        int prohibited_acts_water_reward = RandomHelper::random_int(0, 2);
+        prohibited_acts_water_reward = 500 + 250 * prohibited_acts_water_reward;
+
+        rm.spend_water(-prohibited_acts_water_reward);
+        update_labels();
+
+        auto label_reward = Label::createWithTTF(StringUtils::format("You saved %d gallons of water", prohibited_acts_water_reward), "fonts/Marker Felt.ttf", 50);
+        label_reward->setTextColor(Color4B::BLACK);
+        label_reward->setDimensions(visible_size.width * 0.30, visible_size.height * 0.30);
+        label_reward->setPosition(Vec2(origin.x + visible_size.width * 0.40, origin.y + visible_size.height * 0.40));
+        this->addChild(label_reward, 5);
+        label_reward->setOpacity(0.0f);
+
+        auto get_reward_removed = CallFunc::create([this, label_reward](){
+            this->removeChild(label_reward);
+        });
+
+        label_reward->runAction(Sequence::create(DelayTime::create(2.0f), FadeIn::create(1.0f), DelayTime::create(2.0f), 
+            FadeOut::create(1.0f), get_reward_removed, nullptr));
+    }
+    else
+    {
+        for (auto prohibited_act : prohibited_acts)
+        {
+            this->removeChild(prohibited_act);
+        }
+
+        for (auto prohibited_act_sprite : prohibited_act_sprites)
+        {
+            this->removeChild(prohibited_act_sprite);
+        }
+
+        prohibited_acts.clear();
+        prohibited_act_sprites.clear();
+
+        auto label = Label::createWithTTF("You didn't stop the water from being wasted :(", "fonts/Marker Felt.ttf", 30);
+        label->setTextColor(Color4B::BLACK);
+        label->setPosition(Vec2(origin.x + visible_size.width * 0.40, origin.y + visible_size.height * 0.60));
+        this->addChild(label, 5);
+        label->setOpacity(0.0f);
+
+        auto get_removed = CallFunc::create([this, label](){
+            this->removeChild(label);
+        });
+
+        label->runAction(Sequence::create(FadeIn::create(1.0f), DelayTime::create(1.0f), 
+            FadeOut::create(1.0f), get_removed, nullptr));
+    }
+
+    turn_on_listeners();
+
+    report();
+}
+
+void GameLayer::on_correct_prohibited_act()
+{
+    this->removeChild(prohibited_acts.at(0));
+    this->removeChild(prohibited_acts.at(1));
+    this->removeChild(prohibited_acts.at(2));
+    this->removeChild(prohibited_act_sprites.at(0));
+
+    prohibited_acts.erase(prohibited_acts.begin(), prohibited_acts.begin() + 3);
+    prohibited_act_sprites.erase(prohibited_act_sprites.begin());
+
+    if (static_cast<int>(prohibited_acts.size()) == 0)
+    {
+        is_running_prohibited_acts_minigame = false;
+        end_prohibited_act_minigame();
+    }
+    else
+    {
+        prohibited_acts.at(0)->setTag(prohibited_acts.at(0)->getTag() + 200);
+        prohibited_acts.at(1)->setTag(prohibited_acts.at(1)->getTag() + 200);
+        prohibited_acts.at(2)->setTag(prohibited_acts.at(2)->getTag() + 200);
+
+        prohibited_acts.at(0)->setVisible(true);
+        prohibited_acts.at(1)->setVisible(true);
+        prohibited_acts.at(2)->setVisible(true);
+
+/*        prohibited_acts.at(0)->runAction(FadeIn::create(0.25f));
+        prohibited_acts.at(1)->runAction(FadeIn::create(0.25f));
+        prohibited_acts.at(2)->runAction(FadeIn::create(0.25f));*/
+
+        int prohibited_acts_left = static_cast<int>(prohibited_act_sprites.size());
+
+        prohibited_act_sprites.at(0)->runAction(Sequence::create(
+            Spawn::createWithTwoActions(MoveBy::create(0.25f, Vec2(visible_size.width * 0.10, 0)), 
+                                        ScaleTo::create(0.25f, 1.0f)), 
+            FadeIn::create(0.10f), nullptr));
+
+        if (prohibited_acts_left > 1)
+        {
+            prohibited_act_sprites.at(1)->runAction(MoveBy::create(0.25f, Vec2(visible_size.width * 0.03, 0)));
+        }
+
+        if (prohibited_acts_left > 2)
+        {
+            prohibited_act_sprites.at(2)->runAction(FadeTo::create(0.5f, 150.0f));
+        }
+    }
+}
+
+void GameLayer::on_incorrect_prohibited_act()
+{
+    is_running_prohibited_acts_minigame = false;
+    end_prohibited_act_minigame();
 }
 
 void GameLayer::report()
@@ -912,8 +1150,10 @@ void GameLayer::turn_off_listeners()
 {
     ministry_of_technology->pause();
     ministry_of_education->pause();
+    ministry_of_culture->pause();
     menu_technology->pause();
     menu_education->pause();
+    menu_culture->pause();
     run_week_button->pause();
     add_button->pause();
     substract_button->pause();
@@ -923,8 +1163,10 @@ void GameLayer::turn_on_listeners()
 {
     ministry_of_technology->resume();
     ministry_of_education->resume();
+    ministry_of_culture->resume();
     menu_technology->resume();
     menu_education->resume();
+    menu_culture->resume();
     run_week_button->resume();
     add_button->resume();
     substract_button->resume();
