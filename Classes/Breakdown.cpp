@@ -56,9 +56,8 @@ Breakdown::Breakdown(int num_breakdowns)
 		is_occupied[x][y] = true;
 
 		button->setPosition(house_pos_base + var_x * x + var_y * y);
-		sprite->setPosition(Vec2(origin.x + visible_size.width * 0.15, origin.y + visible_size.height * 0.80));
+		sprite->setPosition(Vec2(origin.x + visible_size.width * 0.25, origin.y + visible_size.height * 0.80));
 		sprite->setScale(0.5f);
-		sprite->setVisible(false);
 
 		breakdowns.pushBack(button);
 		breakdown_sprites.pushBack(sprite);

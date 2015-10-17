@@ -326,12 +326,20 @@ void GameLayer::run_breakdown_minigame()
         breakdown->runAction(FadeIn::create(0.5f));
     }
 
-    for (auto breakdown_sprite : breakdown_sprites)
+    for (int i = 0; i < static_cast<int>(breakdown_sprites.size()); ++i)
     {
-        this->addChild(breakdown_sprite, 3);
+        this->addChild(breakdown_sprites.at(i), 30 - i);
+        breakdown_sprites.at(i)->setOpacity(0.0f);
     }
 
-    breakdown_sprites.at(0)->setVisible(true);
+    breakdown_sprites.at(0)->setScale(1.0f);
+    breakdown_sprites.at(0)->runAction(FadeIn::create(0.5f));
+    breakdown_sprites.at(0)->setPosition(Vec2(origin.x + visible_size.width * 0.38, origin.y + visible_size.height * 0.80));
+
+    breakdown_sprites.at(1)->runAction(FadeTo::create(0.5f, 150.0f));
+    breakdown_sprites.at(1)->setPosition(Vec2(origin.x + visible_size.width * 0.28, origin.y + visible_size.height * 0.80));
+
+    breakdown_sprites.at(2)->runAction(FadeTo::create(0.5f, 150.0f));
 
     for (auto breakdown : breakdowns)
     {
@@ -356,12 +364,12 @@ void GameLayer::run_breakdown_minigame()
         });
     }
 
-    breakdowns_countdown = 9.99f;
+    breakdowns_countdown = 14.99f;
 
     breakdowns_clock = Label::createWithTTF(StringUtils::format("%d", static_cast<int>(breakdowns_countdown + 1)), 
         "fonts/Marker Felt.ttf", 60);
     breakdowns_clock->setTextColor(Color4B::BLACK);
-    breakdowns_clock->setPosition(Vec2(origin.x + visible_size.width * 0.20, origin.y + visible_size.height * 0.80));
+    breakdowns_clock->setPosition(Vec2(origin.x + visible_size.width * 0.08, origin.y + visible_size.height * 0.80));
     this->addChild(breakdowns_clock, 3);
 
     is_running_breakdowns_minigame = true;
@@ -373,8 +381,9 @@ void GameLayer::end_breakdown_minigame()
 
     if (static_cast<int>(breakdowns.size()) == 0)
     {
-        auto label = Label::createWithTTF("You fixed all of the breakdowns!", "fonts/Marker Felt.ttf", 30);
+        auto label = Label::createWithTTF("You fixed all of the breakdowns!", "fonts/Marker Felt.ttf", 50);
         label->setTextColor(Color4B::BLACK);
+        label->setDimensions(visible_size.width * 0.30, visible_size.height * 0.30);
         label->setPosition(Vec2(origin.x + visible_size.width * 0.40, origin.y + visible_size.height * 0.60));
         this->addChild(label, 5);
         label->setOpacity(0.0f);
@@ -383,8 +392,28 @@ void GameLayer::end_breakdown_minigame()
             this->removeChild(label);
         });
 
-        label->runAction(Sequence::create(FadeIn::create(1.0f), DelayTime::create(1.0f), 
+        label->runAction(Sequence::create(FadeIn::create(1.0f), DelayTime::create(2.0f), 
             FadeOut::create(1.0f), get_removed, nullptr));
+
+        int breakdowns_cash_reward = RandomHelper::random_int(0, 2);
+        breakdowns_cash_reward = 500 + 250 * breakdowns_cash_reward;
+
+        rm.spend_cash(-breakdowns_cash_reward);
+        update_labels();
+
+        auto label_reward = Label::createWithTTF(StringUtils::format("You earned $ %d", breakdowns_cash_reward), "fonts/Marker Felt.ttf", 50);
+        label_reward->setTextColor(Color4B::BLACK);
+        label_reward->setDimensions(visible_size.width * 0.30, visible_size.height * 0.30);
+        label_reward->setPosition(Vec2(origin.x + visible_size.width * 0.40, origin.y + visible_size.height * 0.40));
+        this->addChild(label_reward, 5);
+        label_reward->setOpacity(0.0f);
+
+        auto get_reward_removed = CallFunc::create([this, label_reward](){
+            this->removeChild(label_reward);
+        });
+
+        label_reward->runAction(Sequence::create(DelayTime::create(2.0f), FadeIn::create(1.0f), DelayTime::create(2.0f), 
+            FadeOut::create(1.0f), get_reward_removed, nullptr));
     }
     else
     {
@@ -437,7 +466,22 @@ void GameLayer::on_correct_breakdown()
     }
     else
     {
-        breakdown_sprites.at(0)->setVisible(true);
+        int breakdowns_left = static_cast<int>(breakdown_sprites.size());
+
+        breakdown_sprites.at(0)->runAction(Sequence::create(
+            Spawn::createWithTwoActions(MoveBy::create(0.25f, Vec2(visible_size.width * 0.10, 0)), 
+                                        ScaleTo::create(0.25f, 1.0f)), 
+            FadeIn::create(0.10f), nullptr));
+
+        if (breakdowns_left > 1)
+        {
+            breakdown_sprites.at(1)->runAction(MoveBy::create(0.25f, Vec2(visible_size.width * 0.03, 0)));
+        }
+
+        if (breakdowns_left > 2)
+        {
+            breakdown_sprites.at(2)->runAction(FadeTo::create(0.5f, 150.0f));
+        }
     }
 }
 
@@ -449,6 +493,8 @@ void GameLayer::on_incorrect_breakdown()
 
 void GameLayer::report()
 {
+    update_labels();
+
     if (rm.is_water_depleted())
     {
         game_over();
