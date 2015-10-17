@@ -33,8 +33,10 @@ private:
 
 	std::vector<Vec2> positions;
 	std::vector<const char*> file_names;
+	std::vector<const char*> file_names_sprites;
 
-	bool 	is_open_space(Vec2 pos);
+	bool 	is_occupied[7][2] = {{0}};
+	bool 	is_open_space(int x, int y);
 };
 
 #endif // __BREAKDOWN_H__

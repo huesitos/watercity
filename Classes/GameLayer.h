@@ -34,6 +34,8 @@ public:
 	void game_over();
 	void finished();
 
+	void update(float dt);
+
 	ProjectMenuItem* get_menu_technology() { return menu_technology; }
 	ProjectMenuItem* get_menu_education() { return menu_education; }
 	ProjectMenuItem* get_menu_culture() { return menu_culture; }
@@ -102,6 +104,11 @@ private:
 
 	Vector<ui::Button*> breakdowns;
 	Vector<Sprite*> 	breakdown_sprites;
+
+	Label* 	breakdowns_clock;
+
+	bool 	is_running_breakdowns_minigame;
+	float 	breakdowns_countdown;
 
 	// Water consumption gallon
 

@@ -202,7 +202,27 @@ bool GameLayer::init()
 
     add_labels();
 
+    is_running_breakdowns_minigame = false;
+
+    this->scheduleUpdate();
+
     return true;
+}
+
+void GameLayer::update(float dt)
+{
+    if (is_running_breakdowns_minigame)
+    {
+        breakdowns_countdown -= dt;
+
+        breakdowns_clock->setString(StringUtils::format("%.0f", breakdowns_countdown + 0.5f));
+
+        if (breakdowns_countdown < 0.0f)
+        {
+            is_running_breakdowns_minigame = false;
+            end_breakdown_minigame();
+        }
+    }
 }
 
 void GameLayer::run_day()
@@ -294,7 +314,7 @@ void GameLayer::start_breakdown_minigame()
 
 void GameLayer::run_breakdown_minigame()
 {
-    Breakdown b(3);
+    Breakdown b(10);
 
     breakdowns = b.get_breakdowns();
     breakdown_sprites = b.get_breakdown_sprites();
@@ -308,10 +328,10 @@ void GameLayer::run_breakdown_minigame()
 
     for (auto breakdown_sprite : breakdown_sprites)
     {
-        breakdown_sprite->setOpacity(0.0f);
         this->addChild(breakdown_sprite, 3);
-        breakdown_sprite->runAction(FadeIn::create(0.5f));
     }
+
+    breakdown_sprites.at(0)->setVisible(true);
 
     for (auto breakdown : breakdowns)
     {
@@ -319,7 +339,7 @@ void GameLayer::run_breakdown_minigame()
             switch (type)
             {
                 case ui::Widget::TouchEventType::BEGAN:
-                    if (breakdown->getTag() == breakdown_sprites.at(0)->getTag())
+                    if (breakdown->getTag() % 10 == breakdown_sprites.at(0)->getTag() % 10)
                     {
                         this->on_correct_breakdown();
                     }
@@ -335,10 +355,22 @@ void GameLayer::run_breakdown_minigame()
             return true;
         });
     }
+
+    breakdowns_countdown = 9.99f;
+
+    breakdowns_clock = Label::createWithTTF(StringUtils::format("%d", static_cast<int>(breakdowns_countdown + 1)), 
+        "fonts/Marker Felt.ttf", 60);
+    breakdowns_clock->setTextColor(Color4B::BLACK);
+    breakdowns_clock->setPosition(Vec2(origin.x + visible_size.width * 0.20, origin.y + visible_size.height * 0.80));
+    this->addChild(breakdowns_clock, 3);
+
+    is_running_breakdowns_minigame = true;
 }
 
 void GameLayer::end_breakdown_minigame()
 {
+    this->removeChild(breakdowns_clock);
+
     if (static_cast<int>(breakdowns.size()) == 0)
     {
         auto label = Label::createWithTTF("You fixed all of the breakdowns!", "fonts/Marker Felt.ttf", 30);
@@ -398,19 +430,20 @@ void GameLayer::on_correct_breakdown()
     breakdowns.erase(breakdowns.begin());
     breakdown_sprites.erase(breakdown_sprites.begin());
 
-    for (auto breakdown_sprite : breakdown_sprites)
-    {
-        breakdown_sprite->runAction(MoveBy::create(0.25f, Vec2(visible_size.width * -0.10, 0)));
-    }
-
     if (static_cast<int>(breakdowns.size()) == 0)
     {
+        is_running_breakdowns_minigame = false;
         end_breakdown_minigame();
+    }
+    else
+    {
+        breakdown_sprites.at(0)->setVisible(true);
     }
 }
 
 void GameLayer::on_incorrect_breakdown()
 {
+    is_running_breakdowns_minigame = false;
     end_breakdown_minigame();
 }
 
