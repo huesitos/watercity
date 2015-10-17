@@ -693,7 +693,7 @@ void GameLayer::run_breakdown_minigame()
                 case ui::Widget::TouchEventType::BEGAN:
                     if (breakdown->getTag() % 10 == breakdown_sprites.at(0)->getTag() % 10)
                     {
-                        SimpleAudioEngine::getInstance()->playEffect("sounds/good.mp3", false);
+                        SimpleAudioEngine::getInstance()->playEffect("sounds/good.wav", false);
                         this->on_correct_breakdown(breakdown);
                     }
                     else
