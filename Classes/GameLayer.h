@@ -7,6 +7,9 @@
 #include "ResourceManager.h"
 #include "MainMenu.h"
 #include "Climate.h"
+#include "Breakdown.h"
+#include "ProhibitedAct.h"
+#include "Project.h"
 
 USING_NS_CC;
 
@@ -68,11 +71,6 @@ private:
 	Sprite* 	rain_bg;
 	Sprite* 	cloudy_bg;
 	Sprite* 	rain_drops;
-	// Sprite* 	cloud1;
-	// Sprite* 	cloud2;
-	// Sprite* 	cloud3;
-	// Sprite* 	cloud4;
-	// Sprite* 	cloud5;
 	Sprite* 	shadow;
 	Sprite* 	shadow2;
 

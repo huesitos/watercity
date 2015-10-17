@@ -1,8 +1,4 @@
 #include "GameLayer.h"
-#include "Breakdown.h"
-#include "ProhibitedAct.h"
-#include "Climate.h"
-#include "Project.h"
 
 Scene* GameLayer::createScene()
 {
@@ -299,7 +295,7 @@ bool GameLayer::init()
 
 	run_week_button = ui::Button::create("images/start.png");
 	run_week_button->setPosition(Vec2(origin.x + visible_size.width * 0.735 - run_week_button->getContentSize().width / 2,
-									  origin.y + run_week_button->getContentSize().height / 2));
+		  origin.y + run_week_button->getContentSize().height / 2));
 	run_week_button->addTouchEventListener([this](Ref* sender, ui::Widget::TouchEventType type) {
 		switch (type)
 		{
@@ -661,10 +657,10 @@ void GameLayer::start_prohibited_act_minigame()
        this->removeChild(label);
     });
 
-    label->runAction(Sequence::create(FadeIn::create(1.0f), DelayTime::create(1.0f), 
+    label->runAction(Sequence::create(FadeIn::create(1.0f), DelayTime::create(1.0f),
         FadeOut::create(1.0f), get_removed, nullptr));
 
-    this->runAction(Sequence::create(DelayTime::create(3.0f), 
+    this->runAction(Sequence::create(DelayTime::create(3.0f),
         CallFunc::create(CC_CALLBACK_0(GameLayer::run_prohibited_act_minigame, this)), nullptr));
 }
 
@@ -737,7 +733,7 @@ void GameLayer::run_prohibited_act_minigame()
 
     prohibited_acts_countdown = 14.99f;
 
-    prohibited_acts_clock = Label::createWithTTF(StringUtils::format("%d", static_cast<int>(prohibited_acts_countdown + 1)), 
+    prohibited_acts_clock = Label::createWithTTF(StringUtils::format("%d", static_cast<int>(prohibited_acts_countdown + 1)),
         "fonts/Marker Felt.ttf", 60);
     prohibited_acts_clock->setTextColor(Color4B::BLACK);
     prohibited_acts_clock->setPosition(Vec2(origin.x + visible_size.width * 0.08, origin.y + visible_size.height * 0.80));
@@ -763,7 +759,7 @@ void GameLayer::end_prohibited_act_minigame()
             this->removeChild(label);
         });
 
-        label->runAction(Sequence::create(FadeIn::create(1.0f), DelayTime::create(2.0f), 
+        label->runAction(Sequence::create(FadeIn::create(1.0f), DelayTime::create(2.0f),
             FadeOut::create(1.0f), get_removed, nullptr));
 
         int prohibited_acts_water_reward = RandomHelper::random_int(0, 2);
@@ -783,7 +779,7 @@ void GameLayer::end_prohibited_act_minigame()
             this->removeChild(label_reward);
         });
 
-        label_reward->runAction(Sequence::create(DelayTime::create(2.0f), FadeIn::create(1.0f), DelayTime::create(2.0f), 
+        label_reward->runAction(Sequence::create(DelayTime::create(2.0f), FadeIn::create(1.0f), DelayTime::create(2.0f),
             FadeOut::create(1.0f), get_reward_removed, nullptr));
     }
     else
@@ -811,7 +807,7 @@ void GameLayer::end_prohibited_act_minigame()
             this->removeChild(label);
         });
 
-        label->runAction(Sequence::create(FadeIn::create(1.0f), DelayTime::create(1.0f), 
+        label->runAction(Sequence::create(FadeIn::create(1.0f), DelayTime::create(1.0f),
             FadeOut::create(1.0f), get_removed, nullptr));
     }
 
@@ -852,8 +848,8 @@ void GameLayer::on_correct_prohibited_act()
         int prohibited_acts_left = static_cast<int>(prohibited_act_sprites.size());
 
         prohibited_act_sprites.at(0)->runAction(Sequence::create(
-            Spawn::createWithTwoActions(MoveBy::create(0.25f, Vec2(visible_size.width * 0.10, 0)), 
-                                        ScaleTo::create(0.25f, 1.0f)), 
+            Spawn::createWithTwoActions(MoveBy::create(0.25f, Vec2(visible_size.width * 0.10, 0)),
+                                        ScaleTo::create(0.25f, 1.0f)),
             FadeIn::create(0.10f), nullptr));
 
         if (prohibited_acts_left > 1)
@@ -943,7 +939,6 @@ void GameLayer::report()
 
         this->shadow->setVisible(true);
         this->shadow2->setVisible(true);
-
     }
     else
     {
@@ -995,7 +990,6 @@ void GameLayer::update_labels()
 
     //update reserves
     current_num_lines = rm.get_water_reserves() / (rm.get_water_reserves_limit() / amount_of_line_reserves);
-    printf("%d\n", current_num_lines);
 
     wl = Sprite::create("images/meteragua2.png");
 
@@ -1007,7 +1001,6 @@ void GameLayer::update_labels()
     {
         water_lines_meter.at(i)->setVisible(false);
     }
-
 
 
     if (rm.get_happiness() < 30)

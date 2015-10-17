@@ -133,6 +133,7 @@ set(GAME_SRC
   Classes/ProhibitedAct.cpp
   Classes/ProjectMenuItem.cpp
   Classes/Climate.cpp
+  Classes/TutorialScene.cpp
   ${PLATFORM_SPECIFIC_SRC}
 )
 
@@ -147,6 +148,7 @@ set(GAME_HEADERS
   Classes/ProhibitedAct.h
   Classes/ProjectMenuItem.h
   Classes/Climate.h
+  Classes/TutorialScene.h
   ${PLATFORM_SPECIFIC_HEADERS}
 )
 
