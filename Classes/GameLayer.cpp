@@ -794,7 +794,7 @@ void GameLayer::report_breakdown_minigame()
 
     if (did_win)
     {
-        SimpleAudioEngine::getInstance()->playEffect("sounds/win-minigame.wav", true);
+        SimpleAudioEngine::getInstance()->playEffect("sounds/win-minigame.wav", false);
 
         int water_reward = 3000 + 100 * RandomHelper::random_int(-5, 5);
         int cash_reward = 2000 + 200 * RandomHelper::random_int(-5, 5);
