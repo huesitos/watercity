@@ -76,7 +76,7 @@ bool GameLayer::init()
     shadow->runAction(
         RepeatForever::create(
             Sequence::create(
-                MoveTo::create(120.0f, Vec2(origin.x + visible_size.width + shadow->getContentSize().width, origin.y + visible_size.height * 0.3)),
+                MoveTo::create(240.0f, Vec2(origin.x + visible_size.width + shadow->getContentSize().width, origin.y + visible_size.height * 0.3)),
                 Place::create(Vec2(origin.x - shadow->getContentSize().width, origin.y + visible_size.height * 0.3)),
                 nullptr
             ))
@@ -89,7 +89,7 @@ bool GameLayer::init()
     shadow2->runAction(
         RepeatForever::create(
             Sequence::create(
-                MoveTo::create(60.0f, Vec2(origin.x + visible_size.width + shadow2->getContentSize().width, origin.y + visible_size.height * 0.6)),
+                MoveTo::create(120.0f, Vec2(origin.x + visible_size.width + shadow2->getContentSize().width, origin.y + visible_size.height * 0.6)),
                 Place::create(Vec2(origin.x - shadow2->getContentSize().width, origin.y + visible_size.height * 0.6)),
                         nullptr
             ))
@@ -1253,7 +1253,7 @@ void GameLayer::run_clouds()
         Vec2 final_pos(origin.x + visible_size.width * 1.50,
                        origin.y + visible_size.height * (0.85 + RandomHelper::random_real(0.0, 0.15)));
 
-        float travel_time = RandomHelper::random_real(30.0, 45.0);
+        float travel_time = RandomHelper::random_real(80.0, 90.0);
 
         cloud->setVisible(true);
 
